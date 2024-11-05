@@ -1,0 +1,52 @@
+{
+  "flux": {
+    "Jesse": "jessed_600_lora_f16.ckpt",
+    "Trans Cock": "quiron_amateurtranscock_v4_lora_lora_f16.ckpt",
+    "Amateur": "amateur_lora_f16.ckpt",
+    "Hyper": "hyper_flux.1_dev_8steps_lora_lora_f16.ckpt",
+    "Oil Painting": "bichu_v0612_lora_f16.ckpt",
+    "Amateur Nudes": "real_amateur_nudes_v1_lora_f16.ckpt",
+    "4-Step": "flux.1__dev__to__schnell__4_step_lora_f16.ckpt",
+    "Dani": "daniflux_lora_f16.ckpt"
+  },
+  "sd1_5": {
+    "Add More Details": "add_more_details__detail_enhancer___tweaker__lora_f16.ckpt",
+    "Belle Delphine": "belledelphinenewv4_lora_f16.ckpt",
+    "Belle Delphine2": "belle_delphine__1500_lora_f32.ckpt",
+    "Belle Delphine3": "belle_delphine__1750_lora_f32.ckpt",
+    "Cherry": "cherrybomb__1000_lora_f32.ckpt",
+    "Cherry2": "cherrybomb__1500_lora_f32.ckpt",
+    "Cherry3": "cherrybomb__2000_lora_f32.ckpt",
+    "Tentacles": "transparent_tentacles_lora_f16.ckpt",
+    "Transparent Clothes": "transparent_clothes_fefaaiart_lora_f16.ckpt",
+    "Cherry Inpainting": "cherryinpaint_1500_lora_f32.ckpt",
+    "Cherry4": "cherrybomb_1750_lora_f32.ckpt",
+    "Cherry5": "cherrybomb_1500_lora_f32.ckpt",
+    "Geometric": "geometric_pattern_v1_lora_f16.ckpt",
+    "Graffiti Tattoo": "graffiti_tattoo_000005_lora_f16.ckpt",
+    "Tattoo": "tattoozfczfc_v1.1_5640_lora_f16.ckpt",
+    "Face Tattoo": "nlo_facetattoo_v1_lora_f16.ckpt",
+    "Jesse": "jesse_real_750_lora_f32.ckpt",
+    "Dani1": "lora_001_250_lora_f32.ckpt",
+    "Dani2": "lora_001_2000_lora_f32.ckpt",
+    "Dani3": "lora_001_1750_lora_f32.ckpt",
+    "8-Step": "hyper_sd_v1.x_8_step_lora_f16.ckpt",
+    "4-Step": "hyper_sd_v1.x_4_step_lora_f16.ckpt",
+    "Dani4": "danilora_1500_lora_f32.ckpt",
+    "SpiderMike1": "spidermike_2000_lora_f32.ckpt",
+    "Velo": "velo_2000_lora_f32.ckpt",
+    "Flat Chest": "flat_chest_v2_lora_f16.ckpt",
+    "Facial": "facialized_lora_f16.ckpt",
+    "Turbo": "tcd_sd_v1.5_lora_f16.ckpt"
+  },
+  "sdxl": {
+    "LCM": "lcm_sd_xl_base_1.0_lora_f16.ckpt",
+    "8-Step": "hyper_sdxl_8_step_lora_f16.ckpt",
+    "DmD2": "dmd2_sdxl_4_step_lora_f16.ckpt",
+    "SDXL Render": "sdxl_render_v2.0_lora_f16.ckpt",
+    "Turbo": "tcd_sd_xl_base_1.0_lora_f16.ckpt"
+  },
+  "video": {},
+  "sd3_5": {},
+  "sd2_0": {}
+}

@@ -1,0 +1,14 @@
+{
+  "flux": {
+    "controlnet_jasper_ai_upscaler_flux_1_dev_1.0_f16.ckpt": "",
+    "pulid_0.9_eva02_clip_l14_336_f16.ckpt": ""
+  },
+  "sd1_5": {
+    "t2iadapter_sketch_1.x_f16.ckpt": "",
+    "controlnet_scribble_1.x_v1.1_f16.ckpt": "",
+    "controlnet_canny_1.x_v1.1_f16.ckpt": "",
+    "controlnet_openpose_1.x_v1.1_f16.ckpt": "",
+    "controlnet_mlsd_1.x_v1.1_f16.ckpt": "",
+    "controlnet_tile_1.x_v1.1_f16.ckpt": ""
+  }
+}
