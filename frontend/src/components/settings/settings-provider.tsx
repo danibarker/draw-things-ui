@@ -1,10 +1,12 @@
 import { ReactNode, useState } from "react";
 import { defaultSettings, SettingsContext } from "./useSettings";
+import useWebSocket from "../../useWebsocket";
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [images, setImages] = useState<string[]>([]);
-  const [websocket, setWebsocket] = useState<WebSocket | null>(null);
+  const websocket = useWebSocket("/ws", setImages);
+
   return (
     <SettingsContext.Provider
       value={{
@@ -13,7 +15,6 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
         images,
         setImages,
         websocket,
-        setWebsocket,
       }}
     >
       {children}

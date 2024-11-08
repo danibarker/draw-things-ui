@@ -1,8 +1,15 @@
 import styled from "styled-components";
-const ImageGallery = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+const ScrollWindow = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: 100vh;
+  width: 100%;
+  padding: 10px;
+  gap: 10px;
+  img {
+    width: 100%;
+  }
 `;
 
 const DropdownWithButtons = styled.div`
@@ -141,5 +148,5 @@ export {
   LorasList,
   Header,
   Main,
-  ImageGallery,
+  ScrollWindow,
 };

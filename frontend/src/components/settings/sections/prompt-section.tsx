@@ -32,6 +32,7 @@ function PromptSection() {
       seed: settings.seed,
       guidance_scale: settings.guidance_scale,
       sampler: settings.sampler,
+      upscaler: "disabled",
       // init_images: settings.init_images,
     };
     if (data && websocket) {

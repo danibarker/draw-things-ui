@@ -75,9 +75,8 @@ export const SettingsContext = createContext<SettingsContextProps>({
   setSettings: () => null,
   settings: defaultSettings,
   setImages: () => null,
-  images: [],
   websocket: null,
-  setWebsocket: () => null,
+  images: [],
 });
 export const useSettings = () => {
   return useContext(SettingsContext);

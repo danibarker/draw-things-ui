@@ -96,7 +96,6 @@ interface SettingsContextProps {
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   websocket: WebSocket | null;
-  setWebsocket: React.Dispatch<React.SetStateAction<WebSocket | null>>;
 }
 
 type PageHeaderProps = {

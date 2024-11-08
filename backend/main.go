@@ -92,12 +92,18 @@ func handleWebSocket(ws *websocket.Conn) {
 		fmt.Printf("Unmarshaled ImageConfig: %+v\n", imgConfig)
 
 		queueMutex.Lock()
+
+		fmt.Println("queueMutex locked")
 		imageRequestQueue = append(imageRequestQueue, imgConfig)
-		if !serviceBusy {
-			go processQueue(config, ws)
-		}
+		fmt.Printf("serviceBusy: %t\n%v", serviceBusy, imageRequestQueue)
 		queueMutex.Unlock()
-		fmt.Printf("closing websocket connect")
+		if !serviceBusy {
+			fmt.Println("service not busy")
+			go processQueue(config, ws)
+			fmt.Println("processQueue called")
+		}
+		fmt.Println("queueMutex unlocking")
+		fmt.Printf("lock released\n")
 		//resp, err := handleImageRequest(config, "image", imgConfig)
 
 		// if err := websocket.Message.Send(ws, string(body)); err != nil {
@@ -109,44 +115,53 @@ func handleWebSocket(ws *websocket.Conn) {
 }
 
 func processQueue(config Config, ws *websocket.Conn) {
+	fmt.Println("processQueue called")
 	for {
+		fmt.Println("for loop")
 		queueMutex.Lock()
-		defer queueMutex.Unlock()
+		// defer queueMutex.Unlock()
+		fmt.Printf("len(imageRequestQueue): %d\n", len(imageRequestQueue))
 		if len(imageRequestQueue) == 0 {
 			serviceBusy = false
+			queueMutex.Unlock()
 			return
 		}
 
 		imgConfig := imageRequestQueue[0]
 		imageRequestQueue = imageRequestQueue[1:]
 		serviceBusy = true
-
+		queueMutex.Unlock()
+		fmt.Println("serviceBusy: ", serviceBusy)
 		resp, err := handleImageRequest(config, "txt2img", imgConfig)
 		if err != nil {
 			fmt.Println("Failed to handle image request:", err)
 			continue
 		}
-		defer resp.Body.Close()
-
+		fmt.Println("response received")
 		body, err := io.ReadAll(resp.Body)
+		fmt.Println("body read")
+		defer resp.Body.Close()
 		if err != nil {
 			fmt.Println("Failed to read the response body:", err)
 			continue
 		}
-		// fmt.Printf("Response: %s\n", body)
+
+		fmt.Printf("Response: %s\n", body)
 		var imageResponse ImageResponse
 		if err := json.Unmarshal(body, &imageResponse); err != nil {
 			fmt.Println("Failed unmarshalling response body:", err)
 			continue
 		}
+		fmt.Println("Unmarshalled response")
 		// substring of the 0th element of the Images array, only first 20 chars
 		if len(imageResponse.Images) > 0 {
 			fmt.Printf("imageResponse: %+v\n", imageResponse.Images[0][:20])
 			imageResponseQueue = append(imageResponseQueue, imageResponse.Images[0])
+			fmt.Printf("imageResponseQueue: %+v\n", len(imageResponseQueue))
 			if len(imageResponseQueue) > 0 {
 				fmt.Printf("sending response to client\n")
-				queueMutex.Lock()
-				defer queueMutex.Unlock()
+				// queueMutex.Lock()
+				// defer queueMutex.Unlock()
 				imageResponse := imageResponseQueue[0]
 				imageResponseQueue = imageResponseQueue[1:]
 
@@ -185,7 +200,7 @@ func handleImageRequest(config Config, method string, body ImageConfig) (*http.R
 
 func serveFrontend(w http.ResponseWriter, r *http.Request) {
 	// serve frontend/dist/index.html
-	http.FileServer(http.Dir("../frontend/dist")).ServeHTTP(w, r)
+	http.FileServer(http.Dir("./dist")).ServeHTTP(w, r)
 }
 
 func main() {
