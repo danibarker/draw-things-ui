@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  </head>
+  <body> </body>
+  <script type="module">
+    const literacy = {
+      Andorra: 100.0,
+      Finland: 100.0,
+      Liechtenstein: 100.0,
+      Luxembourg: 100.0,
+      Norway: 100.0,
+      "North Korea": 100.0,
+      Latvia: 100.0,
+      Estonia: 100.0,
+      Lithuania: 100.0,
+      Azerbaijan: 100.0,
+      Poland: 100.0,
+      Cuba: 100.0,
+      Tajikistan: 100.0,
+      Georgia: 100.0,
+      Armenia: 100.0,
+      Ukraine: 100.0,
+      Kazakhstan: 100.0,
+      Slovenia: 100.0,
+      Barbados: 100.0,
+      Russia: 100.0,
+      Turkmenistan: 100.0,
+      Belarus: 100.0,
+      Slovakia: 100.0,
+      Palau: 100.0,
+      Uzbekistan: 100.0,
+      Tonga: 99.0,
+      Kyrgyzstan: 99.0,
+      Moldova: 99.0,
+      Croatia: 99.0,
+      Italy: 99.0,
+      Hungary: 99.0,
+      Australia: 99.0,
+      Belgium: 99.0,
+      Canada: 99.0,
+      "Czech Republic": 99.0,
+      Denmark: 99.0,
+      France: 99.0,
+      Germany: 99.0,
+      Iceland: 99.0,
+      Ireland: 99.0,
+      Japan: 99.0,
+      Monaco: 99.0,
+      Netherlands: 99.0,
+      "New Zealand": 99.0,
+      Sweden: 99.0,
+      Switzerland: 99.0,
+      Tuvalu: 99.0,
+      "United Kingdom": 99.0,
+      Samoa: 99.0,
+      "Antigua and Barbuda": 99.0,
+      "Trinidad and Tobago": 99.0,
+      Micronesia: 99.0,
+      Cyprus: 99.0,
+      Romania: 99.0,
+      Montenegro: 98.0,
+      Maldives: 98.0,
+      Bulgaria: 98.0,
+      "Marshall Islands": 98.0,
+      "Bosnia and Herzegovina": 98.0,
+      Mongolia: 98.0,
+      Uruguay: 98.0,
+      Austria: 98.0,
+      Argentina: 98.0,
+      Serbia: 98.0,
+      "South Korea": 98.0,
+      Grenada: 98.0,
+      Israel: 98.0,
+      Spain: 98.0,
+      Macedonia: 98.0,
+      Greece: 97.0,
+      "Costa Rica": 97.0,
+      "Saint Kitts and Nevis": 97.0,
+      Albania: 97.0,
+      Chile: 97.0,
+      Thailand: 96.0,
+      Qatar: 96.0,
+      Brunei: 96.0,
+      "Saint Vincent and the Grenadines": 96.0,
+      "San Marino": 96.0,
+      Singapore: 96.0,
+      Kuwait: 96.0,
+      Bahamas: 96.0,
+      Philippines: 95.0,
+      Nauru: 95.0,
+      China: 95.0,
+      "Cook Islands": 95.0,
+      Palestine: 95.0,
+      "Equatorial Guinea": 95.0,
+      Venezuela: 95.0,
+      Suriname: 95.0,
+      Bahrain: 95.0,
+      Portugal: 94.0,
+      "Saudi Arabia": 94.0,
+      Panama: 94.0,
+      Seychelles: 94.0,
+      Paraguay: 94.0,
+      Peru: 94.0,
+      Fiji: 94.0,
+      Vietnam: 94.0,
+      Colombia: 93.0,
+      Malta: 93.0,
+      Malaysia: 93.0,
+      Mexico: 93.0,
+      "South Africa": 93.0,
+      Indonesia: 93.0,
+      Myanmar: 93.0,
+      Turkey: 93.0,
+      Jordan: 93.0,
+      Bolivia: 92.0,
+      Ecuador: 92.0,
+      Dominica: 92.0,
+      "Sri Lanka": 91.0,
+      Brazil: 90.0,
+      Libya: 90.0,
+      "United Arab Emirates": 90.0,
+      Lebanon: 90.0,
+      "Dominican Republic": 90.0,
+      "Saint Lucia": 90.0,
+      Mauritius: 89.0,
+      Jamaica: 88.0,
+      Botswana: 87.0,
+      Burundi: 87.0,
+      Oman: 87.0,
+      "United States": 86.0,
+      Syria: 86.0,
+      "Cape Verde": 85.0,
+      Guyana: 85.0,
+      Honduras: 85.0,
+      "El Salvador": 84.0,
+      Vanuatu: 84.0,
+      Iran: 84.0,
+      Zimbabwe: 84.0,
+      Swaziland: 83.0,
+      Belize: 83.0,
+      Gabon: 82.0,
+      Congo: 79.0,
+      Iraq: 79.0,
+      Tunisia: 79.0,
+      Guatemala: 78.0,
+      Nicaragua: 78.0,
+      "Solomon Islands": 77.0,
+      Comoros: 77.0,
+      Namibia: 76.0,
+      Lesotho: 76.0,
+      "Democratic Republic of the Congo": 75.0,
+      Sudan: 74.0,
+      Cambodia: 74.0,
+      Uganda: 73.0,
+      Laos: 73.0,
+      Algeria: 73.0,
+      Kenya: 72.0,
+      Egypt: 72.0,
+      Eritrea: 72.0,
+      Ghana: 71.0,
+      Cameroon: 71.0,
+      Angola: 71.0,
+      "São Tomé and Príncipe": 70.0,
+      India: 69.0,
+      Tanzania: 68.0,
+      Yemen: 68.0,
+      Morocco: 67.0,
+      Rwanda: 66.0,
+      Madagascar: 64.0,
+      "Papua New Guinea": 63.0,
+      Zambia: 61.0,
+      Malawi: 61.0,
+      Togo: 60.0,
+      Bangladesh: 60.0,
+      Nepal: 60.0,
+      "Timor-Leste": 58.0,
+      "Guinea-Bissau": 58.0,
+      Pakistan: 55.0,
+      Gambia: 53.0,
+      Bhutan: 53.0,
+      Senegal: 52.0,
+      Nigeria: 51.0,
+      Mozambique: 51.0,
+      Haiti: 49.0,
+      "Sierra Leone": 46.0,
+      Mauritania: 46.0,
+      Liberia: 43.0,
+      "Côte d'Ivoire": 41.0,
+      Somalia: 39.0,
+      Ethiopia: 39.0,
+      Chad: 38.0,
+      "Central African Republic": 37.0,
+      Afghanistan: 32.0,
+      Mali: 31.0,
+      "Burkina Faso": 29.0,
+      Benin: 29.0,
+      "South Sudan": 27.0,
+      Guinea: 25.0,
+      Niger: 15.0,
+      World: 86.3,
+    };
+
+    const gdp = {
+      regex:
+        "^([ãçé\\.\\(\\)A-Za-z\\-]+ ?[ãçé\\.\\(\\)A-Za-z]* ?[ãçé\\.\\(\\)A-Za-z]* ?[íãçé\\.\\(\\)A-Za-z]* ?[íãçé\\.\\(\\)A-Za-z]*)\\s([—0-9,]+)\\s([0-9—,]*)\\s?([0-9—,]*)\\t(20\\d\\d)?\\t?([,\\d]+)\\t(202\\d)$",
+      countries: [
+        { country: "Monaco", gdp: 240535 },
+        { country: "Liechtenstein", gdp: 197268 },
+        { country: "Luxembourg", gdp: 125897 },
+        { country: "Norway", gdp: 106623 },
+        { country: "Ireland", gdp: 105993 },
+        { country: "Switzerland", gdp: 93636 },
+        { country: "Qatar", gdp: 87974 },
+        { country: "Singapore", gdp: 78115 },
+        { country: "United States", gdp: 76101 },
+        { country: "Iceland", gdp: 75260 },
+        { country: "Denmark", gdp: 68029 },
+        { country: "Australia", gdp: 67867 },
+        { country: "Israel", gdp: 58086 },
+        { country: "Netherlands", gdp: 57392 },
+        { country: "Sweden", gdp: 56040 },
+        { country: "Canada", gdp: 55597 },
+        { country: "United Arab Emirates", gdp: 53708 },
+        { country: "San Marino", gdp: 52903 },
+        { country: "Austria", gdp: 52609 },
+        { country: "Finland", gdp: 50988 },
+        { country: "Belgium", gdp: 49987 },
+        { country: "Germany", gdp: 48902 },
+        { country: "New Zealand", gdp: 47412 },
+        { country: "United Kingdom", gdp: 45758 },
+        { country: "Andorra", gdp: 42293 },
+        { country: "France", gdp: 41426 },
+        { country: "Kuwait", gdp: 41079 },
+        { country: "Brunei", gdp: 37152 },
+        { country: "Italy", gdp: 34672 },
+        { country: "Japan", gdp: 34144 },
+        { country: "Malta", gdp: 33942 },
+        { country: "Cyprus", gdp: 32999 },
+        { country: "South Korea", gdp: 32305 },
+        { country: "Bahamas", gdp: 31458 },
+        { country: "Saudi Arabia", gdp: 30436 },
+        { country: "Bahrain", gdp: 30147 },
+        { country: "Spain", gdp: 29771 },
+        { country: "Estonia", gdp: 28693 },
+        { country: "Slovenia", gdp: 28295 },
+        { country: "Czech Republic", gdp: 27685 },
+        { country: "Lithuania", gdp: 25773 },
+        { country: "Oman", gdp: 25057 },
+        { country: "Portugal", gdp: 24813 },
+        { country: "Latvia", gdp: 22088 },
+        { country: "Greece", gdp: 20923 },
+        { country: "Uruguay", gdp: 20793 },
+        { country: "Saint Kitts and Nevis", gdp: 20547 },
+        { country: "Slovakia", gdp: 20432 },
+        { country: "Barbados", gdp: 20239 },
+        { country: "Trinidad and Tobago", gdp: 19629 },
+        { country: "Antigua and Barbuda", gdp: 18880 },
+        { country: "Seychelles", gdp: 18623 },
+        { country: "Guyana", gdp: 18199 },
+        { country: "Hungary", gdp: 17792 },
+        { country: "Croatia", gdp: 17753 },
+        { country: "Panama", gdp: 17358 },
+        { country: "Poland", gdp: 17265 },
+        { country: "Cook Islands", gdp: 17033 },
+        { country: "Russia", gdp: 15482 },
+        { country: "Chile", gdp: 15338 },
+        { country: "Romania", gdp: 15295 },
+        { country: "Argentina", gdp: 13868 },
+        { country: "Bulgaria", gdp: 13302 },
+        { country: "Costa Rica", gdp: 13199 },
+        { country: "Cuba", gdp: 13128 },
+        { country: "World", gdp: 12647 },
+        { country: "China", gdp: 12598 },
+        { country: "Palau", gdp: 12498 },
+        { country: "Saint Lucia", gdp: 12038 },
+        { country: "Malaysia", gdp: 11972 },
+        { country: "Maldives", gdp: 11781 },
+        { country: "Nauru", gdp: 11679 },
+        { country: "Kazakhstan", gdp: 11625 },
+        { country: "Mexico", gdp: 11477 },
+        { country: "Turkey", gdp: 10629 },
+        { country: "Turkmenistan", gdp: 10420 },
+        { country: "Dominican Republic", gdp: 10111 },
+        { country: "Dominica", gdp: 10111 },
+        { country: "Montenegro", gdp: 9935 },
+        { country: "Mauritius", gdp: 9926 },
+        { country: "Grenada", gdp: 9509 },
+        { country: "Saint Vincent and the Grenadines", gdp: 9107 },
+        { country: "Brazil", gdp: 8918 },
+        { country: "Serbia", gdp: 8802 },
+        { country: "Gabon", gdp: 8427 },
+        { country: "Botswana", gdp: 7738 },
+        { country: "Belarus", gdp: 7643 },
+        { country: "Azerbaijan", gdp: 7600 },
+        { country: "Bosnia and Herzegovina", gdp: 7569 },
+        { country: "Lebanon", gdp: 7159 },
+        { country: "Peru", gdp: 7126 },
+        { country: "Equatorial Guinea", gdp: 7026 },
+        { country: "Armenia", gdp: 7018 },
+        { country: "Belize", gdp: 6984 },
+        { country: "Thailand", gdp: 6909 },
+        { country: "South Africa", gdp: 6766 },
+        { country: "Marshall Islands", gdp: 6728 },
+        { country: "Albania", gdp: 6655 },
+        { country: "Colombia", gdp: 6630 },
+        { country: "Georgia", gdp: 6571 },
+        { country: "Macedonia", gdp: 6549 },
+        { country: "Ecuador", gdp: 6391 },
+        { country: "Paraguay", gdp: 6153 },
+        { country: "Jamaica", gdp: 6047 },
+        { country: "Libya", gdp: 5951 },
+        { country: "Iraq", gdp: 5937 },
+        { country: "Suriname", gdp: 5859 },
+        { country: "Fiji", gdp: 5356 },
+        { country: "Guatemala", gdp: 5324 },
+        { country: "Tuvalu", gdp: 5219 },
+        { country: "El Salvador", gdp: 5127 },
+        { country: "Mongolia", gdp: 5046 },
+        { country: "Namibia", gdp: 4911 },
+        { country: "Indonesia", gdp: 4788 },
+        { country: "Tonga", gdp: 4571 },
+        { country: "Iran", gdp: 4495 },
+        { country: "Moldova", gdp: 4433 },
+        { country: "Algeria", gdp: 4274 },
+        { country: "Jordan", gdp: 4205 },
+        { country: "Vietnam", gdp: 4164 },
+        { country: "Venezuela", gdp: 4164 },
+        { country: "Micronesia", gdp: 4105 },
+        { country: "Ukraine", gdp: 4043 },
+        { country: "Cape Verde", gdp: 3903 },
+        { country: "Samoa", gdp: 3855 },
+        { country: "Tunisia", gdp: 3738 },
+        { country: "Egypt", gdp: 3688 },
+        { country: "Palestine", gdp: 3640 },
+        { country: "Swaziland", gdp: 3601 },
+        { country: "Bolivia", gdp: 3600 },
+        { country: "Philippines", gdp: 3499 },
+        { country: "Morocco", gdp: 3495 },
+        { country: "Sri Lanka", gdp: 3490 },
+        { country: "Angola", gdp: 3184 },
+        { country: "Papua New Guinea", gdp: 3117 },
+        { country: "Bhutan", gdp: 3063 },
+        { country: "Honduras", gdp: 3040 },
+        { country: "Vanuatu", gdp: 3015 },
+        { country: "Congo", gdp: 2570 },
+        { country: "Bangladesh", gdp: 2528 },
+        { country: "Côte d'Ivoire", gdp: 2486 },
+        { country: "India", gdp: 2445 },
+        { country: "São Tomé and Príncipe", gdp: 2405 },
+        { country: "Timor-Leste", gdp: 2389 },
+        { country: "Uzbekistan", gdp: 2322 },
+        { country: "Mauritania", gdp: 2322 },
+        { country: "Nicaragua", gdp: 2255 },
+        { country: "Solomon Islands", gdp: 2205 },
+        { country: "Ghana", gdp: 2204 },
+        { country: "Nigeria", gdp: 2174 },
+        { country: "Kenya", gdp: 2099 },
+        { country: "Laos", gdp: 2040 },
+        { country: "Kyrgyzstan", gdp: 1649 },
+        { country: "Haiti", gdp: 1619 },
+        { country: "Zimbabwe", gdp: 1619 },
+        { country: "Senegal", gdp: 1604 },
+        { country: "Cambodia", gdp: 1588 },
+        { country: "Cameroon", gdp: 1588 },
+        { country: "Guinea", gdp: 1504 },
+        { country: "Comoros", gdp: 1490 },
+        { country: "Zambia", gdp: 1456 },
+        { country: "Pakistan", gdp: 1386 },
+        { country: "Benin", gdp: 1303 },
+        { country: "Nepal", gdp: 1290 },
+        { country: "Myanmar", gdp: 1204 },
+        { country: "Tanzania", gdp: 1154 },
+        { country: "Tajikistan", gdp: 1054 },
+        { country: "Uganda", gdp: 1021 },
+        { country: "Lesotho", gdp: 992 },
+        { country: "Rwanda", gdp: 966 },
+        { country: "Ethiopia", gdp: 964 },
+        { country: "Chad", gdp: 948 },
+        { country: "Togo", gdp: 914 },
+        { country: "Burkina Faso", gdp: 846 },
+        { country: "Syria", gdp: 840 },
+        { country: "Mali", gdp: 833 },
+        { country: "Gambia", gdp: 825 },
+        { country: "Sudan", gdp: 784 },
+        { country: "Guinea-Bissau", gdp: 748 },
+        { country: "Eritrea", gdp: 647 },
+        { country: "Liberia", gdp: 616 },
+        { country: "Malawi", gdp: 615 },
+        { country: "Somalia", gdp: 592 },
+        { country: "Niger", gdp: 591 },
+        { country: "North Korea", gdp: 590 },
+        { country: "Democratic Republic of the Congo", gdp: 588 },
+        { country: "Mozambique", gdp: 558 },
+        { country: "Madagascar", gdp: 505 },
+        { country: "Central African Republic", gdp: 429 },
+        { country: "South Sudan", gdp: 423 },
+        { country: "Sierra Leone", gdp: 405 },
+        { country: "Afghanistan", gdp: 345 },
+        { country: "Yemen", gdp: 327 },
+        { country: "Burundi", gdp: 313 },
+      ],
+    };
+    const combined = {};
+    for (let country of gdp.countries) {
+      if (literacy[country.country]) {
+        combined[country.country] = {
+          gdp: country.gdp,
+          literacy: literacy[country.country],
+        };
+      } else {
+        console.log(`No literacy data for ${country.country}`);
+      }
+    }
+
+    const data = [];
+    for (let country in combined) {
+      data.push({
+        y: combined[country].gdp,
+        x: combined[country].literacy,
+        name: country,
+      });
+    }
+
+    const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    const width = 960 - margin.left - margin.right;
+    const height = 500 - margin.top - margin.bottom;
+
+    const x = d3.scaleLinear().range([0, width]);
+    const y = d3.scaleLinear().range([height, 0]);
+
+    const xAxis = d3.axisBottom(x);
+    const yAxis = d3.axisLeft(y);
+
+    const svg = d3
+      .select("body")
+      .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    x.domain(
+      d3.extent(data, function (d) {
+        return d.x;
+      })
+    );
+    y.domain(
+      d3.extent(data, function (d) {
+        return d.y;
+      })
+    );
+    svg
+      .append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+    svg.append("g").attr("class", "y axis").call(yAxis);
+    svg
+      .selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", function (d) {
+        return x(d.x);
+      })
+      .attr("cy", function (d) {
+        return y(d.y);
+      })
+      .append("title")
+      .text(function (d) {
+        return d.name;
+      });
+    svg
+      .selectAll(".dot")
+      .data(data)
+      .enter()
+      .append("text")
+      .attr("x", function (d) {
+        return x(d.x);
+      })
+      .attr("y", function (d) {
+        return y(d.y);
+      })
+      .text(function (d) {
+        return d.name;
+      });
+
+    // draw bar graph with X axis GDP and Y axis literacy
+    const barData = [];
+    for (let country in combined) {
+      barData.push({
+        x: combined[country].gdp,
+        y: combined[country].literacy,
+        name: country,
+      });
+    }
+
+    barData.sort((a, b) => a.x - b.x);
+
+    const barWidth = 20;
+    const barHeight = 20;
+    const barMargin = 5;
+    const barSvg = d3
+      .select("body")
+      .append("svg")
+      .attr("width", barWidth * barData.length)
+      .attr("height", barHeight * barData.length);
+    barSvg
+      .selectAll("rect")
+      .data(barData)
+      .enter()
+      .append("rect")
+      .attr("x", function (d, i) {
+        return i * (barWidth + barMargin);
+      })
+      .attr("y", function (d) {
+        return barHeight - y(d.y);
+      })
+      .attr("width", barWidth)
+      .attr("height", function (d) {
+        return y(d.y);
+      });
+    barSvg
+      .selectAll("text")
+      .data(barData)
+      .enter()
+      .append("text")
+      .attr("x", function (d, i) {
+        return i * (barWidth + barMargin);
+      })
+      .attr("y", function (d) {
+        return barHeight - y(d.y);
+      })
+      .text(function (d) {
+        return d.name;
+      });
+  </script>
+</html>
