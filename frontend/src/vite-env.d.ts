@@ -96,6 +96,10 @@ interface SettingsContextProps {
   images: string[];
   setImages: React.Dispatch<React.SetStateAction<string[]>>;
   websocket: WebSocket | null;
+  isAdvanced: boolean;
+  setIsAdvanced: React.Dispatch<React.SetStateAction<boolean>>;
+  showHidden: boolean;
+  setShowHidden: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 type PageHeaderProps = {

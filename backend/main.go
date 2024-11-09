@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"net/http"
 	"os"
 	"sync"
@@ -13,9 +12,6 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type Config struct {
-	HOST string
-}
 type Lora struct {
 	File   string  `json:"file"`
 	Weight float64 `json:"weight"`
@@ -59,143 +55,111 @@ type ImageResponse struct {
 	Images []string `json:"images"`
 }
 
-// var config = Config{
-// 	HOST: "https://drawthings.danibarker.ca",
-// }
+//	var config = Config{
+//		HOST: "https://drawthings.danibarker.ca",
+//	}
+type CompletedImage struct {
+	Image  string         `json:"image"`
+	Socket websocket.Conn `json:"socket"`
+}
 
 var (
-	imageRequestQueue  []ImageConfig
-	imageResponseQueue []string
-	queueMutex         sync.Mutex
-	serviceBusy        bool
+	clientQueue     []*websocket.Conn                 // Queue of clients waiting for image responses
+	queueMutex      sync.Mutex                        // Mutex for the image request queue
+	serviceBusy     bool                              // Flag to indicate if the service is busy processing requests
+	imageRequestMap map[*websocket.Conn][]ImageConfig = make(map[*websocket.Conn][]ImageConfig)
+	HOST            string                            = "http://localhost:7776"
 )
 
 func handleWebSocket(ws *websocket.Conn) {
-	fmt.Printf("new websocket connection\n")
-	config := Config{
-		HOST: "http://localhost:7776",
-	}
 
 	for {
 		var imgConfig ImageConfig
 		var message string
 		if err := websocket.Message.Receive(ws, &message); err != nil {
+
 			fmt.Printf("error receiving message: %s\n", err)
 			break
 		}
-		fmt.Printf("Received raw message: %s\n", message)
-		// Unmarshal the JSON message into ImageConfig
+		fmt.Printf("received message: %s\n", message)
 		if err := json.Unmarshal([]byte(message), &imgConfig); err != nil {
 			fmt.Printf("error unmarshaling message: %s\n", err)
-			break
+			continue
 		}
-		fmt.Printf("Unmarshaled ImageConfig: %+v\n", imgConfig)
 
 		queueMutex.Lock()
-
-		fmt.Println("queueMutex locked")
-		imageRequestQueue = append(imageRequestQueue, imgConfig)
-		fmt.Printf("serviceBusy: %t\n%v", serviceBusy, imageRequestQueue)
+		// Add the client to the queue
+		clientQueue = append(clientQueue, ws)
+		// Add the request to the map
+		imageRequestMap[ws] = append(imageRequestMap[ws], imgConfig)
 		queueMutex.Unlock()
+
+		// If the service is not busy, process the queue
 		if !serviceBusy {
-			fmt.Println("service not busy")
-			go processQueue(config, ws)
-			fmt.Println("processQueue called")
+			go processQueue()
 		}
-		fmt.Println("queueMutex unlocking")
-		fmt.Printf("lock released\n")
-		//resp, err := handleImageRequest(config, "image", imgConfig)
 
-		// if err := websocket.Message.Send(ws, string(body)); err != nil {
-		// 	fmt.Printf("error sending message: %s\n", err)
-		// 	break
-		// }
 	}
-	fmt.Printf("closing websocket connection\n")
-}
 
-func processQueue(config Config, ws *websocket.Conn) {
-	fmt.Println("processQueue called")
+}
+func processQueue() {
 	for {
-		fmt.Println("for loop")
 		queueMutex.Lock()
-		// defer queueMutex.Unlock()
-		fmt.Printf("len(imageRequestQueue): %d\n", len(imageRequestQueue))
-		if len(imageRequestQueue) == 0 {
+		if len(clientQueue) == 0 {
 			serviceBusy = false
 			queueMutex.Unlock()
 			return
 		}
-
-		imgConfig := imageRequestQueue[0]
-		imageRequestQueue = imageRequestQueue[1:]
 		serviceBusy = true
+		// Get the first client in the queue
+		client := clientQueue[0]
+		clientQueue = clientQueue[1:]
+		// Get the first image request for the client
+		imgConfig := imageRequestMap[client][0]
+		imageRequestMap[client] = imageRequestMap[client][1:]
 		queueMutex.Unlock()
-		fmt.Println("serviceBusy: ", serviceBusy)
-		resp, err := handleImageRequest(config, "txt2img", imgConfig)
+
+		// Send the image request to the service
+		image, err := handleImageRequest("txt2img", imgConfig)
 		if err != nil {
-			fmt.Println("Failed to handle image request:", err)
-			continue
-		}
-		fmt.Println("response received")
-		body, err := io.ReadAll(resp.Body)
-		fmt.Println("body read")
-		defer resp.Body.Close()
-		if err != nil {
-			fmt.Println("Failed to read the response body:", err)
+			fmt.Printf("error handling image request: %s\n", err)
 			continue
 		}
 
-		fmt.Printf("Response: %s\n", body)
-		var imageResponse ImageResponse
-		if err := json.Unmarshal(body, &imageResponse); err != nil {
-			fmt.Println("Failed unmarshalling response body:", err)
-			continue
+		// Send the image to the client
+		if err := websocket.Message.Send(client, image); err != nil {
+			fmt.Printf("error sending message: %s\n", err)
 		}
-		fmt.Println("Unmarshalled response")
-		// substring of the 0th element of the Images array, only first 20 chars
-		if len(imageResponse.Images) > 0 {
-			fmt.Printf("imageResponse: %+v\n", imageResponse.Images[0][:20])
-			imageResponseQueue = append(imageResponseQueue, imageResponse.Images[0])
-			fmt.Printf("imageResponseQueue: %+v\n", len(imageResponseQueue))
-			if len(imageResponseQueue) > 0 {
-				fmt.Printf("sending response to client\n")
-				// queueMutex.Lock()
-				// defer queueMutex.Unlock()
-				imageResponse := imageResponseQueue[0]
-				imageResponseQueue = imageResponseQueue[1:]
 
-				// Send the response to the client
-				if err := websocket.Message.Send(ws, imageResponse); err != nil {
-					fmt.Printf("error sending message: %s\n", err)
-					break
-				}
-				fmt.Printf("finished sending response to client\n")
-				continue
-			} else {
-				fmt.Printf("no response to send to client\n")
-			}
-		} else {
-			fmt.Printf("no images in response\n")
-		}
 	}
 }
-func handleImageRequest(config Config, method string, body ImageConfig) (*http.Response, error) {
+
+func handleImageRequest(method string, body ImageConfig) (string, error) {
+	// stringify
 	jsonBody, err := json.Marshal(body)
-	fmt.Printf("jsonBody: %s\n", jsonBody)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	url := fmt.Sprintf("%s/sdapi/v1/%s", config.HOST, method)
+	url := fmt.Sprintf("%s/sdapi/v1/%s", HOST, method)
+	// sends request
 	resp, err := http.Post(
 		url, "application/json", bytes.NewReader(jsonBody))
 	if err != nil {
 		fmt.Printf("error sending request to /api: %s\n", err)
-
-		return nil, err
+		return "", err
 	}
-
-	return resp, nil
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+	// unmarshal response
+	var response ImageResponse
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		return "", err
+	}
+	if len(response.Images) == 0 {
+		return "", errors.New("no images in response")
+	}
+	return response.Images[0], nil
 }
 
 func serveFrontend(w http.ResponseWriter, r *http.Request) {
@@ -204,6 +168,7 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+
 	http.Handle("/ws", websocket.Handler(handleWebSocket))
 	http.HandleFunc("/", serveFrontend)
 	err := http.ListenAndServe(":3333", nil)

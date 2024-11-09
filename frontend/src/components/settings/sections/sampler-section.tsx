@@ -1,5 +1,5 @@
 import { Row, Section } from "../styled-components";
-import samplers from "../samplers.json";
+import samplers from "./samplers.json";
 import { useSettings } from "../useSettings";
 
 const SamplerSection = () => {

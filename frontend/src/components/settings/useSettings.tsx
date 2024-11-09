@@ -1,19 +1,19 @@
 import { createContext, useContext } from "react";
 export const defaultSettings: Settings = {
   model_category: "flux",
-  model: "",
+  model: "flux_1_schnell_q5p.ckpt",
   loras: [],
   controls: [],
-  strength: 0.699999988079071,
-  seed: 3809914812,
+  strength: 1,
+  seed: -1,
   seed_mode: "Scale Alike",
   width: 384,
-  height: 512,
+  height: 384,
   upscaler: "",
   upscaler_scale: 0,
   guidance_scale: 3.5,
-  steps: 8,
-  sampler: "Euler A Trailing",
+  steps: 4,
+  sampler: "DDIM Trailing",
   stochastic_sampling_gamma: 0.3,
   shift: 1,
   batch_count: 1,
@@ -44,7 +44,9 @@ export const defaultSettings: Settings = {
   diffusion_tile_width: 1024,
   diffusion_tile_overlap: 128,
   prompt:
-    "a majestic queen in ornate golden regalia stands atop marble stairs, her face contorted with divine fury, arms raised commanding lightning. hyper-realistic rendering with dramatic chiaroscuro lighting, volumetric fog, and intricate fabric details in renaissance style composition.",
+    "photo of the number " +
+    Math.random().toString().substring(4, 5) +
+    " in a field",
   negative_prompt: "",
   negative_aesthetic_score: 0,
   negative_original_height: 0,
@@ -77,7 +79,12 @@ export const SettingsContext = createContext<SettingsContextProps>({
   setImages: () => null,
   websocket: null,
   images: [],
+  isAdvanced: false,
+  setIsAdvanced: () => null,
+  showHidden: false,
+  setShowHidden: () => null,
 });
+
 export const useSettings = () => {
   return useContext(SettingsContext);
 };

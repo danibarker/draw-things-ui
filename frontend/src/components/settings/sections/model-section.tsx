@@ -1,6 +1,6 @@
 import { Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
-import models from "../models.json";
+import models from "./models.json";
 
 function ModelSection() {
   const settings = useSettings();

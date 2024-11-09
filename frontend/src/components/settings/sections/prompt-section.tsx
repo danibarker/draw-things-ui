@@ -1,9 +1,27 @@
+import { useEffect } from "react";
 import { Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
 
 function PromptSection() {
   const s = useSettings();
-  const { settings, websocket, setSettings } = s;
+  const {
+    settings,
+    websocket,
+    setSettings,
+    isAdvanced,
+    setShowHidden,
+    showHidden,
+  } = s;
+  useEffect(() => {
+    if (
+      settings.prompt &&
+      settings.prompt === "show hidden stuff" &&
+      !showHidden
+    ) {
+      setShowHidden(true);
+    }
+  }, [settings.prompt, setShowHidden, showHidden]);
+
   /*
   Width          int       `json:"width"`
 	Height         int       `json:"height"`
@@ -44,22 +62,33 @@ function PromptSection() {
   };
   return (
     <Section>
-      <Row>
-        <div>
+      <Row
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "20px",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <label htmlFor="prompt">Prompt</label>
+          <textarea
+            id="prompt"
+            name="prompt"
+            value={settings.prompt}
+            onChange={(event) => {
+              setSettings({
+                ...settings,
+                prompt: event.target.value,
+              });
+            }}
+            style={{ height: isAdvanced ? "300px" : "100px" }}
+          />
+        </div>
+        <div>
           <button onClick={submit}>Submit</button>
         </div>
-        <textarea
-          id="prompt"
-          name="prompt"
-          value={settings.prompt}
-          onChange={(event) => {
-            setSettings({
-              ...settings,
-              prompt: event.target.value,
-            });
-          }}
-        />
       </Row>
     </Section>
   );

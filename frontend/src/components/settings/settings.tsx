@@ -11,6 +11,8 @@ import LoraSection from "./sections/loras-section";
 import StrengthSeedSection from "./sections/strength-seed-section";
 import StepsGuidanceSection from "./sections/steps-guidance";
 import PromptSection from "./sections/prompt-section";
+import SimpleSizeSection from "./sections/simple-size-section";
+import { useSettings } from "./useSettings";
 
 // const controlImportances = ["balanced", "prompt", "control"];
 // const controlSettings = {
@@ -28,17 +30,18 @@ import PromptSection from "./sections/prompt-section";
 
 const Settings = () => {
   const [openPanel, setOpenPanel] = useState(true);
+  const { isAdvanced } = useSettings();
   return (
     <LeftPanel open={openPanel}>
       <PageHeader setOpenPanel={setOpenPanel} openPanel={openPanel} />
       <Main>
         <PromptSection />
-        <ModelSection />
+        {isAdvanced && <ModelSection />}
         <LoraSection />
-        <StrengthSeedSection />
-        <StepsGuidanceSection />
-        <SizeSection />
-        <SamplerSection />
+        {isAdvanced && <StrengthSeedSection />}
+        {isAdvanced && <StepsGuidanceSection />}
+        {isAdvanced ? <SizeSection /> : <SimpleSizeSection />}
+        {!isAdvanced && <SamplerSection />}
       </Main>
     </LeftPanel>
   );

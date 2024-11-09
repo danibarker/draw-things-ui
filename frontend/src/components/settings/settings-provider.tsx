@@ -3,6 +3,9 @@ import { defaultSettings, SettingsContext } from "./useSettings";
 import useWebSocket from "../../useWebsocket";
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
+  const [isAdvanced, setIsAdvanced] = useState(false);
+  const [showHidden, setShowHidden] = useState(false);
+
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [images, setImages] = useState<string[]>([]);
   const websocket = useWebSocket("/ws", setImages);
@@ -15,6 +18,10 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
         images,
         setImages,
         websocket,
+        isAdvanced,
+        setIsAdvanced,
+        showHidden,
+        setShowHidden,
       }}
     >
       {children}
