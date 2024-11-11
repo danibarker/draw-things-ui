@@ -5,9 +5,9 @@ import App from "./App.tsx";
 import SettingsProvider from "./components/settings/settings-provider.tsx";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <SettingsProvider>
-      <App />
-    </SettingsProvider>
-  </StrictMode>
+	<StrictMode>
+		<SettingsProvider>
+			<App />
+		</SettingsProvider>
+	</StrictMode>
 );

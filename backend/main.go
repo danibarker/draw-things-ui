@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -9,6 +10,8 @@ import (
 	"os"
 	"sync"
 
+	_ "github.com/mattn/go-sqlite3"
+	"github.com/mitchellh/mapstructure"
 	"golang.org/x/net/websocket"
 )
 
@@ -51,6 +54,14 @@ type ImageConfig struct {
 	// InitImages []string `json:"init_images,omitempty"`
 }
 
+type Message struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
+type QueueMessage struct {
+	QueueLength int    `json:"queue_length"`
+	Type        string `json:"type"`
+}
 type ImageResponse struct {
 	Images []string `json:"images"`
 }
@@ -72,36 +83,59 @@ var (
 )
 
 func handleWebSocket(ws *websocket.Conn) {
-
 	for {
-		var imgConfig ImageConfig
-		var message string
-		if err := websocket.Message.Receive(ws, &message); err != nil {
-
+		var message Message
+		if err := websocket.JSON.Receive(ws, &message); err != nil {
 			fmt.Printf("error receiving message: %s\n", err)
 			break
 		}
-		fmt.Printf("received message: %s\n", message)
-		if err := json.Unmarshal([]byte(message), &imgConfig); err != nil {
-			fmt.Printf("error unmarshaling message: %s\n", err)
-			continue
+		fmt.Printf("received message: %s\n", message.Type)
+
+		switch message.Type {
+		case "image":
+			var imgConfig ImageConfig
+			if err := mapstructure.Decode(message.Data, &imgConfig); err != nil {
+				fmt.Printf("error decoding image config: %s\n", err)
+				continue
+			}
+			fmt.Printf("image config: %+v\n", imgConfig)
+			handleImageMessage(ws, imgConfig)
+			handleQueueMessage(ws)
+		case "queue":
+			handleQueueMessage(ws)
+		default:
+			fmt.Printf("unknown message type: %s\n", message.Type)
 		}
+	}
+}
+func handleQueueMessage(ws *websocket.Conn) {
+	queueMutex.Lock()
+	queueLength := len(clientQueue)
+	queueMutex.Unlock()
 
-		queueMutex.Lock()
-		// Add the client to the queue
-		clientQueue = append(clientQueue, ws)
-		// Add the request to the map
-		imageRequestMap[ws] = append(imageRequestMap[ws], imgConfig)
-		queueMutex.Unlock()
+	// should send a message to the client as such:
+	// {"type":"queue","queue_length":1}
 
-		// If the service is not busy, process the queue
-		if !serviceBusy {
-			go processQueue()
-		}
+	message := QueueMessage{
+		QueueLength: queueLength,
+		Type:        "queue",
+	}
 
+	if err := websocket.JSON.Send(ws, message); err != nil {
+		fmt.Printf("error sending message: %s\n", err)
 	}
 
 }
+func handleImageMessage(ws *websocket.Conn, imgConfig ImageConfig) {
+	queueMutex.Lock()
+	clientQueue = append(clientQueue, ws)
+	imageRequestMap[ws] = append(imageRequestMap[ws], imgConfig)
+	queueMutex.Unlock()
+	if !serviceBusy {
+		go processQueue()
+	}
+}
+
 func processQueue() {
 	for {
 		queueMutex.Lock()
@@ -125,12 +159,31 @@ func processQueue() {
 			fmt.Printf("error handling image request: %s\n", err)
 			continue
 		}
+		type ImageResponse struct {
+			Type        string `json:"type"`
+			Image       string `json:"image"`
+			QueueLength int    `json:"queue_length"`
+		}
+		queueMutex.Lock()
+		queueLength := len(clientQueue)
+		queueMutex.Unlock()
 
+		messageToSend := ImageResponse{
+			Type:        "image",
+			Image:       image,
+			QueueLength: queueLength,
+		}
+		// stringify
+		jsonMessage, err := json.Marshal(messageToSend)
+		if err != nil {
+			fmt.Printf("error marshalling message: %s\n", err)
+			continue
+		}
+		fmt.Printf("sending image to client\n%s\n", jsonMessage)
 		// Send the image to the client
-		if err := websocket.Message.Send(client, image); err != nil {
+		if err := websocket.Message.Send(client, jsonMessage); err != nil {
 			fmt.Printf("error sending message: %s\n", err)
 		}
-
 	}
 }
 
@@ -166,16 +219,74 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 	// serve frontend/dist/index.html
 	http.FileServer(http.Dir("./dist")).ServeHTTP(w, r)
 }
-
 func main() {
+	// sqlite3
+	const create string = `
+  CREATE TABLE IF NOT EXISTS activities (
+  id INTEGER NOT NULL PRIMARY KEY,
+  time DATETIME NOT NULL,
+  description TEXT
+  );`
+	const file string = "activities.db"
+	db, err := sql.Open("sqlite3", file)
+	if err != nil {
+		fmt.Printf("error opening sqlite3: %s\n", err)
+		panic(err)
+	}
+
+	if _, err3 := db.Exec(create); err3 != nil {
+		fmt.Printf("error creating table: %s\n", err3)
+		panic(err3)
+	}
+
+	fmt.Printf("connected to sqlite3\n")
+	fmt.Printf("creating table\n")
+	fmt.Printf("listening on port 3333\n")
+
+	db.Exec("INSERT INTO activities (time, description) VALUES (datetime('now'), 'server started')")
+
+	rows, err := db.Query("SELECT * FROM activities")
+	if err != nil {
+		fmt.Printf("error querying table: %s\n", err)
+	}
+	for rows.Next() {
+		var id int
+		var time string
+		var description string
+		if err := rows.Scan(&id, &time, &description); err != nil {
+			fmt.Printf("error scanning row: %s\n", err)
+		}
+		fmt.Printf("id: %d, time: %s, description: %s\n", id, time, description)
+	}
+	rows.Close()
+	db.Close()
 
 	http.Handle("/ws", websocket.Handler(handleWebSocket))
+	http.HandleFunc("/api/loras", func(w http.ResponseWriter, r *http.Request) {
+		// get input from request body
+		body := struct {
+			Input string `json:"input"`
+		}{}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		// check if input === 'macbookmsglimespeakermousebrushvape'
+		if body.Input == "don't steal please" {
+			// return "success" if true
+			w.Write([]byte("success"))
+		} else {
+			// send 500 error if false
+			http.Error(w, "invalid input", http.StatusInternalServerError)
+		}
+	})
+
 	http.HandleFunc("/", serveFrontend)
-	err := http.ListenAndServe(":3333", nil)
-	if errors.Is(err, http.ErrServerClosed) {
+	err2 := http.ListenAndServe(":3333", nil)
+	if errors.Is(err2, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
-	} else if err != nil {
-		fmt.Printf("error starting server: %s\n", err)
+	} else if err2 != nil {
+		fmt.Printf("error starting server: %s\n", err2)
 		os.Exit(1)
 	} else {
 		fmt.Printf("server started on port 3333\n")

@@ -3,26 +3,33 @@ import { Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
 
 function PromptSection() {
-  const s = useSettings();
-  const {
-    settings,
-    websocket,
-    setSettings,
-    isAdvanced,
-    setShowHidden,
-    showHidden,
-  } = s;
-  useEffect(() => {
-    if (
-      settings.prompt &&
-      settings.prompt === "show hidden stuff" &&
-      !showHidden
-    ) {
-      setShowHidden(true);
-    }
-  }, [settings.prompt, setShowHidden, showHidden]);
+	const s = useSettings();
+	const {
+		settings,
+		websocket,
+		setSettings,
+		isAdvanced,
+		setIsAdvanced,
+		setQueue,
+		queue,
+		// setShowHidden,
+		// showHidden,
+	} = s;
+	useEffect(() => {
+		if (
+			settings.prompt &&
+			settings.prompt.length > 13 &&
+			settings.prompt.length < 18
+		) {
+			if (settings.prompt === "advanced settings") {
+				setIsAdvanced(true);
+			} else if (settings.prompt === "basic settings") {
+				setIsAdvanced(false);
+			}
+		}
+	}, [settings.prompt, setIsAdvanced]);
 
-  /*
+	/*
   Width          int       `json:"width"`
 	Height         int       `json:"height"`
 	Prompt         string    `json:"prompt"`
@@ -37,61 +44,70 @@ function PromptSection() {
 	Sampler        string    `json:"sampler"`
 	InitImages []string `json:"init_images,omitempty"`
   */
-  const submit = async () => {
-    const data = {
-      width: settings.width,
-      height: settings.height,
-      prompt: settings.prompt,
-      steps: settings.steps,
-      strength: settings.strength,
-      model: settings.model,
-      loras: settings.loras,
-      controls: settings.controls,
-      seed: settings.seed,
-      guidance_scale: settings.guidance_scale,
-      sampler: settings.sampler,
-      upscaler: "disabled",
-      // init_images: settings.init_images,
-    };
-    if (data && websocket) {
-      console.log(data);
-      websocket.send(JSON.stringify(data));
-    } else {
-      console.log("Settings and/or websocket not found");
-    }
-  };
-  return (
-    <Section>
-      <Row
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: "20px",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <label htmlFor="prompt">Prompt</label>
-          <textarea
-            id="prompt"
-            name="prompt"
-            value={settings.prompt}
-            onChange={(event) => {
-              setSettings({
-                ...settings,
-                prompt: event.target.value,
-              });
-            }}
-            style={{ height: isAdvanced ? "300px" : "100px" }}
-          />
-        </div>
-        <div>
-          <button onClick={submit}>Submit</button>
-        </div>
-      </Row>
-    </Section>
-  );
+	const submit = async () => {
+		const data = {
+			data: {
+				width: settings.width,
+				height: settings.height,
+				prompt: settings.prompt,
+				steps: settings.steps,
+				strength: settings.strength,
+				model: settings.model,
+				loras: settings.loras,
+				controls: settings.controls,
+				seed: settings.seed,
+				guidance_scale: settings.guidance_scale,
+				sampler: settings.sampler,
+				upscaler: "disabled",
+				// init_images: settings.init_images,
+			},
+			type: "image",
+		};
+		console.log(data);
+		if (data && websocket) {
+			console.log(data);
+			websocket.send(JSON.stringify(data));
+			setQueue([...queue, data.data]);
+		} else {
+			console.log("Settings and/or websocket not found");
+		}
+	};
+	return (
+		<Section>
+			<Row
+				style={{
+					display: "flex",
+					flexDirection: "row",
+					gap: "20px",
+					justifyContent: "space-between",
+					alignItems: "center",
+				}}
+			>
+				<div style={{ display: "flex", flexDirection: "column" }}>
+					<label htmlFor="prompt">Prompt</label>
+					<textarea
+						id="prompt"
+						name="prompt"
+						value={settings.prompt}
+						onChange={event => {
+							setSettings({
+								...settings,
+								prompt: event.target.value,
+							});
+						}}
+						style={{ height: isAdvanced ? "300px" : "100px" }}
+					/>
+				</div>
+				<div>
+					<button disabled={queue.length > 3} onClick={submit}>
+						{queue.length > 3 ?
+							"Please wait, you have 3 in the queue already"
+						:	"Submit"}
+					</button>
+				</div>
+			</Row>
+		</Section>
+	);
 }
 
 export default PromptSection;

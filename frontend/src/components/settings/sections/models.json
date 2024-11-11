@@ -1,56 +1,56 @@
 {
-  "sd2_0": {
-    "SD V2 (SD2.0 Inpainting)": "sd_v2.0_inpainting_f16.ckpt"
-  },
-  "flux": {
-    "Flux.1 (Flux)": "flux_1_schnell_q8p.ckpt",
-    "Flux.1 8-bit (Flux)": "flux_1_schnell_q5p.ckpt"
-  },
-  "sd1_5": {
-    "SD V1.5 (SD1.5 Inpainting)": "sd_v1.5_inpainting_f16.ckpt",
-    "Dreamshaper (SD1.5)": "dreamshaper_v8_f16.ckpt",
-    "Counterfeit (SD1.5)": "counterfeit_v3.0_f16.ckpt",
-    "Spiderverse (SD1.5)": "spiderverse_v1_f16.ckpt",
-    "F222 (SD1.5)": "f222_f16.ckpt",
-    "Hassanblend (SD1.5)": "hassanblend_v1.5.1.2_f16.ckpt",
-    "Juggernaut (SD1.5)": "juggernaut_reborn_f16.ckpt",
-    "Realistic Vision V5 (SD1.5)": "realistic_vision_v5.1_f16.ckpt",
-    "DnD Classes and Species (SD1.5)": "dnd_classes_and_species_f16.ckpt",
-    "Studio Ghibli (SD1.5)": "ghibli_v1_f16.ckpt",
-    "Sam Does Art (SD1.5)": "samdoesart_v3_f16.ckpt",
-    "Ink Punk (SD1.5)": "inkpunk_v2_f16.ckpt",
-    "Classic Disney (SD1.5)": "classicanim_v1_f16.ckpt",
-    "Seek Art Mega (SD1.5)": "seek_art_mega_v1_f16.ckpt",
-    "Aloe Veras Simpmaker3K1 (SD1.5)": "aloeveras_simpmaker_3k1_f16.ckpt",
-    "Supermarionation (SD1.5)": "supermarionation_v2_f16.ckpt",
-    "Pixar/Modern Disney (SD1.5)": "modi_v1_f16.ckpt",
-    "Midjourney (SD1.5)": "mdjrny_v4_f16.ckpt",
-    "Papercut (SD1.5)": "papercut_v1_f16.ckpt",
-    "Analog (SD1.5)": "analog_v1_f16.ckpt",
-    "3D Model Redshift (SD1.5)": "redshift_v1_f16.ckpt",
-    "Rev Animated (SD1.5)": "rev_animated_v1.22_f16.ckpt",
-    "Anime Anything (SD1.5)": "anything_v3_f16.ckpt",
-    "Juggernaut 8-bit (SD1.5)": "juggernaut_reborn_q6p_q8p.ckpt",
-    "Dani (SD1.5)": "dani_f32.ckpt",
-    "Spidermike (SD1.5)": "spidermike_f32.ckpt",
-    "DJ (SD1.5)": "dj_f16.ckpt"
-  },
-  "sdxl": {
-    "Playground (SDXL)": "playground_v2.5_f16.ckpt",
-    "Kwai Kolors (SDXL Inpainting)": "kwai_kolors_inpainting_1.0_f16.ckpt",
-    "Fooocus (SDXL Inpainting)": "fooocus_inpaint_sd_xl_v2.6_f16.ckpt",
-    "Kwai Kolors (SDXL)": "kwai_kolors_1.0_f16.ckpt",
-    "PixelWave 10 (SDXL)": "pixelwave_10_f16.ckpt",
-    "Playground V2 (SDXL)": "playground_v2_f16.ckpt",
-    "RealVisXL (SDXL)": "realvisxl_v4.0_f16.ckpt",
-    "JuggernautXL (SDXL)": "juggernaut_xl_v9_f16.ckpt",
-    "AnimagineXL (SDXL)": "animagine_xl_v3.1_f16.ckpt",
-    "iCatcher Realistic (SDXL)": "icatcher_realistic_f16.ckpt"
-  },
-  "sd3_5": {
-    "SD V3.5 Turbo": "sd3_large_turbo_3.5_q6p.ckpt"
-  },
-  "video": {
-    "Video (SVD)": "svd_i2v_xt_1.1_f16.ckpt"
-  }
+	"sd2_0": {
+		"SD V2 (SD2.0 Inpainting)": "sd_v2.0_inpainting_f16.ckpt"
+	},
+	"flux": {
+		"Flux.1 (Flux)": "flux_1_schnell_q8p.ckpt",
+		"Flux.1 8-bit (Flux)": "flux_1_schnell_q5p.ckpt"
+	},
+	"sd1_5": {
+		"SD V1.5 (SD1.5 Inpainting)": "sd_v1.5_inpainting_f16.ckpt",
+		"Dreamshaper (SD1.5)": "dreamshaper_v8_f16.ckpt",
+		"Counterfeit (SD1.5)": "counterfeit_v3.0_f16.ckpt",
+		"Spiderverse (SD1.5)": "spiderverse_v1_f16.ckpt",
+		"F222 (SD1.5)": "f222_f16.ckpt",
+		"Hassanblend (SD1.5)": "hassanblend_v1.5.1.2_f16.ckpt",
+		"Juggernaut (SD1.5)": "juggernaut_reborn_f16.ckpt",
+		"Realistic Vision V5 (SD1.5)": "realistic_vision_v5.1_f16.ckpt",
+		"DnD Classes and Species (SD1.5)": "dnd_classes_and_species_f16.ckpt",
+		"Studio Ghibli (SD1.5)": "ghibli_v1_f16.ckpt",
+		"Sam Does Art (SD1.5)": "samdoesart_v3_f16.ckpt",
+		"Ink Punk (SD1.5)": "inkpunk_v2_f16.ckpt",
+		"Classic Disney (SD1.5)": "classicanim_v1_f16.ckpt",
+		"Seek Art Mega (SD1.5)": "seek_art_mega_v1_f16.ckpt",
+		"Aloe Veras Simpmaker3K1 (SD1.5)": "aloeveras_simpmaker_3k1_f16.ckpt",
+		"Supermarionation (SD1.5)": "supermarionation_v2_f16.ckpt",
+		"Pixar/Modern Disney (SD1.5)": "modi_v1_f16.ckpt",
+		"Midjourney (SD1.5)": "mdjrny_v4_f16.ckpt",
+		"Papercut (SD1.5)": "papercut_v1_f16.ckpt",
+		"Analog (SD1.5)": "analog_v1_f16.ckpt",
+		"3D Model Redshift (SD1.5)": "redshift_v1_f16.ckpt",
+		"Rev Animated (SD1.5)": "rev_animated_v1.22_f16.ckpt",
+		"Anime Anything (SD1.5)": "anything_v3_f16.ckpt",
+		"Juggernaut 8-bit (SD1.5)": "juggernaut_reborn_q6p_q8p.ckpt",
+		"Dani (SD1.5)": "dani_f32.ckpt",
+		"Spidermike (SD1.5)": "spidermike_f32.ckpt",
+		"DJ (SD1.5)": "dj_f16.ckpt"
+	},
+	"sdxl": {
+		"Playground (SDXL)": "playground_v2.5_f16.ckpt",
+		"Kwai Kolors (SDXL Inpainting)": "kwai_kolors_inpainting_1.0_f16.ckpt",
+		"Fooocus (SDXL Inpainting)": "fooocus_inpaint_sd_xl_v2.6_f16.ckpt",
+		"Kwai Kolors (SDXL)": "kwai_kolors_1.0_f16.ckpt",
+		"PixelWave 10 (SDXL)": "pixelwave_10_f16.ckpt",
+		"Playground V2 (SDXL)": "playground_v2_f16.ckpt",
+		"RealVisXL (SDXL)": "realvisxl_v4.0_f16.ckpt",
+		"JuggernautXL (SDXL)": "juggernaut_xl_v9_f16.ckpt",
+		"AnimagineXL (SDXL)": "animagine_xl_v3.1_f16.ckpt",
+		"iCatcher Realistic (SDXL)": "icatcher_realistic_f16.ckpt"
+	},
+	"sd3_5": {
+		"SD V3.5 Turbo": "sd3_large_turbo_3.5_q6p.ckpt"
+	},
+	"video": {
+		"Video (SVD)": "svd_i2v_xt_1.1_f16.ckpt"
+	}
 }
