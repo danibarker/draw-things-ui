@@ -77,13 +77,15 @@ function PromptSection() {
 			<Row
 				style={{
 					display: "flex",
-					flexDirection: "row",
+					flexDirection: "column",
 					gap: "20px",
 					justifyContent: "space-between",
-					alignItems: "center",
+					alignItems: "start",
 				}}
 			>
-				<div style={{ display: "flex", flexDirection: "column" }}>
+				<div
+					style={{ display: "flex", flexDirection: "column", width: "100%" }}
+				>
 					<label htmlFor="prompt">Prompt</label>
 					<textarea
 						id="prompt"
@@ -95,14 +97,12 @@ function PromptSection() {
 								prompt: event.target.value,
 							});
 						}}
-						style={{ height: isAdvanced ? "300px" : "100px" }}
+						style={{ height: isAdvanced ? "100px" : "70px" }}
 					/>
 				</div>
 				<div>
 					<button disabled={queue.length > 3} onClick={submit}>
-						{queue.length > 3 ?
-							"Please wait, you have 3 in the queue already"
-						:	"Submit"}
+						{queue.length > 3 ? "Busy..." : "Submit"}
 					</button>
 				</div>
 			</Row>

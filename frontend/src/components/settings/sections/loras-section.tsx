@@ -10,12 +10,13 @@ import {
 import loras from "./loras.json";
 import { useEffect, useState } from "react";
 import { useSettings } from "../useSettings";
-import { FloppyDisk, FloppyDiskRegular } from "../../icons/fa-icons";
+import { FloppyDisk, FloppyDiskRegular } from "../../icons";
 
 function LoraSection() {
 	const [open, setOpen] = useState(false);
 	const [lorasToShow, setLorasToShow] = useState(loras);
-	const { settings, setSettings, setModalOpen } = useSettings();
+	const { settings, setSettings, setModalOpen, setModalContent } =
+		useSettings();
 	useEffect(() => {
 		const loadExtraLorasFromLocalStorage = async () => {
 			const lorasFromLocalStorage = localStorage.getItem("loras");
@@ -99,9 +100,14 @@ function LoraSection() {
 								</DropdownOption>
 							))}
 
-						<button onClick={() => setModalOpen(true)}>
-							<FloppyDisk fill="#000" stroke="#000" strokeWidth={0} />
-							<FloppyDiskRegular fill="#000" stroke="#000" strokeWidth={0} />
+						<button
+							onClick={() => {
+								setModalContent("loras");
+								setModalOpen(true);
+							}}
+						>
+							<FloppyDisk fill="white" stroke="red" strokeWidth={0} />
+							<FloppyDiskRegular fill="red" stroke="white" strokeWidth={0} />
 						</button>
 					</DropdownBox>
 				</DropdownWithButtons>

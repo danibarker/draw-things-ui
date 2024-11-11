@@ -30,7 +30,7 @@ function StrengthSeedSection() {
 					<input
 						style={{
 							width: "200px",
-							fontSize: "24px",
+							fontSize: "16px",
 							padding: "0px",
 							marginBottom: "4px",
 						}}

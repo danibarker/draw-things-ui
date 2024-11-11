@@ -32,15 +32,11 @@ type Control struct {
 	GlobalAveragePooling bool     `json:"globalAveragePooling"`
 	DownSamplingRate     float32  `json:"downSamplingRate"`
 }
-type InitImagesType struct {
-	// init_images is either an array of strings or undefined
-	// must handle the undefined case when undefined received in JSON
-
-}
 
 type AppConfig struct {
 	Password   string `json:"password"`
 	ExtraLoras string `json:"extra_loras"`
+	DBFilename string `json:"db_filename"`
 }
 
 type ImageConfig struct {
@@ -81,6 +77,8 @@ type CompletedImage struct {
 }
 
 var (
+	config          AppConfig                         // Config struct
+	db              *sql.DB                           // SQLite3 database
 	clientQueue     []*websocket.Conn                 // Queue of clients waiting for image responses
 	queueMutex      sync.Mutex                        // Mutex for the image request queue
 	serviceBusy     bool                              // Flag to indicate if the service is busy processing requests
@@ -180,14 +178,15 @@ func processQueue() {
 			QueueLength: queueLength,
 		}
 		// stringify
-		jsonMessage, err := json.Marshal(messageToSend)
+		var jsonMessage []byte
+		jsonMessage, err = json.Marshal(messageToSend)
 		if err != nil {
 			fmt.Printf("error marshalling message: %s\n", err)
 			continue
 		}
 		fmt.Printf("sending image to client\n%s\n", jsonMessage)
 		// Send the image to the client
-		if err := websocket.Message.Send(client, jsonMessage); err != nil {
+		if err = websocket.Message.Send(client, jsonMessage); err != nil {
 			fmt.Printf("error sending message: %s\n", err)
 		}
 	}
@@ -201,7 +200,8 @@ func handleImageRequest(method string, body ImageConfig) (string, error) {
 	}
 	url := fmt.Sprintf("%s/sdapi/v1/%s", HOST, method)
 	// sends request
-	resp, err := http.Post(
+	var resp *http.Response
+	resp, err = http.Post(
 		url, "application/json", bytes.NewReader(jsonBody))
 	if err != nil {
 		fmt.Printf("error sending request to /api: %s\n", err)
@@ -212,7 +212,7 @@ func handleImageRequest(method string, body ImageConfig) (string, error) {
 	}
 	// unmarshal response
 	var response ImageResponse
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+	if err = json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		return "", err
 	}
 	if len(response.Images) == 0 {
@@ -222,96 +222,64 @@ func handleImageRequest(method string, body ImageConfig) (string, error) {
 }
 
 func serveFrontend(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("serving frontend\n")
 	// serve frontend/dist/index.html
 	http.FileServer(http.Dir("./dist")).ServeHTTP(w, r)
 }
 func main() {
+	setupApi()
 	// sqlite3
+	file, err := os.Open("config.json")
+	if err != nil {
+		fmt.Printf("error opening config.json: %s\n", err)
+		panic(err)
+	}
+	if err = json.NewDecoder(file).Decode(&config); err != nil {
+		fmt.Printf("error decoding config.json: %s\n", err)
+		panic(err)
+	}
+	if err = file.Close(); err != nil {
+		fmt.Printf("error closing config.json: %s\n", err)
+		panic(err)
+	}
 
-	const create string = `
-  CREATE TABLE IF NOT EXISTS activities (
-  id INTEGER NOT NULL PRIMARY KEY,
-  time DATETIME NOT NULL,
-  description TEXT
-  );`
-	const files string = "activities.db"
-	db, err := sql.Open("sqlite3", files)
+	fmt.Printf("config: %+v\n", config)
+
+	db, err = sql.Open("sqlite3", config.DBFilename)
 	if err != nil {
 		fmt.Printf("error opening sqlite3: %s\n", err)
 		panic(err)
 	}
-
-	if _, err3 := db.Exec(create); err3 != nil {
-		fmt.Printf("error creating table: %s\n", err3)
-		panic(err3)
-	}
+	defer db.Close()
+	// if _, err = db.Exec(CREATE_DB); err != nil {
+	// 	fmt.Printf("error creating table: %s\n", err)
+	// 	panic(err)
+	// }
+	// if _, err = db.Exec(CREATE_DB2); err != nil {
+	// 	fmt.Printf("error creating table: %s\n", err)
+	// 	panic(err)
+	// }
+	// if _, err = db.Exec(CREATE_DB3); err != nil {
+	// 	fmt.Printf("error creating table: %s\n", err)
+	// 	panic(err)
+	// }
+	// if _, err = db.Exec(CREATE_DB4); err != nil {
+	// 	fmt.Printf("error creating table: %s\n", err)
+	// 	panic(err)
+	// }
 
 	fmt.Printf("connected to sqlite3\n")
-	fmt.Printf("creating table\n")
 	fmt.Printf("listening on port 3333\n")
 
-	db.Exec("INSERT INTO activities (time, description) VALUES (datetime('now'), 'server started')")
-
-	rows, err := db.Query("SELECT * FROM activities")
-	if err != nil {
-		fmt.Printf("error querying table: %s\n", err)
-	}
-	for rows.Next() {
-		var id int
-		var time string
-		var description string
-		if err := rows.Scan(&id, &time, &description); err != nil {
-			fmt.Printf("error scanning row: %s\n", err)
-		}
-		fmt.Printf("id: %d, time: %s, description: %s\n", id, time, description)
-	}
-	rows.Close()
-	db.Close()
-
 	http.Handle("/ws", websocket.Handler(handleWebSocket))
-	http.HandleFunc("/api/loras", func(w http.ResponseWriter, r *http.Request) {
-		// get input from request body
-		body := struct {
-			Input string `json:"input"`
-		}{}
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		config := AppConfig{}
-		// read config.json
-		file, err := os.Open("config.json")
-		if err != nil {
-			fmt.Printf("error opening config.json: %s\n", err)
-			panic(err)
-		}
-		if err := json.NewDecoder(file).Decode(&config); err != nil {
-			fmt.Printf("error decoding config.json: %s\n", err)
-			panic(err)
-		}
-		if err := file.Close(); err != nil {
-			fmt.Printf("error closing config.json: %s\n", err)
-			panic(err)
-		}
-
-		fmt.Printf("config: %+v\n", config)
-
-		// check if input === 'macbookmsglimespeakermousebrushvape'
-		if body.Input == config.Password {
-			// return "success" if true
-			w.Write([]byte(config.ExtraLoras))
-		} else {
-			// send 500 error if false
-			http.Error(w, "invalid input", http.StatusInternalServerError)
-		}
-	})
+	http.Handle("/api/", http.StripPrefix("/api", apiMux))
 
 	http.HandleFunc("/", serveFrontend)
-	err2 := http.ListenAndServe(":3333", nil)
-	if errors.Is(err2, http.ErrServerClosed) {
+	err = http.ListenAndServe(":3333", nil)
+	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
-	} else if err2 != nil {
-		fmt.Printf("error starting server: %s\n", err2)
+	} else if err != nil {
+		fmt.Printf("error starting server: %s\n", err)
 		os.Exit(1)
 	} else {
 		fmt.Printf("server started on port 3333\n")

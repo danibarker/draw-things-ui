@@ -13,7 +13,7 @@ const Loading = (props: Props) => {
 					d="M30 10 
             A 20 20 10 1 0 50 30"
 					stroke={props.stroke || "#000"}
-					stroke-width="2"
+					strokeWidth="2"
 					fill="none"
 				/>
 				<path

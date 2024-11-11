@@ -3,26 +3,24 @@ import { Column, Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
 import styled from "styled-components";
 interface SelectableButtonProps {
-	isSelected: boolean;
+	$isselected: string;
 }
 
 const SelectableButton = styled.button<SelectableButtonProps>`
-	padding: 4px;
-	aspect-ratio: 1;
-	width: 100%;
-	font-weight: 100;
-	font-size: 14px;
-
+	padding: 0px 2px;
+	aspect-ratio: 1.9;
+	width: 70px;
+	font-weight: 500;
+	font-size: 10px;
+	background: none;
+	border: 1px solid transparent;
 	&:after {
-		background: ${props => {
-			console.log("isSelected", props.isSelected);
-			return props.isSelected ?
-					"linear-gradient(179deg, #5c3bff, #e91e76) border-box"
-				:	"linear-gradient(179deg, #3bf5ff, #ac1ee9) border-box";
-		}};
-		transition: background-color 2s ease infinite;
-		animation: ${props => (props.isSelected ? "pulse 4s infinite" : "none")};
+		transition: all 1s ease infinite;
+		animation: ${props =>
+			props.$isselected == "true" ? "pulse 1s infinite" : "none"};
 	}
+	animation: ${props =>
+		props.$isselected === "true" ? "pulse 1s infinite" : "none"};
 `;
 
 const SpecialColumn = styled(Column)``;
@@ -60,6 +58,11 @@ function SimpleSizeSection() {
 					medium: [1024, 512],
 					large: [1208, 640],
 				},
+				panoramic: {
+					small: [768, 256],
+					medium: [1152, 384],
+					large: [1728, 576],
+				},
 			}),
 			[]
 		);
@@ -78,36 +81,44 @@ function SimpleSizeSection() {
 			<Row>
 				<Row>
 					<label htmlFor="controls">Aspect Ratio</label>
-					<SpecialColumn>
+					<SpecialColumn style={{ marginBottom: "10px" }}>
 						<SelectableButton
-							isSelected={aspectRatio === "square"}
+							$isselected={aspectRatio === "square" ? "true" : "false"}
 							onClick={() => setAspectRatio("square")}
 						>
 							Square
 						</SelectableButton>
 						<SelectableButton
-							isSelected={aspectRatio === "landscape"}
+							$isselected={aspectRatio === "landscape" ? "true" : "false"}
 							onClick={() => setAspectRatio("landscape")}
 						>
 							Landscape
 						</SelectableButton>
 						<SelectableButton
-							isSelected={aspectRatio === "portrait"}
+							$isselected={aspectRatio === "portrait" ? "true" : "false"}
 							onClick={() => setAspectRatio("portrait")}
 						>
 							Portrait
 						</SelectableButton>
+					</SpecialColumn>
+					<SpecialColumn>
 						<SelectableButton
-							isSelected={aspectRatio === "tall"}
+							$isselected={aspectRatio === "tall" ? "true" : "false"}
 							onClick={() => setAspectRatio("tall")}
 						>
 							Tall
 						</SelectableButton>
 						<SelectableButton
-							isSelected={aspectRatio === "wide"}
+							$isselected={aspectRatio === "wide" ? "true" : "false"}
 							onClick={() => setAspectRatio("wide")}
 						>
 							Wide
+						</SelectableButton>
+						<SelectableButton
+							$isselected={aspectRatio === "panoramic" ? "true" : "false"}
+							onClick={() => setAspectRatio("panoramic")}
+						>
+							Panoramic
 						</SelectableButton>
 					</SpecialColumn>
 				</Row>
@@ -115,19 +126,19 @@ function SimpleSizeSection() {
 					<label htmlFor="controls">Size</label>
 					<SpecialColumn>
 						<SelectableButton
-							isSelected={size === "small"}
+							$isselected={size === "small" ? "true" : "false"}
 							onClick={() => setSize("small")}
 						>
 							Small
 						</SelectableButton>
 						<SelectableButton
-							isSelected={size === "medium"}
+							$isselected={size === "medium" ? "true" : "false"}
 							onClick={() => setSize("medium")}
 						>
 							Medium
 						</SelectableButton>
 						<SelectableButton
-							isSelected={size === "large"}
+							$isselected={size === "large" ? "true" : "false"}
 							onClick={() => setSize("large")}
 						>
 							Large

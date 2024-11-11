@@ -114,16 +114,6 @@ const Section = styled.div`
 	label {
 		margin-bottom: 8px;
 	}
-	select,
-	textarea {
-		font-size: 24px;
-		padding: 8px;
-		resize: none;
-	}
-	textarea {
-		width: 100%;
-		height: 300px;
-	}
 `;
 const LeftPanel = styled.div<{ open?: boolean }>`
 	width: 600px;

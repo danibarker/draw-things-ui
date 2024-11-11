@@ -1,58 +1,121 @@
-import styled from "styled-components";
+import styled, {
+	// css,
+	keyframes,
+} from "styled-components";
+const spin = ({
+	$color1,
+	$color2,
+}: {
+	$color1: string;
+	$color2: string;
+}) => keyframes`
 
+	0% {
+		background: linear-gradient(0deg, ${$color1}, ${$color2});
+	}
+	10% {
+		background: linear-gradient(36deg, ${$color1}, ${$color2});
+	}
+	20% {
+		background: linear-gradient(72deg, ${$color1}, ${$color2});
+	}
+	30% {
+		background: linear-gradient(108deg, ${$color1}, ${$color2});
+	}
+	40% {
+		background: linear-gradient(144deg, ${$color1}, ${$color2});
+	}
+	50% {
+		background: linear-gradient(180deg, ${$color1}, ${$color2});
+	}
+	60% {
+		background: linear-gradient(216deg, ${$color1}, ${$color2});
+	}
+	70% {
+		background: linear-gradient(252deg, ${$color1}, ${$color2});
+	}
+	80% {
+		background: linear-gradient(288deg, ${$color1}, ${$color2});
+	}
+	90% {
+		background: linear-gradient(324deg, ${$color1}, ${$color2});
+	}
+	100% {
+		background: linear-gradient(360deg, ${$color1}, ${$color2});
+	}
+
+`;
 export const Window = styled.div`
 	display: grid;
-	grid-template-rows: 1fr;
-	height: 100vh;
+	grid-template-rows: 40px 1fr;
+	height: 100%;
 `;
 
 export const Nav = styled.nav`
-	height: 60px;
-	background: #333;
+	height: 40px;
+	background: var(--input-bg);
+	border-bottom: 0.1px solid #888;
 	color: white;
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-evenly;
 `;
 
 export const Main = styled.main`
 	display: grid;
-	grid-template-columns: auto 1fr; /* Left auto width, Right takes remaining */
+	grid-template-columns: 400px 5fr; /* Left auto width, Right takes remaining */
 	height: 100%;
+	overflow: hidden;
+	background: #333;
 `;
 
 /* Left Side (2 rows) */
 export const LeftSide = styled.div`
+	height: 100%;
+	background: #333;
+	overflow: hidden;
+	border-right: 0.1px solid #888;
 	display: grid;
 	grid-template-rows: 50px 1fr; /* Title Bar (50px) + Scrollable Settings */
 `;
 
 export const RightSide = styled.div`
+	overflow: hidden;
+	height: 100%;
 	display: grid;
-	grid-template-rows: 50px 1fr; /* Title Bar (50px) + Scrollable Gallery */
+	grid-template-rows: 50px 1fr;
+	background: #333;
 `;
 
 export const TitleBar = styled.div`
 	height: 50px;
-	background: #444; /* Example color */
-	color: white;
+	background: var(--main-bg);
+	text-align: center;
 	display: flex;
 	align-items: center;
+	justify-content: center;
 	padding-left: 10px;
+	border-bottom: 0.1px solid #888;
+	h2 {
+		font-size: 29px;
+		font-weight: 100;
+	}
 `;
 
 export const Scrollable = styled.div`
+	height: 100%;
 	overflow-y: auto;
-	padding: 10px;
-	background: #f5f5f5; /* Light background for contrast */
+	overflow-x: hidden;
 `;
 
 export const PhotoGallery = styled.div`
+	height: 100%;
 	overflow-y: auto;
+	overflow-x: hidden;
 	padding: 10px;
-	background: #e5e5e5; /* Light background for contrast */
+	/* Light background for contrast */
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
 	gap: 10px;
 	img,
 	.img {
@@ -61,25 +124,21 @@ export const PhotoGallery = styled.div`
 		display: block;
 	}
 `;
-
-export const ModalContent = styled.div`
+// const animationRule = css`
+// 	${props: { $color1: string, $color2: string } => spin(props.$color1, props.$color2)} 1s infinite alternate;
+// `;
+export const ModalContent = styled.div<{ $color1: string; $color2: string }>`
 	position: absolute;
 	border: 4px solid transparent;
 	border-radius: 20px;
-	padding: 40px;
 	color: white;
 	width: 670px;
 	height: 460px;
-	font-size: 20px;
+
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	z-index: 199;
-	display: grid;
-	grid-template-columns: repeat(6, 1fr);
-	grid-template-rows: repeat(5, 1fr);
-	gap: 20px;
-	background: black;
 	&::after {
 		content: "";
 		position: absolute;
@@ -89,7 +148,7 @@ export const ModalContent = styled.div`
 		width: 100%;
 		height: 100%;
 		background: linear-gradient(137deg, #ffffff, #f4f8f4) padding-box,
-			linear-gradient(45deg, #6700ff, #00cfff) border-box;
+			linear-gradient(45deg, var(--highlight-1), var(--highlight-2)) border-box;
 		mask: linear-gradient(white, black) padding-box,
 			linear-gradient(white, white);
 		mask-composite: exclude;
@@ -104,51 +163,8 @@ export const ModalContent = styled.div`
 		gap: 20px;
 		align-items: center;
 		justify-content: center;
-	}
-	h2 {
-		font-size: 44px;
-		grid-row: 1 / 3;
-		grid-column: 1 / 7;
-		text-align: center;
-		align-self: center;
-		font-weight: 100;
-	}
-	input {
-		padding: 5px;
-		font-size: 32px;
-		grid-row: 3 / 4;
-		grid-column: 1 / 7;
-		background: linear-gradient(0deg, black 10%, black 50%, white 190%);
-		border: 2px solid blue;
-		color: #bebebe;
-	}
-	button {
-		padding: 5px 10px;
-		font-size: 16px;
-		cursor: pointer;
-		grid-row: 4 / 5;
-		grid-column: span 3;
-		font-size: 20px;
-		position: relative;
-		border: 6px solid transparent;
-		border-radius: 10px;
-	}
-	button::after {
-		content: "";
-		position: absolute;
-		top: -6px;
-		left: -6px;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(56deg, #9300ac, #1c3fff) border-box;
-		mask: linear-gradient(white, black) padding-box,
-			linear-gradient(white, white);
-		mask-composite: exclude;
-		border-radius: inherit;
-		border: inherit;
-	}
-	button:disabled {
-		background-color: gray;
-		cursor: not-allowed;
+		animation: ${props =>
+				spin({ $color1: props.$color1, $color2: props.$color2 })}
+			2s infinite;
 	}
 `;

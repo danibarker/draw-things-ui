@@ -13,7 +13,7 @@ import PromptSection from "./sections/prompt-section";
 import SimpleSizeSection from "./sections/simple-size-section";
 import { useSettings } from "./useSettings";
 import styled from "styled-components";
-import { WindowMaximize, WindowMinimize } from "../icons/fa-icons";
+import { WindowMaximize, WindowMinimize } from "../icons";
 
 // const controlImportances = ["balanced", "prompt", "control"];
 // const controlSettings = {
@@ -54,9 +54,11 @@ const Settings = ({ openPanel, setOpenPanel }: SettingsProps) => {
 				open={openPanel}
 				onClick={() => setOpenPanel((prev: boolean) => !prev)}
 			>
-				{openPanel ?
+				{openPanel ? (
 					<WindowMinimize fill="black" stroke="black" strokeWidth={1} />
-				:	<WindowMaximize fill="black" stroke="black" strokeWidth={1} />}
+				) : (
+					<WindowMaximize fill="black" stroke="black" strokeWidth={1} />
+				)}
 			</PanelCollapseButton>
 			<LeftPanel open={openPanel}>
 				<PageHeader />
@@ -66,9 +68,7 @@ const Settings = ({ openPanel, setOpenPanel }: SettingsProps) => {
 					<LoraSection />
 					{isAdvanced && <StrengthSeedSection />}
 					{isAdvanced && <StepsGuidanceSection />}
-					{isAdvanced ?
-						<SizeSection />
-					:	<SimpleSizeSection />}
+					{isAdvanced ? <SizeSection /> : <SimpleSizeSection />}
 					{isAdvanced && <SamplerSection />}
 				</Main>
 			</LeftPanel>

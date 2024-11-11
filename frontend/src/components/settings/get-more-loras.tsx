@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import styled from "styled-components";
 export function GetMoreLoras({
 	setModalOpen,
 }: {
@@ -19,7 +20,7 @@ export function GetMoreLoras({
 		}
 	};
 	return (
-		<>
+		<Container>
 			<h2>Enter your API key</h2>
 			<input
 				type="text"
@@ -30,6 +31,24 @@ export function GetMoreLoras({
 				Submit
 			</button>
 			<button onClick={() => setModalOpen(false)}>Close</button>
-		</>
+		</Container>
 	);
 }
+
+const Container = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	background-color: var(--main-bg);
+	h2 {
+		margin-bottom: 1rem;
+	}
+	input {
+		margin-bottom: 1rem;
+	}
+	button {
+		margin-bottom: 1rem;
+	}
+`;

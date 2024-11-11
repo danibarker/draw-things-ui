@@ -25,13 +25,13 @@ const Layout = () => {
 	const { isAdvanced, images, queue, modalOpen, setModalOpen, modalContent } =
 		useSettings();
 	const modalRef = useRef<HTMLDivElement>(null);
-
+	console.log("modalContent", modalContent);
 	return (
 		<Window>
 			{modalOpen && (
-				<Modal modalRef={modalRef}>
+				<Modal modalRef={modalRef} $color1="green" $color2="purple">
 					{modalContent === "help" ? (
-						<HelpSection />
+						<HelpSection setModalOpen={setModalOpen} />
 					) : (
 						<GetMoreLoras setModalOpen={setModalOpen} />
 					)}
@@ -41,7 +41,7 @@ const Layout = () => {
 			<Main>
 				<LeftSide>
 					<TitleBar>
-						<h1>Settings</h1>
+						<h2>Settings</h2>
 					</TitleBar>
 					<Scrollable>
 						<PromptSection />
@@ -55,7 +55,9 @@ const Layout = () => {
 				</LeftSide>
 
 				<RightSide>
-					<TitleBar>Gallery</TitleBar>
+					<TitleBar>
+						<h2>Gallery</h2>
+					</TitleBar>
 					<PhotoGallery>
 						{images.map(image => (
 							<img key={image} src={`${image}`} alt="Generated" />
