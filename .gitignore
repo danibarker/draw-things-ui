@@ -13,6 +13,7 @@ dist-ssr
 *.local
 iconica
 svgs
+config.json
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

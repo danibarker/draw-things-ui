@@ -37,6 +37,12 @@ type InitImagesType struct {
 	// must handle the undefined case when undefined received in JSON
 
 }
+
+type AppConfig struct {
+	Password   string `json:"password"`
+	ExtraLoras string `json:"extra_loras"`
+}
+
 type ImageConfig struct {
 	Width         int       `json:"width"`
 	Height        int       `json:"height"`
@@ -221,14 +227,15 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 }
 func main() {
 	// sqlite3
+
 	const create string = `
   CREATE TABLE IF NOT EXISTS activities (
   id INTEGER NOT NULL PRIMARY KEY,
   time DATETIME NOT NULL,
   description TEXT
   );`
-	const file string = "activities.db"
-	db, err := sql.Open("sqlite3", file)
+	const files string = "activities.db"
+	db, err := sql.Open("sqlite3", files)
 	if err != nil {
 		fmt.Printf("error opening sqlite3: %s\n", err)
 		panic(err)
@@ -271,10 +278,28 @@ func main() {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+		config := AppConfig{}
+		// read config.json
+		file, err := os.Open("config.json")
+		if err != nil {
+			fmt.Printf("error opening config.json: %s\n", err)
+			panic(err)
+		}
+		if err := json.NewDecoder(file).Decode(&config); err != nil {
+			fmt.Printf("error decoding config.json: %s\n", err)
+			panic(err)
+		}
+		if err := file.Close(); err != nil {
+			fmt.Printf("error closing config.json: %s\n", err)
+			panic(err)
+		}
+
+		fmt.Printf("config: %+v\n", config)
+
 		// check if input === 'macbookmsglimespeakermousebrushvape'
-		if body.Input == "don't steal please" {
+		if body.Input == config.Password {
 			// return "success" if true
-			w.Write([]byte("success"))
+			w.Write([]byte(config.ExtraLoras))
 		} else {
 			// send 500 error if false
 			http.Error(w, "invalid input", http.StatusInternalServerError)
