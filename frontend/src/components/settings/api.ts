@@ -13,10 +13,10 @@ export const getLoras = async () => {
 	const response = await axios.get("/api/images/loras");
 	console.log("loras", response.data);
 	response.data.forEach((lora: Lora) => {
-		if (!lorasToAdd[lora.model_type]) {
-			lorasToAdd[lora.model_type] = { [lora.lora_name]: lora.filename };
+		if (!lorasToAdd[lora.lora_name]) {
+			lorasToAdd[lora.lora_name] = { [lora.model_type]: lora.filename };
 		} else {
-			lorasToAdd[lora.model_type][lora.lora_name] = lora.filename;
+			lorasToAdd[lora.lora_name][lora.model_type] = lora.filename;
 		}
 	});
 	return lorasToAdd;
