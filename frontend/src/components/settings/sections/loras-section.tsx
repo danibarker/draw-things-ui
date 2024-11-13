@@ -7,51 +7,21 @@ import {
 	Row,
 	Section,
 } from "../styled-components";
-import loras from "./loras.json";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSettings } from "../useSettings";
 import { FloppyDisk, FloppyDiskRegular } from "../../icons";
 
 function LoraSection() {
 	const [open, setOpen] = useState(false);
-	const [lorasToShow, setLorasToShow] = useState(loras);
-	const { settings, setSettings, setModalOpen, setModalContent } =
-		useSettings();
-	useEffect(() => {
-		const loadExtraLorasFromLocalStorage = async () => {
-			const lorasFromLocalStorage = localStorage.getItem("loras");
-			if (lorasFromLocalStorage) {
-				const lorasToAdd = JSON.parse(lorasFromLocalStorage);
-				setLorasToShow({
-					flux: {
-						...loras.flux,
-						...lorasToAdd.flux,
-					},
-					sd1_5: {
-						...loras.sd1_5,
-						...lorasToAdd.sd1_5,
-					},
-					sd2_0: {
-						...loras.sd2_0,
-						...lorasToAdd.sd2_0,
-					},
-					sd3_5: {
-						...loras.sd3_5,
-						...lorasToAdd.sd3_5,
-					},
-					sdxl: {
-						...loras.sdxl,
-						...lorasToAdd.sdxl,
-					},
-					video: {
-						...loras.video,
-						...lorasToAdd.video,
-					},
-				});
-			}
-		};
-		loadExtraLorasFromLocalStorage();
-	}, []);
+
+	const {
+		settings,
+		setSettings,
+		setModalOpen,
+		setModalContent,
+		loras: lorasToShow,
+	} = useSettings();
+
 	return (
 		<Section>
 			<Row>
@@ -67,38 +37,41 @@ function LoraSection() {
 					</DropDownOpener>
 					<DropdownBox id="loras-dropdown" open={open}>
 						{lorasToShow &&
-							Object.entries(
-								lorasToShow[settings.model_category as keyof typeof loras]
-							).map(([key, value]) => (
-								<DropdownOption key={key}>
-									{key}
-									<button
-										onClick={() => {
-											let lorasInUse = settings.loras && settings.loras.slice();
+							settings.model_category &&
+							lorasToShow?.[settings.model_category] &&
+							Object.entries(lorasToShow?.[settings.model_category])?.map(
+								([key, value]) => (
+									<DropdownOption key={key}>
+										{key}
+										<button
+											onClick={() => {
+												let lorasInUse =
+													settings.loras && settings.loras.slice();
 
-											if (!Array.isArray(lorasInUse)) {
-												lorasInUse = [];
-											}
-											lorasInUse.push({
-												weight: 1,
-												file:
-													typeof value === "string"
-														? value
-														: JSON.stringify(value),
-												key,
-											});
+												if (!Array.isArray(lorasInUse)) {
+													lorasInUse = [];
+												}
+												lorasInUse.push({
+													weight: 1,
+													file:
+														typeof value === "string"
+															? value
+															: JSON.stringify(value),
+													key,
+												});
 
-											setSettings(prev => ({
-												...prev,
-												loras: lorasInUse,
-											}));
-											setOpen(!open);
-										}}
-									>
-										Add
-									</button>
-								</DropdownOption>
-							))}
+												setSettings(prev => ({
+													...prev,
+													loras: lorasInUse,
+												}));
+												setOpen(!open);
+											}}
+										>
+											Add
+										</button>
+									</DropdownOption>
+								)
+							)}
 
 						<button
 							onClick={() => {

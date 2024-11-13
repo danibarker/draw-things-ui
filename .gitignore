@@ -26,5 +26,6 @@ config.json
 *.sw?
 *.db
 *.txt
-
+test.json
 draw-go-react
+zzz-fake

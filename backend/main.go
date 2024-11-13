@@ -15,11 +15,11 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-type Lora struct {
+type LoraSetting struct {
 	File   string  `json:"file"`
 	Weight float64 `json:"weight"`
 }
-type Control struct {
+type ControlSetting struct {
 	File                 string   `json:"file"`
 	Weight               float32  `json:"weight"`
 	GuidanceStart        float32  `json:"guidanceStart"`
@@ -40,21 +40,27 @@ type AppConfig struct {
 }
 
 type ImageConfig struct {
-	Width         int       `json:"width"`
-	Height        int       `json:"height"`
-	Prompt        string    `json:"prompt"`
-	Steps         int       `json:"steps"`
-	Strength      float32   `json:"strength"`
-	Model         string    `json:"model"`
-	Loras         []Lora    `json:"loras"`
-	Controls      []Control `json:"controls"`
-	Seed          int64     `json:"seed"`
-	GuidanceScale float32   `json:"guidance_scale"`
-	Sampler       string    `json:"sampler"`
+	Width         int              `json:"width"`
+	Height        int              `json:"height"`
+	Prompt        string           `json:"prompt"`
+	Steps         int              `json:"steps"`
+	Strength      float32          `json:"strength"`
+	Model         string           `json:"model"`
+	Loras         []LoraSetting    `json:"loras"`
+	Controls      []ControlSetting `json:"controls"`
+	Seed          int64            `json:"seed"`
+	GuidanceScale float32          `json:"guidance_scale"`
+	Sampler       string           `json:"sampler"`
 	// init_images is either an array of strings or undefined
 	// must handle the undefined case
 	// InitImages []string `json:"init_images,omitempty"`
 }
+type ImageReqFail struct {
+	Req ImageConfig `json:"req"`
+	Err string      `json:"err"`
+}
+type ImageReqFails []ImageReqFail
+type ImageReqFailsMap map[*websocket.Conn]ImageReqFails
 
 type Message struct {
 	Type string      `json:"type"`
@@ -83,7 +89,8 @@ var (
 	queueMutex      sync.Mutex                        // Mutex for the image request queue
 	serviceBusy     bool                              // Flag to indicate if the service is busy processing requests
 	imageRequestMap map[*websocket.Conn][]ImageConfig = make(map[*websocket.Conn][]ImageConfig)
-	HOST            string                            = "http://localhost:7776"
+	HOST            string                            = "http://localhost:7775"
+	fails           ImageReqFailsMap                  = make(ImageReqFailsMap)
 )
 
 func handleWebSocket(ws *websocket.Conn) {
@@ -142,25 +149,74 @@ func handleImageMessage(ws *websocket.Conn, imgConfig ImageConfig) {
 
 func processQueue() {
 	for {
+		var client *websocket.Conn
+		var imgConfig ImageConfig
+
 		queueMutex.Lock()
 		if len(clientQueue) == 0 {
 			serviceBusy = false
 			queueMutex.Unlock()
 			return
+		} else {
+			fmt.Printf("queue length: %d\n", len(clientQueue))
+			client = clientQueue[0]
+			clientQueue = clientQueue[1:]
+
+			if len(imageRequestMap[client]) == 0 {
+				queueMutex.Unlock()
+				continue
+			} else {
+				serviceBusy = true
+				imgConfig = imageRequestMap[client][0]
+				// Get the first client in the queue
+				// Get the first image request for the client
+				imageRequestMap[client] = imageRequestMap[client][1:]
+				queueMutex.Unlock()
+			}
 		}
-		serviceBusy = true
-		// Get the first client in the queue
-		client := clientQueue[0]
-		clientQueue = clientQueue[1:]
-		// Get the first image request for the client
-		imgConfig := imageRequestMap[client][0]
-		imageRequestMap[client] = imageRequestMap[client][1:]
-		queueMutex.Unlock()
 
 		// Send the image request to the service
 		image, err := handleImageRequest("txt2img", imgConfig)
 		if err != nil {
 			fmt.Printf("error handling image request: %s\n", err)
+			// add the imgConfig back to the client
+			// increment the failures
+			fails[client] = append(fails[client], ImageReqFail{
+				Req: imgConfig,
+				Err: err.Error(),
+			})
+
+			// check if the client has failed 3 times
+			if len(fails[client]) >= 3 {
+				// send the client a message that they have failed 3 times
+				// and remove them from the queue
+				type FailMessage struct {
+					Type string `json:"type"`
+					Err  string `json:"err"`
+				}
+				failMessage := FailMessage{
+					Type: "fail",
+					Err:  "failed 3 times",
+				}
+				var jsonFailMessage []byte
+				jsonFailMessage, err = json.Marshal(failMessage)
+				if err != nil {
+					fmt.Printf("error marshalling message: %s\n", err)
+					continue
+				}
+				if err = websocket.Message.Send(client, jsonFailMessage); err != nil {
+					fmt.Printf("error sending message: %s\n", err)
+				}
+				continue
+			}
+
+			queueMutex.Lock()
+			imageRequestMap[client] = append(imageRequestMap[client], imgConfig)
+
+			// Add the client back to the queue
+
+			clientQueue = append(clientQueue, client)
+			queueMutex.Unlock()
 			continue
 		}
 		type ImageResponse struct {
@@ -226,6 +282,7 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 	// serve frontend/dist/index.html
 	http.FileServer(http.Dir("./dist")).ServeHTTP(w, r)
 }
+
 func main() {
 	setupApi()
 	// sqlite3

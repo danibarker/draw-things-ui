@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-interface ControlsType {
+interface ControlSetting {
 	guidanceStart: number;
 	guidanceEnd: number;
 	controlImportance: string;
@@ -12,7 +12,7 @@ interface ControlsType {
 	globalAveragePooling: boolean;
 	downSamplingRate: number; // tile and upscale
 }
-interface Lora {
+interface LoraSetting {
 	file: string;
 	weight: number;
 	key: string;
@@ -21,8 +21,8 @@ interface Lora {
 interface Settings {
 	model_category?: string;
 	model: string;
-	loras: Lora[];
-	controls?: ControlsType[];
+	loras: LoraSetting[];
+	controls?: ControlSetting[];
 	strength: number;
 	seed: number;
 	seed_mode?: string;
@@ -107,7 +107,12 @@ interface SettingsContextProps {
 	globalQueueLength: number;
 	setGlobalQueueLength: React.Dispatch<React.SetStateAction<number>>;
 	modalContent: string;
-	setModalContent: React.Dispatch<React.SetStateAction<string>>;
+	setModalContent: React.spatch<React.SetStateAction<string>>;
+	loras: { [key: string]: { [key: string]: string } };
+	models: { [key: string]: { [key: string]: string } };
+	seedModes: SeedMode[];
+	upscalers: Upscaler[];
+	samplers: Sampler[];
 }
 
 type PageHeaderProps = {
@@ -117,4 +122,40 @@ type PageHeaderProps = {
 
 type SectionProps = {
 	settings: SettingsContextProps;
+};
+
+type Lora = {
+	filename: string;
+	lora_name: string;
+	model_type: string;
+};
+
+type Control = {
+	filename: string;
+	control_name: string;
+	model_type: string;
+};
+
+type Model = {
+	filename: string;
+	model_name: string;
+	model_type: string;
+};
+
+type SeedMode = {
+	seed_mode_name: string;
+};
+
+type Upscaler = {
+	upscaler_name: string;
+};
+
+type Sampler = {
+	sampler_name: string;
+};
+
+type Refiner = {
+	refiner_name: string;
+	model_type: string;
+	filename: string;
 };
