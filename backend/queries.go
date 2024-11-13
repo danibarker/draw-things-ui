@@ -255,7 +255,6 @@ CREATE TABLE IF NOT EXISTS roles (
 	INSERT OR IGNORE INTO controls (control_name, model_type, file) VALUES ('MLSD', 'sd1_5', 'controlnet_mlsd_1.x_v1.1_f16.ckpt');
 	INSERT OR IGNORE INTO controls (control_name, model_type, file) VALUES ('Tile', 'sd1_5', 'controlnet_tile_1.x_v1.1_f16.ckpt');
 
-	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Jesse', 'flux', 'jessed_600_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Amateur', 'flux', 'amateur_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Oil Painting', 'flux', 'bichu_v0612_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Dani', 'flux', 'daniflux_lora_f16.ckpt');
@@ -270,7 +269,6 @@ CREATE TABLE IF NOT EXISTS roles (
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('4-Step', 'sd1_5', 'hyper_sd_v1.x_4_step_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Dani4', 'sd1_5', 'danilora_1500_lora_f32.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('Turbo', 'sd1_5', 'tcd_sd_v1.5_lora_f16.ckpt');
-	
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('LCM', 'sdxl', 'lcm_sd_xl_base_1.0_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('8-Step', 'sdxl', 'hyper_sdxl_8_step_lora_f16.ckpt');
 	INSERT OR IGNORE INTO loras (lora_name, model_type, filename) VALUES ('DmD2', 'sdxl', 'dmd2_sdxl_4_step_lora_f16.ckpt');

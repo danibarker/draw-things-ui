@@ -1,6 +1,13 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { defaultSettings, SettingsContext } from "./useSettings";
 import useWebSocket from "../../useWebsocket";
+import {
+	getLoras,
+	getModels,
+	getSamplers,
+	getUpscalers,
+	getSeedModes,
+} from "./api";
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [isAdvanced, setIsAdvanced] = useState(false);
@@ -12,6 +19,30 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [settings, setSettings] = useState<Settings>(defaultSettings);
 	const [images, setImages] = useState<string[]>([]);
 	const [modalContent, setModalContent] = useState("help");
+	const [loras, setLoras] = useState<{
+		[key: string]: { [key: string]: string };
+	}>({});
+	const [models, setModels] = useState<{
+		[key: string]: { [key: string]: string };
+	}>({});
+	const [seedModes, setSeedModes] = useState<SeedMode[]>([]);
+	const [upscalers, setUpscalers] = useState<Upscaler[]>([]);
+	const [samplers, setSamplers] = useState<Sampler[]>([]);
+	useEffect(() => {
+		const getSettings = async () => {
+			const newLoras = await getLoras();
+			setLoras(newLoras);
+			const newModels = await getModels();
+			setModels(newModels);
+			const newSeedModes = await getSeedModes();
+			setSeedModes(newSeedModes);
+			const newUpscalers = await getUpscalers();
+			setUpscalers(newUpscalers);
+			const newSamplers = await getSamplers();
+			setSamplers(newSamplers);
+		};
+		getSettings();
+	}, []);
 
 	const websocket = useWebSocket(
 		"/ws",
@@ -46,6 +77,11 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				setGlobalQueueLength,
 				modalContent,
 				setModalContent,
+				loras,
+				models,
+				seedModes,
+				upscalers,
+				samplers,
 			}}
 		>
 			{children}
