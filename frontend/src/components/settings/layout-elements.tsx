@@ -54,8 +54,8 @@ export const Window = styled.div`
 export const Nav = styled.nav`
 	height: 40px;
 	background: var(--input-bg);
-	border-bottom: 0.1px solid #888;
-	color: white;
+	border-bottom: 0.1px solid var(--border-color-1);
+	color: var(--text-color);
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
@@ -63,18 +63,18 @@ export const Nav = styled.nav`
 
 export const Main = styled.main`
 	display: grid;
-	grid-template-columns: 400px 5fr; /* Left auto width, Right takes remaining */
+	grid-template-columns: 500px 5fr; /* Left auto width, Right takes remaining */
 	height: 100%;
 	overflow: hidden;
-	background: #333;
+	background: var(--main-bg);
 `;
 
 /* Left Side (2 rows) */
 export const LeftSide = styled.div`
 	height: 100%;
-	background: #333;
+	background: var(--main-bg);
 	overflow: hidden;
-	border-right: 0.1px solid #888;
+	border-right: 0.1px solid var(--border-color-1);
 	display: grid;
 	grid-template-rows: 50px 1fr; /* Title Bar (50px) + Scrollable Settings */
 `;
@@ -84,7 +84,7 @@ export const RightSide = styled.div`
 	height: 100%;
 	display: grid;
 	grid-template-rows: 50px 1fr;
-	background: #333;
+	background: var(--main-bg);
 `;
 
 export const TitleBar = styled.div`
@@ -95,7 +95,7 @@ export const TitleBar = styled.div`
 	align-items: center;
 	justify-content: center;
 	padding-left: 10px;
-	border-bottom: 0.1px solid #888;
+	border-bottom: 0.1px solid var(--border-color-1);
 	h2 {
 		font-size: 29px;
 		font-weight: 100;
@@ -131,7 +131,7 @@ export const ModalContent = styled.div<{ $color1: string; $color2: string }>`
 	position: absolute;
 	border: 4px solid transparent;
 	border-radius: 20px;
-	color: white;
+	color: var(--text-color);
 	width: 670px;
 	height: 460px;
 
@@ -147,7 +147,8 @@ export const ModalContent = styled.div<{ $color1: string; $color2: string }>`
 		left: -4px;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(137deg, #ffffff, #f4f8f4) padding-box,
+		background: linear-gradient(137deg, var(--highlight-3), var(--highlight-4))
+				padding-box,
 			linear-gradient(45deg, var(--highlight-1), var(--highlight-2)) border-box;
 		mask: linear-gradient(white, black) padding-box,
 			linear-gradient(white, white);

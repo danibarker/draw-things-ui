@@ -20,6 +20,13 @@ function PromptSection() {
 		// showHidden,
 	} = s;
 	useEffect(() => {
+		setSettings(prev => ({
+			...prev,
+			prompt:
+				"Young software developer immersed in coding, viewed from behind, bathed in blue monitor glow. Modern minimalist workspace, dual screens displaying vibrant code. Hyper-realistic style with precise details, volumetric lighting, reflections on glass desk surface, 8K resolution detail.",
+		}));
+	}, [setSettings]);
+	useEffect(() => {
 		if (
 			settings.prompt &&
 			settings.prompt.length > 13 &&
@@ -120,11 +127,22 @@ function PromptSection() {
 					/>
 				</div>
 				<div style={{ display: "flex", position: "relative" }}>
-					<button ref={submitRef} disabled={queue.length > 3} onClick={submit}>
+					<button
+						className="sibling"
+						ref={submitRef}
+						disabled={queue.length > 3}
+						onClick={submit}
+					>
 						{queue.length > 3 ? "Busy..." : "Submit"}
 					</button>
 					<FlyingButton ref={buttonRef}>
-						<button>{queue.length > 3 ? "Busy..." : "Submit"}</button>
+						<button
+							className="underbutton"
+							style={{ opacity: 0.9 }}
+							onMouseEnter={console.log}
+						>
+							{queue.length > 3 ? "Busy..." : "Submit"}
+						</button>
 					</FlyingButton>
 					{/* <Timer time={33} /> */}
 				</div>
@@ -149,6 +167,10 @@ const FlyingButton = styled.div`
 		top: -13px;
 		rotate: 360deg;
 		transition: all 1s;
+	}
+	&:hover > button {
+		color: var(--highlight-3);
+		background-color: var(--button-hover-bg);
 	}
 	/* animation: move 1s infinite; */
 `;

@@ -36,7 +36,7 @@ const PanelCollapseButton = styled.button<{ open?: boolean }>`
 
 	top: 50px;
 	border: none;
-	background: darkslateblue;
+	background: var(--input-bg);
 	z-index: 99;
 	svg {
 		width: 20px;

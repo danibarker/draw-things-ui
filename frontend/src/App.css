@@ -24,15 +24,25 @@
 	--input-bg: #333;
 	--shadow-1: rgba(130, 100, 154, 0.8);
 	font-weight: 400;
-	color-scheme: dark dark;
+	color-scheme: light dark;
 	background-color: var(--main-bg);
-
+	--button-hover-bg: #abcdef;
 	--highlight-1: #3bf5ff;
 	--highlight-2: #ac1ee9;
 	--highlight-1a: #5c3bff;
 	--highlight-2a: #e91e76;
 	--lowlight-1a: #ff1515;
 	--lowlight-2a: #ffee00;
+	--disabled-border-gradient-1: #ff1515;
+	--disabled-border-gradient-2: #ffee00;
+	--highlight-3: #440000;
+	--highlight-4: #170038;
+	--text-color: #bbb;
+	--border-color-1: #919191;
+	--outline-1: #33a0ff;
+	--outline-2: #ff33a0;
+	--slider-bg: #333;
+	--transparent-shadow: rgba(0, 0, 0, 0.5);
 }
 #root {
 	height: 100vh;
@@ -64,7 +74,7 @@ button {
 	border-radius: 5px;
 	font-weight: 400;
 	background-color: transparent;
-	color: #bbb;
+	color: var(--text-color);
 }
 button:disabled {
 	opacity: 0.5;
@@ -85,31 +95,178 @@ button::after {
 	border: inherit;
 	border-style: inherit;
 }
+
 button:disabled::after {
-	background: linear-gradient(90deg, rgb(234, 255, 0), red) border-box;
+	background: linear-gradient(
+			90deg,
+			var(--disabled-border-gradient-1),
+			var(--disabled-border-gradient-2)
+		)
+		border-box;
 	animation: pulse-disabled 1s infinite;
 }
+
+.underbutton {
+	background: green;
+	color: pink;
+}
+.sibling:hover + div > button.underbutton::after {
+	background: pink;
+	color: green;
+}
 button:hover {
-	box-shadow: 0px 0px 14px 4px var(--shadow-1);
+	color: black;
+	/* background-color: white; */
+	background-color: var(--button-hover-bg);
+	/* box-shadow: 0px 0px 14px 4px var(--shadow-1); */
 }
 
 @media (prefers-color-scheme: light) {
 	:root {
-		--main-bg: #f9f9f9;
-		--panel-bg: #fff;
-		--primary-color: #646cff;
-		color: #3f3f3f;
+		--main-bg: #bae4f3;
+		--panel-bg: darkturquoise;
+		--input-bg: #e7e7e7;
+		--shadow-1: rgba(216, 0, 0, 0.8);
 		background-color: var(--main-bg);
+		--button-hover-bg: #a4f2a0;
+		--highlight-1: #6d00c6;
+		--highlight-2: #e91e76;
+		--highlight-1a: #ff6c3b;
+		--highlight-2a: #1ee936;
+		--lowlight-1a: #ff1515;
+		--lowlight-2a: #ffee00;
+		--disabled-border-gradient-1: #ff1515;
+		--disabled-border-gradient-2: #ffee00;
+		--highlight-3: #440000;
+		--highlight-4: #170038;
+		--text-color: #252525;
+		--border-color-1: #919191;
+		--outline-1: #33a0ff;
+		--outline-2: #ff33a0;
+		--transparent-shadow: rgba(0, 0, 0, 0.5);
+		--slider-bg: rgb(255, 112, 181);
 	}
 }
 textarea,
 input {
+	padding: 10px;
+	font-size: 16px;
 	border-radius: 7.5px;
 	font-family: var(--font-4), serif;
 	font-weight: 300;
 	background-color: var(--panel-bg);
 	resize: none;
 	padding: 10px;
+	accent-color: var(--highlight-4);
+}
+
+input[type="range"] {
+	outline: none; /* Remove outline */
+	opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+	-webkit-transition: 0.2s; /* 0.2 seconds transition on hover */
+	transition: opacity 0.2s;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 100%;
+	height: 15px;
+	background: var(--slider-bg);
+	position: relative;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	opacity: 50%;
+	width: 12px;
+	height: 12px;
+	background: var(--highlight-1);
+	cursor: pointer;
+	margin-top: -3.5px;
+	border-radius: 5px;
+}
+
+.slider::-moz-range-thumb {
+	-webkit-appearance: none;
+	opacity: 5%;
+	appearance: none;
+	border-radius: 50%;
+	width: 25px; /* Set a specific slider handle width */
+	height: 25px; /* Slider handle height */
+	background: var(--highlight-1); /* Slider handle color */
+	cursor: pointer; /* Cursor on hover */
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+}
+
+input[type="Range"]::-moz-range-thumb:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+	opacity: 1; /* Fully shown on mouse-down */
+}
+
+input[type="range"]::-moz-range-thumb:active {
+	opacity: 1; /* Fully shown on mouse-down */
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+	height: 5px;
+	cursor: pointer;
+	opacity: 50%;
+	background: var(--highlight-2);
+	border-radius: 100px;
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--highlight-2);
+}
+
+input[type="range"]::-moz-range-track {
+	height: 5px;
+	opacity: 50%;
+	cursor: pointer;
+	background: var(--highlight-2);
+	border-radius: 25px;
+	-webkit-appearance: none;
+	appearance: none;
+	background: var(--highlight-2);
+}
+
+input[type="range"]::-webkit-slider-runnable-track:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+	background: var(--highlight-1);
+}
+
+input[type="range"]::-moz-range-track:hover {
+	opacity: 1; /* Fully shown on mouse-over */
+	background: var(--highlight-1);
+}
+
+input[type="range"]::-webkit-slider-runnable-track:active {
+	opacity: 1; /* Fully shown on mouse-down */
+	background: var(--highlight-1);
+}
+
+input[type="range"]::-moz-range-track:active {
+	opacity: 1; /* Fully shown on mouse-down */
+	background: var(--highlight-1);
+}
+
+select {
+	accent-color: var(--highlight-4);
+	padding: 10px;
+	max-width: 300px;
+	accent-color: var(--highlight-4);
+	font-size: 16px;
+}
+
+select option:hover::after {
+	content: "👉";
+	width: 100%;
+	height: 100%;
+	background-color: var(--highlight-2);
 }
 /* animation pulse */
 @keyframes pulse {

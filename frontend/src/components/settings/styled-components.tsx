@@ -32,10 +32,10 @@ const ScrollWindow = styled.div`
 `;
 const RightPanel = styled.div<{ wide: boolean }>`
 	position: relative;
-	background-color: rgb(50, 50, 50);
+	background-color: var(--main-bg);
 	height: 100%;
 	width: 100%;
-	outline: rgb(69, 9, 233) solid 3px;
+	outline: var(--outline-1) solid 3px;
 	color: white;
 	display: flex;
 	flex-direction: column;
@@ -52,7 +52,7 @@ const RightPanel = styled.div<{ wide: boolean }>`
 	grid-row: 1;
 
 	&* {
-		outline: rgb(215, 99, 153) solid 3px;
+		outline: var(--outline-2) solid 3px;
 	}
 `; // This is a type definition for the props of the Modal component
 
@@ -68,11 +68,11 @@ const DropdownBox = styled.div<{ open?: boolean }>`
 	position: absolute;
 	top: 50px;
 	left: 0;
-	background-color: #170202;
+	background-color: var(--main-bg);
 	border: 2px solid var(--primary-color);
 	width: 50%;
 	place-self: center;
-	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	box-shadow: 0px 8px 16px 0px var(--transparent-shadow);
 	z-index: 1;
 	height: 400px;
 	overflow-y: auto;
@@ -85,11 +85,11 @@ const DropdownOption = styled.div`
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	border: 1px solid var(--primary-color);
+	border: 1px solid var(--highlight-1);
 	padding: 12px 16px;
 	button {
 		font-weight: 100;
-		color: white;
+		color: var(--text-color);
 		padding: 8px;
 		cursor: pointer;
 		font-size: 16px;
@@ -119,7 +119,7 @@ const LeftPanel = styled.div<{ open?: boolean }>`
 	width: 600px;
 	transform: translateX(${props => (props.open ? "0" : "-565px")});
 	height: 100%;
-	background-color: #121212;
+	background-color: var(--main-bg);
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
@@ -132,7 +132,7 @@ const LorasList = styled.ul`
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		border-bottom: 1px solid #333;
+		border-bottom: 1px solid var(--border-color-1);
 		input {
 			width: 200px;
 			margin-left: auto;
@@ -143,7 +143,7 @@ const LorasList = styled.ul`
 			position: absolute;
 			top: 0;
 			right: 40%;
-			color: white;
+			color: var(--text-color);
 		}
 	}
 `;
@@ -152,7 +152,7 @@ const Header = styled.header`
 	justify-content: space-between;
 	align-items: center;
 	padding-left: 28px;
-	background-color: #333;
+	background-color: var(--main-bg);
 	color: white;
 	button {
 		background-color: transparent;
