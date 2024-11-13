@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
-import Timer from "../../timer";
+// import Timer from "../../timer";
 import styled from "styled-components";
 
 function PromptSection() {
@@ -126,7 +126,7 @@ function PromptSection() {
 					<FlyingButton ref={buttonRef}>
 						<button>{queue.length > 3 ? "Busy..." : "Submit"}</button>
 					</FlyingButton>
-					<Timer time={33} />
+					{/* <Timer time={33} /> */}
 				</div>
 			</Row>
 		</Section>
@@ -137,7 +137,7 @@ const FlyingButton = styled.div`
 	position: absolute;
 	background-color: transparent;
 	width: 86px;
-	height: 46px;
+	height: 31px;
 	transition: none;
 	left: 0px;
 	top: 0px;
@@ -145,8 +145,9 @@ const FlyingButton = styled.div`
 	pointer-events: none;
 	&.move {
 		left: 200%;
-		scale: 0;
+		scale: 200;
 		top: -13px;
+		rotate: 360deg;
 		transition: all 1s;
 	}
 	/* animation: move 1s infinite; */
