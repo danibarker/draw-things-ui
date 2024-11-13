@@ -1,6 +1,3 @@
-// import controls from "./controls.json";
-// import refiners from "./refiners.json";
-// import seedModes from "./seedModes.json";
 import { LeftPanel, Main } from "./styled-components";
 import PageHeader from "./page-header";
 import SamplerSection from "./sections/sampler-section";
@@ -14,21 +11,21 @@ import SimpleSizeSection from "./sections/simple-size-section";
 import { useSettings } from "./useSettings";
 import styled from "styled-components";
 import { WindowMaximize, WindowMinimize } from "../icons";
-
-// const controlImportances = ["balanced", "prompt", "control"];
-// const controlSettings = {
-//   guidanceStart: { min: 0, max: 1 },
-//   guidanceEnd: { min: 0, max: 1 },
-//   controlImportance: { options: controlImportances },
-//   weight: { min: 0, max: 1 },
-//   noPrompt: { options: [true, false] },
-//   inputOverride: "",
-//   targetBlocks: [],
-//   file: { options: controls },
-//   globalAveragePooling: { options: [true, false] },
-//   downSamplingRate: { min: 0, max: 1 }, // tile and upscale
-// };
-
+/*
+const controlImportances = ["balanced", "prompt", "control"];
+const controlSettings = {
+	guidanceStart: { min: 0, max: 1 },
+	guidanceEnd: { min: 0, max: 1 },
+	controlImportance: { options: controlImportances },
+	weight: { min: 0, max: 1 },
+	noPrompt: { options: [true, false] },
+	inputOverride: "",
+	targetBlocks: [],
+	file: { options: controls },
+	globalAveragePooling: { options: [true, false] },
+	downSamplingRate: { min: 0, max: 1 }, // fork tile and upscale
+};
+*/
 interface SettingsProps {
 	openPanel: boolean;
 	setOpenPanel: React.Dispatch<React.SetStateAction<boolean>>;

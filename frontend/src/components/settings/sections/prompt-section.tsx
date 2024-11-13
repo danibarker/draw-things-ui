@@ -1,8 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
+import Timer from "../../timer";
+import styled from "styled-components";
 
 function PromptSection() {
+	const buttonRef = useRef<HTMLDivElement>(null);
+	const submitRef = useRef<HTMLButtonElement>(null);
 	const s = useSettings();
 	const {
 		settings,
@@ -64,10 +68,25 @@ function PromptSection() {
 			type: "image",
 		};
 		console.log(data);
-		if (data && websocket) {
+		if (
+			data &&
+			websocket &&
+			buttonRef &&
+			buttonRef.current &&
+			submitRef &&
+			submitRef.current
+		) {
 			console.log(data);
 			websocket.send(JSON.stringify(data));
 			setQueue([...queue, data.data]);
+			buttonRef.current.classList.add("move");
+			submitRef.current.disabled = true;
+			setTimeout(() => {
+				if (buttonRef && buttonRef.current && submitRef && submitRef.current) {
+					buttonRef.current.classList.remove("move");
+					submitRef.current.disabled = false;
+				}
+			}, 1000);
 		} else {
 			console.log("Settings and/or websocket not found");
 		}
@@ -100,14 +119,37 @@ function PromptSection() {
 						style={{ height: isAdvanced ? "100px" : "70px" }}
 					/>
 				</div>
-				<div>
-					<button disabled={queue.length > 3} onClick={submit}>
+				<div style={{ display: "flex", position: "relative" }}>
+					<button ref={submitRef} disabled={queue.length > 3} onClick={submit}>
 						{queue.length > 3 ? "Busy..." : "Submit"}
 					</button>
+					<FlyingButton ref={buttonRef}>
+						<button>{queue.length > 3 ? "Busy..." : "Submit"}</button>
+					</FlyingButton>
+					<Timer time={33} />
 				</div>
 			</Row>
 		</Section>
 	);
 }
+
+const FlyingButton = styled.div`
+	position: absolute;
+	background-color: transparent;
+	width: 86px;
+	height: 46px;
+	transition: none;
+	left: 0px;
+	top: 0px;
+	display: flex;
+	pointer-events: none;
+	&.move {
+		left: 200%;
+		scale: 0;
+		top: -13px;
+		transition: all 1s;
+	}
+	/* animation: move 1s infinite; */
+`;
 
 export default PromptSection;

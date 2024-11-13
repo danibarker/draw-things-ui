@@ -1,5 +1,20 @@
+@font-face {
+	font-family: "Friz Quadrata Regular OS";
+	font-style: normal;
+	font-weight: normal;
+	src: local("Friz Quadrata Regular OS"),
+		url("/fonts/friz-quadrata-regular-os-5870333951e7c.woff") format("woff");
+}
+
+@font-face {
+	font-family: "Friz Quadrata Bold Italic OS";
+	font-style: normal;
+	font-weight: normal;
+	src: local("Friz Quadrata Bold Italic OS"),
+		url("/fonts/friz-quadrata-bold-italic-os-5870341205e0f.woff") format("woff");
+}
 :root {
-	--font-1: "Bona Nova SC";
+	--font-1: "Friz Quadrata Regular OS";
 	--font-2: "Faculty Glyphic";
 	--font-3: "Itim";
 	--font-4: "Montserrat";
@@ -27,7 +42,7 @@
 	box-sizing: border-box;
 	padding: 0;
 	margin: 0;
-	font-family: var(--font-5), serif;
+	font-family: var(--font-1), serif;
 }
 
 body,
