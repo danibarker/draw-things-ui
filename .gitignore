@@ -26,3 +26,5 @@ config.json
 *.sw?
 *.db
 *.txt
+
+draw-go-react
