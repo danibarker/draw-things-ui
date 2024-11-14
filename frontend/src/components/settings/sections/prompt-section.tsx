@@ -16,6 +16,7 @@ function PromptSection() {
 		setIsAdvanced,
 		setQueue,
 		queue,
+		id,
 		// setShowHidden,
 		// showHidden,
 	} = s;
@@ -70,6 +71,9 @@ function PromptSection() {
 				guidance_scale: settings.guidance_scale,
 				sampler: settings.sampler,
 				upscaler: "disabled",
+				waiting: true,
+				lostConnection: false,
+				id: id,
 				// init_images: settings.init_images,
 			},
 			type: "image",

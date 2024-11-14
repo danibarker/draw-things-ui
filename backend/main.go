@@ -51,20 +51,12 @@ type ImageConfig struct {
 	Seed          int64            `json:"seed"`
 	GuidanceScale float32          `json:"guidance_scale"`
 	Sampler       string           `json:"sampler"`
-	// init_images is either an array of strings or undefined
-	// must handle the undefined case
-	// InitImages []string `json:"init_images,omitempty"`
 }
-type ImageReqFail struct {
-	Req ImageConfig `json:"req"`
-	Err string      `json:"err"`
-}
-type ImageReqFails []ImageReqFail
-type ImageReqFailsMap map[*websocket.Conn]ImageReqFails
 
 type Message struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
+	Id   string      `json:"id"`
 }
 type QueueMessage struct {
 	QueueLength int    `json:"queue_length"`
@@ -82,15 +74,21 @@ type CompletedImage struct {
 	Socket websocket.Conn `json:"socket"`
 }
 
+type ErrorMessage struct {
+	Error string `json:"error"`
+}
+
 var (
-	config          AppConfig                         // Config struct
-	db              *sql.DB                           // SQLite3 database
-	clientQueue     []*websocket.Conn                 // Queue of clients waiting for image responses
-	queueMutex      sync.Mutex                        // Mutex for the image request queue
-	serviceBusy     bool                              // Flag to indicate if the service is busy processing requests
-	imageRequestMap map[*websocket.Conn][]ImageConfig = make(map[*websocket.Conn][]ImageConfig)
-	HOST            string                            = "http://localhost:7775"
-	fails           ImageReqFailsMap                  = make(ImageReqFailsMap)
+	config           AppConfig                  // Config struct
+	db               *sql.DB                    // SQLite3 database
+	clientQueue      []*websocket.Conn          // Queue of clients waiting for image responses
+	queueMutex       sync.Mutex                 // Mutex for the image request queue
+	imageRequestList []ImageConfig              = make([]ImageConfig, 0)
+	idToSocketMap    map[string]*websocket.Conn = make(map[string]*websocket.Conn)
+	idToImageRequest map[string][]ImageConfig   = make(map[string][]ImageConfig)
+	busy             bool                       = false
+	HOST             string                     = "http://localhost:7775"
+	Id               string
 )
 
 func handleWebSocket(ws *websocket.Conn) {
@@ -101,6 +99,12 @@ func handleWebSocket(ws *websocket.Conn) {
 			break
 		}
 		fmt.Printf("received message: %s\n", message.Type)
+		// check if id is in idToSocketMap
+		if message.Id != "" {
+			if _, ok := idToSocketMap[message.Id]; !ok {
+				idToSocketMap[message.Id] = ws
+			}
+		}
 
 		switch message.Type {
 		case "image":
@@ -109,8 +113,10 @@ func handleWebSocket(ws *websocket.Conn) {
 				fmt.Printf("error decoding image config: %s\n", err)
 				continue
 			}
-			fmt.Printf("image config: %+v\n", imgConfig)
-			handleImageMessage(ws, imgConfig)
+
+			idToImageRequest[message.Id] = append(idToImageRequest[message.Id], imgConfig)
+			imageRequestList = append(imageRequestList, imgConfig)
+			handleImageMessages()
 			handleQueueMessage(ws)
 		case "queue":
 			handleQueueMessage(ws)
@@ -119,13 +125,11 @@ func handleWebSocket(ws *websocket.Conn) {
 		}
 	}
 }
+
 func handleQueueMessage(ws *websocket.Conn) {
 	queueMutex.Lock()
 	queueLength := len(clientQueue)
 	queueMutex.Unlock()
-
-	// should send a message to the client as such:
-	// {"type":"queue","queue_length":1}
 
 	message := QueueMessage{
 		QueueLength: queueLength,
@@ -137,126 +141,44 @@ func handleQueueMessage(ws *websocket.Conn) {
 	}
 
 }
-func handleImageMessage(ws *websocket.Conn, imgConfig ImageConfig) {
-	queueMutex.Lock()
-	clientQueue = append(clientQueue, ws)
-	imageRequestMap[ws] = append(imageRequestMap[ws], imgConfig)
-	queueMutex.Unlock()
-	if !serviceBusy {
-		go processQueue()
-	}
-}
-
-func processQueue() {
+func handleImageMessages() {
 	for {
-		var client *websocket.Conn
-		var imgConfig ImageConfig
-
-		queueMutex.Lock()
-		if len(clientQueue) == 0 {
-			serviceBusy = false
-			queueMutex.Unlock()
-			return
-		} else {
-			fmt.Printf("queue length: %d\n", len(clientQueue))
-			client = clientQueue[0]
-			clientQueue = clientQueue[1:]
-
-			if len(imageRequestMap[client]) == 0 {
-				queueMutex.Unlock()
-				continue
-			} else {
-				serviceBusy = true
-				imgConfig = imageRequestMap[client][0]
-				// Get the first client in the queue
-				// Get the first image request for the client
-				imageRequestMap[client] = imageRequestMap[client][1:]
-				queueMutex.Unlock()
-			}
-		}
-
-		// Send the image request to the service
-		image, err := handleImageRequest("txt2img", imgConfig)
-		if err != nil {
-			fmt.Printf("error handling image request: %s\n", err)
-			// add the imgConfig back to the client
-			// increment the failures
-			fails[client] = append(fails[client], ImageReqFail{
-				Req: imgConfig,
-				Err: err.Error(),
-			})
-
-			// check if the client has failed 3 times
-			if len(fails[client]) >= 3 {
-				// send the client a message that they have failed 3 times
-				// and remove them from the queue
-				type FailMessage struct {
-					Type string `json:"type"`
-					Err  string `json:"err"`
-				}
-				failMessage := FailMessage{
-					Type: "fail",
-					Err:  "failed 3 times",
-				}
-				var jsonFailMessage []byte
-				jsonFailMessage, err = json.Marshal(failMessage)
-				if err != nil {
-					fmt.Printf("error marshalling message: %s\n", err)
-					continue
-				}
-				if err = websocket.Message.Send(client, jsonFailMessage); err != nil {
-					fmt.Printf("error sending message: %s\n", err)
-				}
-				continue
-			}
-
-			queueMutex.Lock()
-			imageRequestMap[client] = append(imageRequestMap[client], imgConfig)
-
-			// Add the client back to the queue
-
-			clientQueue = append(clientQueue, client)
-			queueMutex.Unlock()
+		if len(imageRequestList) == 0 {
 			continue
 		}
-		type ImageResponse struct {
-			Type        string `json:"type"`
-			Image       string `json:"image"`
-			QueueLength int    `json:"queue_length"`
-		}
 		queueMutex.Lock()
-		queueLength := len(clientQueue)
+		imgConfig := imageRequestList[0]
+		imageRequestList = imageRequestList[1:]
 		queueMutex.Unlock()
-
-		messageToSend := ImageResponse{
-			Type:        "image",
-			Image:       image,
-			QueueLength: queueLength,
-		}
-		// stringify
-		var jsonMessage []byte
-		jsonMessage, err = json.Marshal(messageToSend)
+		jsonBody, err := json.Marshal(imgConfig)
 		if err != nil {
-			fmt.Printf("error marshalling message: %s\n", err)
+			fmt.Printf("error marshalling image config: %s\n", err)
 			continue
 		}
-		fmt.Printf("sending image to client\n%s\n", jsonMessage)
-		// Send the image to the client
-		if err = websocket.Message.Send(client, jsonMessage); err != nil {
-			fmt.Printf("error sending message: %s\n", err)
+		if !busy {
+			image, err := handleImageRequest("generate", jsonBody)
+			if err != nil {
+				fmt.Printf("error handling image request: %s\n", err)
+				continue
+			}
+
+			if err := websocket.JSON.Send(ws, Message{
+				Type: "image",
+				Data: image,
+			}); err != nil {
+				fmt.Printf("error sending message: %s\n", err)
+			}
+
 		}
 	}
 }
 
-func handleImageRequest(method string, body ImageConfig) (string, error) {
-	// stringify
-	jsonBody, err := json.Marshal(body)
-	if err != nil {
-		return "", err
-	}
+func handleImageRequest(method string, jsonBody []byte) (string, error) {
+
 	url := fmt.Sprintf("%s/sdapi/v1/%s", HOST, method)
 	// sends request
 	var resp *http.Response
+	var err error
 	resp, err = http.Post(
 		url, "application/json", bytes.NewReader(jsonBody))
 	if err != nil {

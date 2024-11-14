@@ -12,9 +12,9 @@ func setupApi() {
 	setupAuth()
 	setupImages()
 	apiMux = http.NewServeMux()
+	apiMux.HandleFunc("/loras", HandleLoras)
 	apiMux.Handle("/auth/", http.StripPrefix("/auth", authMux))
 	apiMux.Handle("/images/", http.StripPrefix("/images", imagesMux))
-	apiMux.HandleFunc("/loras", HandleLoras)
 }
 
 // handle /auth

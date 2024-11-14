@@ -7,9 +7,22 @@ interface HelpProps {
 export const HelpSection = ({ setModalOpen }: HelpProps) => {
 	return (
 		<HelpContainer>
-			<div>
-				<button onClick={() => setModalOpen(false)}>Close</button>
-				<h2>Help</h2>
+			<div
+				style={{
+					display: "flex",
+					flexDirection: "row",
+
+					alignItems: "flex-start",
+					gap: "20px",
+				}}
+			>
+				<h2 style={{ marginRight: "auto", marginLeft: "50%" }}>Help</h2>
+				<button
+					style={{ marginRight: "20px" }}
+					onClick={() => setModalOpen(false)}
+				>
+					Close
+				</button>
 			</div>
 			<div className="scroll">
 				<div
@@ -29,7 +42,11 @@ export const HelpSection = ({ setModalOpen }: HelpProps) => {
 						<p>
 							If you're having any trouble getting results that match what
 							you're looking for, each of the models have their own set of
-							inputs that they were trained on.
+							inputs that they were trained on. For Flux, I suggest using this
+							website to get you started on what the model is expecting:
+							<a href="https://glif.app/@AP/glifs/clzbm2qvb000113zgz4a9r1wj">
+								Glif - Flux Prompt Generator
+							</a>
 						</p>
 					</div>
 					<div>
@@ -217,7 +234,7 @@ const HelpContainer = styled.div`
 	height: 100%;
 	background: var(--panel-bg);
 	text-align: center;
-	padding: 40px 0px 0 0;
+	padding: 5px 0px 0 0;
 	.scroll {
 		background: var(--input-bg);
 		overflow: auto;
@@ -237,5 +254,9 @@ const HelpContainer = styled.div`
 		font-size: 24px;
 		font-weight: 100;
 		margin-bottom: 20px;
+		margin-top: 40px;
+	}
+	button {
+		margin-top: 5px;
 	}
 `;

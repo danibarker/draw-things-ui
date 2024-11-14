@@ -1,5 +1,7 @@
 import { createContext, useContext } from "react";
 export const defaultSettings: Settings = {
+	waiting: false,
+	lostConnection: false,
 	model_category: "flux",
 	model: "flux_1_schnell_q8p.ckpt",
 	loras: [],
@@ -74,6 +76,7 @@ export const defaultSettings: Settings = {
 	type: "txt2img",
 };
 export const SettingsContext = createContext<SettingsContextProps>({
+	id: "",
 	setSettings: () => null,
 	settings: defaultSettings,
 	setImages: () => null,

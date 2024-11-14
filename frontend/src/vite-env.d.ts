@@ -19,6 +19,8 @@ interface LoraSetting {
 }
 
 interface Settings {
+	waiting: boolean;
+	lostConnection: boolean;
 	model_category?: string;
 	model: string;
 	loras: LoraSetting[];
@@ -113,6 +115,7 @@ interface SettingsContextProps {
 	seedModes: SeedMode[];
 	upscalers: Upscaler[];
 	samplers: Sampler[];
+	id: string;
 }
 
 type PageHeaderProps = {

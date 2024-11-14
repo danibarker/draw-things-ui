@@ -18,6 +18,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [positionsInQueue, setPositionsInQueue] = useState<number[]>([]);
 	const [settings, setSettings] = useState<Settings>(defaultSettings);
 	const [images, setImages] = useState<string[]>([]);
+	const [id, setId] = useState("");
 	const [modalContent, setModalContent] = useState("help");
 	const [loras, setLoras] = useState<{
 		[key: string]: { [key: string]: string };
@@ -40,12 +41,23 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 			setUpscalers(newUpscalers);
 			const newSamplers = await getSamplers();
 			setSamplers(newSamplers);
+			// get from localStorage or generate random 16 character string and store in localStorage
+			let lsData = localStorage.getItem("id");
+			if (!lsData) {
+				lsData = Math.random().toString(36).substring(2, 18);
+				localStorage.setItem("id", lsData);
+			} else {
+				setId(lsData);
+			}
 		};
 		getSettings();
 	}, []);
 
 	const websocket = useWebSocket(
 		"/ws",
+		queue,
+		settings,
+		setSettings,
 		setImages,
 		setQueue,
 		setGlobalQueueLength
@@ -60,6 +72,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	return (
 		<SettingsContext.Provider
 			value={{
+				id,
 				settings,
 				setSettings,
 				images,
