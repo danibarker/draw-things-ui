@@ -29,3 +29,5 @@ config.json
 test.json
 draw-go-react
 zzz-fake
+backend/public
+run.go
