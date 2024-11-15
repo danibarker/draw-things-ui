@@ -47,7 +47,7 @@ const spin = ({
 `;
 export const Window = styled.div`
 	display: grid;
-	grid-template-rows: 40px 1fr;
+	grid-template-rows: 1fr 40px;
 	height: 100%;
 `;
 
@@ -66,13 +66,11 @@ export const Main = styled.main`
 	grid-template-columns: 500px 5fr; /* Left auto width, Right takes remaining */
 	height: 100%;
 	overflow: hidden;
-	background: var(--main-bg);
 `;
 
 /* Left Side (2 rows) */
 export const LeftSide = styled.div`
 	height: 100%;
-	background: var(--main-bg);
 	overflow: hidden;
 	border-right: 0.1px solid var(--border-color-1);
 	display: grid;
@@ -84,12 +82,10 @@ export const RightSide = styled.div`
 	height: 100%;
 	display: grid;
 	grid-template-rows: 50px 1fr;
-	background: var(--main-bg);
 `;
 
 export const TitleBar = styled.div`
 	height: 50px;
-	background: var(--main-bg);
 	text-align: center;
 	display: flex;
 	align-items: center;

@@ -37,7 +37,7 @@ const Layout = () => {
 					)}
 				</Modal>
 			)}
-			<NavBar />
+
 			<Main>
 				<LeftSide>
 					<TitleBar>
@@ -71,6 +71,7 @@ const Layout = () => {
 					</PhotoGallery>
 				</RightSide>
 			</Main>
+			<NavBar />
 		</Window>
 	);
 };

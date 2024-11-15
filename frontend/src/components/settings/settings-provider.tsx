@@ -55,9 +55,6 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 
 	const websocket = useWebSocket(
 		"/ws",
-		queue,
-		settings,
-		setSettings,
 		setImages,
 		setQueue,
 		setGlobalQueueLength

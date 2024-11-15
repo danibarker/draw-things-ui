@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Button } from "./components/settings/styled-components";
 
 interface HelpProps {
 	setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,12 +18,12 @@ export const HelpSection = ({ setModalOpen }: HelpProps) => {
 				}}
 			>
 				<h2 style={{ marginRight: "auto", marginLeft: "50%" }}>Help</h2>
-				<button
+				<Button
 					style={{ marginRight: "20px" }}
 					onClick={() => setModalOpen(false)}
 				>
 					Close
-				</button>
+				</Button>
 			</div>
 			<div className="scroll">
 				<div

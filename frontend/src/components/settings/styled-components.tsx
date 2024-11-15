@@ -32,7 +32,6 @@ const ScrollWindow = styled.div`
 `;
 const RightPanel = styled.div<{ wide: boolean }>`
 	position: relative;
-	background-color: var(--main-bg);
 	height: 100%;
 	width: 100%;
 	outline: var(--outline-1) solid 3px;
@@ -68,7 +67,6 @@ const DropdownBox = styled.div<{ open?: boolean }>`
 	position: absolute;
 	top: 50px;
 	left: 0;
-	background-color: var(--main-bg);
 	border: 2px solid var(--primary-color);
 	width: 50%;
 	place-self: center;
@@ -77,17 +75,15 @@ const DropdownBox = styled.div<{ open?: boolean }>`
 	height: 400px;
 	overflow-y: auto;
 `;
-const DropDownOpener = styled.button`
-	width: 25%;
-`;
 
 const DropdownOption = styled.div`
 	display: flex;
+	background-color: var(--panel-bg);
 	justify-content: space-between;
 	align-items: center;
 	border: 1px solid var(--highlight-1);
 	padding: 12px 16px;
-	button {
+	Button {
 		font-weight: 100;
 		color: var(--text-color);
 		padding: 8px;
@@ -119,7 +115,6 @@ const LeftPanel = styled.div<{ open?: boolean }>`
 	width: 600px;
 	transform: translateX(${props => (props.open ? "0" : "-565px")});
 	height: 100%;
-	background-color: var(--main-bg);
 	overflow: auto;
 	display: flex;
 	flex-direction: column;
@@ -152,9 +147,8 @@ const Header = styled.header`
 	justify-content: space-between;
 	align-items: center;
 	padding-left: 28px;
-	background-color: var(--main-bg);
 	color: white;
-	button {
+	Button {
 		background-color: transparent;
 		color: white;
 		font-size: 24px;
@@ -172,7 +166,63 @@ const SettingsPage = styled.main`
 	flex-direction: column;
 `;
 
+const Button = styled.button`
+	font-family: var(--font-4), serif;
+	padding: 5px 10px;
+	max-width: 120px;
+	cursor: pointer;
+	font-size: 16px;
+	position: relative;
+	border: 1px solid transparent;
+	border-radius: 5px;
+	font-weight: 400;
+	background-color: transparent;
+	color: var(--text-color);
+	&:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+	&:after {
+		content: "";
+		position: absolute;
+		top: -1.5px;
+		left: -1.5px;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(179deg, var(--highlight-1), var(--highlight-2))
+			border-box;
+		mask: linear-gradient(white, white) padding-box,
+			linear-gradient(white, white);
+		mask-composite: exclude;
+		border-radius: inherit;
+		border: inherit;
+		border-style: inherit;
+	}
+	&:disabled::after {
+		background: linear-gradient(
+				90deg,
+				var(--disabled-border-gradient-1),
+				var(--disabled-border-gradient-2)
+			)
+			border-box;
+		animation: pulse-disabled 1s infinite;
+	}
+
+	&.solid {
+		background-color: var(--highlight-1);
+		color: var(--text-color);
+		&:hover {
+			background-color: var(--highlight-2);
+		}
+	}
+`;
+
+const DropDownOpener = styled(Button)`
+	width: 25%;
+`;
+
 export {
+	Button,
 	DropdownWithButtons,
 	DropdownBox,
 	DropDownOpener,

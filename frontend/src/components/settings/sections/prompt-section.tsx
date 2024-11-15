@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Row, Section } from "../styled-components";
+import { Button, Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
 // import Timer from "../../timer";
 import styled from "styled-components";
@@ -70,13 +70,11 @@ function PromptSection() {
 				seed: settings.seed,
 				guidance_scale: settings.guidance_scale,
 				sampler: settings.sampler,
-				upscaler: "disabled",
-				waiting: true,
-				lostConnection: false,
-				id: id,
+				upscaler: "",
 				// init_images: settings.init_images,
 			},
 			type: "image",
+			id: id,
 		};
 		console.log(data);
 		if (
@@ -131,22 +129,22 @@ function PromptSection() {
 					/>
 				</div>
 				<div style={{ display: "flex", position: "relative" }}>
-					<button
+					<Button
 						className="sibling"
 						ref={submitRef}
 						disabled={queue.length > 3}
 						onClick={submit}
 					>
 						{queue.length > 3 ? "Busy..." : "Submit"}
-					</button>
+					</Button>
 					<FlyingButton ref={buttonRef}>
-						<button
+						<Button
 							className="underbutton"
 							style={{ opacity: 0.9 }}
 							onMouseEnter={console.log}
 						>
 							{queue.length > 3 ? "Busy..." : "Submit"}
-						</button>
+						</Button>
 					</FlyingButton>
 					{/* <Timer time={33} /> */}
 				</div>

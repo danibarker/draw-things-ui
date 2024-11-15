@@ -19,8 +19,6 @@ interface LoraSetting {
 }
 
 interface Settings {
-	waiting: boolean;
-	lostConnection: boolean;
 	model_category?: string;
 	model: string;
 	loras: LoraSetting[];

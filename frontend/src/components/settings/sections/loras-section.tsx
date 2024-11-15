@@ -1,4 +1,5 @@
 import {
+	Button,
 	DropdownBox,
 	DropDownOpener,
 	DropdownOption,
@@ -43,7 +44,7 @@ function LoraSection() {
 								([key, value]) => (
 									<DropdownOption key={key}>
 										{key}
-										<button
+										<Button
 											onClick={() => {
 												let lorasInUse =
 													settings.loras && settings.loras.slice();
@@ -68,12 +69,12 @@ function LoraSection() {
 											}}
 										>
 											Add
-										</button>
+										</Button>
 									</DropdownOption>
 								)
 							)}
 
-						<button
+						<Button
 							onClick={() => {
 								setModalContent("loras");
 								setModalOpen(true);
@@ -81,7 +82,7 @@ function LoraSection() {
 						>
 							<FloppyDisk fill="white" stroke="red" strokeWidth={0} />
 							<FloppyDiskRegular fill="red" stroke="white" strokeWidth={0} />
-						</button>
+						</Button>
 					</DropdownBox>
 				</DropdownWithButtons>
 				<LorasList>
@@ -110,7 +111,7 @@ function LoraSection() {
 										}));
 									}}
 								/>
-								<button
+								<Button
 									onClick={() => {
 										if (!Array.isArray(settings.loras)) {
 											return;
@@ -124,7 +125,7 @@ function LoraSection() {
 									}}
 								>
 									Remove
-								</button>
+								</Button>
 							</li>
 						))}
 				</LorasList>

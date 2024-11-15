@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Button } from "./settings/styled-components";
 
 const Timer = ({ time }: { time: number }) => {
 	const [timeRemaining, setTimeRemaining] = useState(time);
@@ -18,7 +19,7 @@ const Timer = ({ time }: { time: number }) => {
 	return (
 		<div>
 			<p>Time Remaining: {timeRemaining}</p>
-			<button onClick={() => setTimeRemaining(60)}>Start Timer</button>
+			<Button onClick={() => setTimeRemaining(60)}>Start Timer</Button>
 		</div>
 	);
 };

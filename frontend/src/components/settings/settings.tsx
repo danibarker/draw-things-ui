@@ -1,4 +1,4 @@
-import { LeftPanel, Main } from "./styled-components";
+import { Button, LeftPanel, Main } from "./styled-components";
 import PageHeader from "./page-header";
 import SamplerSection from "./sections/sampler-section";
 import SizeSection from "./sections/size-section";
@@ -30,7 +30,7 @@ interface SettingsProps {
 	openPanel: boolean;
 	setOpenPanel: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const PanelCollapseButton = styled.button<{ open?: boolean }>`
+const PanelCollapseButton = styled(Button)<{ open?: boolean }>`
 	position: absolute;
 	left: ${props => (props.open ? "600px" : "0")};
 

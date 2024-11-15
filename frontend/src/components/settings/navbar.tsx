@@ -1,5 +1,6 @@
 import Loading from "../icons/loading";
 import { Nav } from "./layout-elements";
+import { Button } from "./styled-components";
 import { useSettings } from "./useSettings";
 
 export const NavBar = () => {
@@ -15,22 +16,22 @@ export const NavBar = () => {
 					? " not responding"
 					: " disconnected"}
 			</p>
-			<button
+			<Button
 				onClick={() => {
 					setModalOpen(true);
 					setModalContent("help");
 				}}
 			>
 				Help/Tutorial
-			</button>
-			<button
+			</Button>
+			<Button
 				style={{ border: "none", background: "none" }}
 				onClick={() => {
 					websocket?.send(JSON.stringify({ type: "queue" }));
 				}}
 			>
 				<Loading fill="white" stroke="white" width={20} />
-			</button>
+			</Button>
 			<p>Global queue length: {globalQueueLength}</p>
 		</Nav>
 	);

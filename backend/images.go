@@ -54,6 +54,7 @@ func setupImages() {
 	imagesMux.HandleFunc("/refiners", Refiners)
 	imagesMux.HandleFunc("/seedmodes", SeedModes)
 	imagesMux.HandleFunc("/upscalers", Upscalers)
+
 }
 
 func Models(w http.ResponseWriter, r *http.Request) {

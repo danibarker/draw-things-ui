@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
+import { Button } from "./styled-components";
 export function GetMoreLoras({
 	setModalOpen,
 }: {
@@ -27,10 +28,10 @@ export function GetMoreLoras({
 				value={input}
 				onChange={e => setInput(e.target.value)}
 			/>
-			<button disabled={buttonDisabled} onClick={getLoras}>
+			<Button disabled={buttonDisabled} onClick={getLoras}>
 				Submit
-			</button>
-			<button onClick={() => setModalOpen(false)}>Close</button>
+			</Button>
+			<Button onClick={() => setModalOpen(false)}>Close</Button>
 		</Container>
 	);
 }
@@ -41,7 +42,6 @@ const Container = styled.div`
 	align-items: center;
 	justify-content: center;
 	height: 100%;
-	background-color: var(--main-bg);
 	h2 {
 		margin-bottom: 1rem;
 	}

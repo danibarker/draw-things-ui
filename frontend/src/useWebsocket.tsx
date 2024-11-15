@@ -2,9 +2,6 @@ import { useEffect, useState } from "react";
 
 function useWebSocket(
 	url: string,
-	queue: Settings[],
-	settings: Settings,
-	setSettings: React.Dispatch<React.SetStateAction<Settings>>,
 	setImages: React.Dispatch<React.SetStateAction<string[]>>,
 	setQueue: React.Dispatch<React.SetStateAction<Settings[]>>,
 	setGlobalQueueLength: React.Dispatch<React.SetStateAction<number>>
@@ -20,23 +17,11 @@ function useWebSocket(
 			ws.onopen = () => {
 				console.log("Connected to websocket");
 				setWebsocket(ws);
-				reconnectAttempts = 0; // Reset attempts on successful connection
-				if (settings.lostConnection) {
-					ws.send(JSON.stringify({ queue }));
-					setSettings((prev: Settings) => ({
-						...prev,
-						lostConnection: false,
-						waiting: true,
-					}));
-				}
 			};
 
 			ws.onclose = () => {
 				console.log("Disconnected from websocket");
 				setWebsocket(null);
-				if (settings.waiting) {
-					setSettings((prev: Settings) => ({ ...prev, lostConnection: true }));
-				}
 				// Only attempt to reconnect if attempts are below 10
 				if (reconnectAttempts < 10) {
 					reconnectAttempts += 1;
@@ -65,7 +50,7 @@ function useWebSocket(
 				if (typeof event.data === "string") {
 					const json = JSON.parse(event.data);
 					if (json.type === "image") {
-						setImages(images => [...images, json.image]);
+						setImages(images => [...images, json.data]);
 					} else if (json.type === "queue") {
 						setGlobalQueueLength(json.queue_length);
 					}
@@ -82,9 +67,9 @@ function useWebSocket(
 						const json = JSON.parse(data as string);
 						console.log("json", json);
 						if (json.type === "image") {
-							const base64String = `data:image/png;base64,${json.image}`;
-							setImages(images => [...images, base64String]);
-							setQueue(queue => queue.slice(1));
+							const path = json.data;
+							setImages(prev => [...prev, path]);
+							setQueue(prev => prev.slice(1));
 							setGlobalQueueLength(json.queue_length);
 						} else if (json.type === "queue") {
 							setGlobalQueueLength(json.data.length);

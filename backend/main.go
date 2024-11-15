@@ -3,12 +3,14 @@ package main
 import (
 	"bytes"
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"sync"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/mitchellh/mapstructure"
@@ -53,6 +55,13 @@ type ImageConfig struct {
 	Sampler       string           `json:"sampler"`
 }
 
+type ImageRequest struct {
+	ImageConfig ImageConfig `json:"image_config"`
+	Complete    bool        `json:"complete"`
+	Filename    string      `json:"filename"`
+	Username    string      `json:"username"`
+}
+
 type Message struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
@@ -66,9 +75,6 @@ type ImageResponse struct {
 	Images []string `json:"images"`
 }
 
-//	var config = Config{
-//		HOST: "https://drawthings.danibarker.ca",
-//	}
 type CompletedImage struct {
 	Image  string         `json:"image"`
 	Socket websocket.Conn `json:"socket"`
@@ -83,9 +89,9 @@ var (
 	db               *sql.DB                    // SQLite3 database
 	clientQueue      []*websocket.Conn          // Queue of clients waiting for image responses
 	queueMutex       sync.Mutex                 // Mutex for the image request queue
-	imageRequestList []ImageConfig              = make([]ImageConfig, 0)
+	imageRequestList []string                   = make([]string, 0)
 	idToSocketMap    map[string]*websocket.Conn = make(map[string]*websocket.Conn)
-	idToImageRequest map[string][]ImageConfig   = make(map[string][]ImageConfig)
+	idToImageRequest map[string][]ImageRequest  = make(map[string][]ImageRequest)
 	busy             bool                       = false
 	HOST             string                     = "http://localhost:7775"
 	Id               string
@@ -99,7 +105,6 @@ func handleWebSocket(ws *websocket.Conn) {
 			break
 		}
 		fmt.Printf("received message: %s\n", message.Type)
-		// check if id is in idToSocketMap
 		if message.Id != "" {
 			if _, ok := idToSocketMap[message.Id]; !ok {
 				idToSocketMap[message.Id] = ws
@@ -107,17 +112,42 @@ func handleWebSocket(ws *websocket.Conn) {
 		}
 
 		switch message.Type {
+		case "reconnect":
+			var complete []string
+			if message.Id != "" {
+				idToSocketMap[message.Id] = ws
+				if idToImageRequest[message.Id] != nil {
+					for _, imgReq := range idToImageRequest[message.Id] {
+						if !imgReq.Complete {
+							complete = append(complete, imgReq.Filename)
+						}
+					}
+				}
+			}
+			if err := websocket.JSON.Send(ws, Message{
+				Type: "reconnect",
+				Data: complete,
+			}); err != nil {
+				fmt.Printf("error sending message: %s\n", err)
+			}
+
 		case "image":
 			var imgConfig ImageConfig
 			if err := mapstructure.Decode(message.Data, &imgConfig); err != nil {
 				fmt.Printf("error decoding image config: %s\n", err)
 				continue
 			}
-
-			idToImageRequest[message.Id] = append(idToImageRequest[message.Id], imgConfig)
-			imageRequestList = append(imageRequestList, imgConfig)
-			handleImageMessages()
-			handleQueueMessage(ws)
+			newImageRequest := ImageRequest{
+				ImageConfig: imgConfig,
+				Complete:    false,
+				Filename:    "",
+			}
+			idToImageRequest[message.Id] = append(idToImageRequest[message.Id], newImageRequest)
+			imageRequestList = append(imageRequestList, message.Id)
+			if !busy {
+				go handleImageMessages()
+			}
+			go handleQueueMessage(ws)
 		case "queue":
 			handleQueueMessage(ws)
 		default:
@@ -144,33 +174,77 @@ func handleQueueMessage(ws *websocket.Conn) {
 func handleImageMessages() {
 	for {
 		if len(imageRequestList) == 0 {
-			continue
+			busy = false
+			return
 		}
 		queueMutex.Lock()
-		imgConfig := imageRequestList[0]
+		id := imageRequestList[0]
 		imageRequestList = imageRequestList[1:]
 		queueMutex.Unlock()
-		jsonBody, err := json.Marshal(imgConfig)
+		imgRequest := idToImageRequest[id][0]
+		idToImageRequest[id] = idToImageRequest[id][1:]
+		jsonBody, err := json.Marshal(imgRequest.ImageConfig)
 		if err != nil {
 			fmt.Printf("error marshalling image config: %s\n", err)
 			continue
 		}
-		if !busy {
-			image, err := handleImageRequest("generate", jsonBody)
-			if err != nil {
-				fmt.Printf("error handling image request: %s\n", err)
-				continue
-			}
-
-			if err := websocket.JSON.Send(ws, Message{
-				Type: "image",
-				Data: image,
-			}); err != nil {
-				fmt.Printf("error sending message: %s\n", err)
-			}
-
+		image, err := handleImageRequest("txt2img", jsonBody)
+		if err != nil {
+			fmt.Printf("error handling image request: %s\n", err)
+			continue
 		}
+		currentDateTime := time.Now().String()
+		currentDate := currentDateTime[0:10] + "-" + currentDateTime[11:13] + currentDateTime[14:16] + "-" + id
+		var folderPath string
+		if imgRequest.Username != "" {
+
+			folderPath = "/assets/images/" + imgRequest.Username + "/"
+		} else {
+			folderPath = "/assets/images/"
+		}
+		fileName := fmt.Sprintf("%s%s.png", folderPath, currentDate)
+		// convert base64 image to png, save in filename
+		if err = convertBase64ToPng(image, "public"+fileName); err != nil {
+			fmt.Printf("error saving image: %s\n", err)
+			continue
+		}
+		imgRequest.Complete = true
+		fmt.Printf("image, %s,%v\n", fileName, imgRequest.Complete)
+		websocket.JSON.Send(idToSocketMap[id], Message{
+			Type: "image",
+			Data: fileName,
+		})
 	}
+}
+
+func convertBase64ToPng(base64String, filename string) error {
+	// decode base64
+	data, err := base64Decode(base64String)
+	if err != nil {
+		return err
+	}
+	// create file
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	// write data to file
+	if _, err = file.Write(data); err != nil {
+		fmt.Printf("error writing data to file: %s\n", err)
+		return err
+	}
+	return nil
+}
+
+func base64Decode(base64String string) ([]byte, error) {
+	// decode base64
+	data, err := base64.StdEncoding.DecodeString(base64String)
+	if err != nil {
+		fmt.Printf("error decoding base64: %s\n", err)
+		return nil, err
+	}
+	return data, nil
 }
 
 func handleImageRequest(method string, jsonBody []byte) (string, error) {
@@ -202,10 +276,18 @@ func handleImageRequest(method string, jsonBody []byte) (string, error) {
 func serveFrontend(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("serving frontend\n")
 	// serve frontend/dist/index.html
-	http.FileServer(http.Dir("./dist")).ServeHTTP(w, r)
+	http.ServeFile(w, r, "public/index.html")
 }
 
 func main() {
+
+	// if does not exist create images folder
+	if _, err := os.Stat("public/assets/images"); os.IsNotExist(err) {
+		if err = os.MkdirAll("public/assets/images", 0755); err != nil {
+			fmt.Printf("error creating images folder: %s\n", err)
+			panic(err)
+		}
+	}
 	setupApi()
 	// sqlite3
 	file, err := os.Open("config.json")
@@ -233,20 +315,7 @@ func main() {
 	// if _, err = db.Exec(CREATE_DB); err != nil {
 	// 	fmt.Printf("error creating table: %s\n", err)
 	// 	panic(err)
-	// }
-	// if _, err = db.Exec(CREATE_DB2); err != nil {
-	// 	fmt.Printf("error creating table: %s\n", err)
-	// 	panic(err)
-	// }
-	// if _, err = db.Exec(CREATE_DB3); err != nil {
-	// 	fmt.Printf("error creating table: %s\n", err)
-	// 	panic(err)
-	// }
-	// if _, err = db.Exec(CREATE_DB4); err != nil {
-	// 	fmt.Printf("error creating table: %s\n", err)
-	// 	panic(err)
-	// }
-
+	//=
 	fmt.Printf("connected to sqlite3\n")
 	fmt.Printf("listening on port 3333\n")
 
@@ -254,6 +323,9 @@ func main() {
 	http.Handle("/api/", http.StripPrefix("/api", apiMux))
 
 	http.HandleFunc("/", serveFrontend)
+	http.HandleFunc("/assets/", func(w http.ResponseWriter, r *http.Request) {
+		http.FileServer(http.Dir("./public")).ServeHTTP(w, r)
+	})
 	err = http.ListenAndServe(":3333", nil)
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")

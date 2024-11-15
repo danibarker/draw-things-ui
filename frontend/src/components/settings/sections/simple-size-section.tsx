@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { Column, Row, Section } from "../styled-components";
+import { Button, Column, Row, Section } from "../styled-components";
 import { useSettings } from "../useSettings";
 import styled from "styled-components";
 interface SelectableButtonProps {
 	$isselected: string;
 }
 
-const SelectableButton = styled.button<SelectableButtonProps>`
+const SelectableButton = styled(Button)<SelectableButtonProps>`
 	padding: 0px 2px;
 	aspect-ratio: 1.9;
 	width: 70px;
