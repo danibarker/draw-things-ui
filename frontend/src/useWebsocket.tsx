@@ -17,6 +17,7 @@ function useWebSocket(
 			ws.onopen = () => {
 				console.log("Connected to websocket");
 				setWebsocket(ws);
+				ws.send("reconnect");
 			};
 
 			ws.onclose = () => {
