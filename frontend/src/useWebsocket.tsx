@@ -17,7 +17,7 @@ function useWebSocket(
 			ws.onopen = () => {
 				console.log("Connected to websocket");
 				setWebsocket(ws);
-				ws.send(`{"type":"reconnect", id: "${localStorage.getItem("id")}"}`);
+				ws.send(`{"type":"reconnect", "id": "${localStorage.getItem("id")}"}`);
 			};
 
 			ws.onclose = () => {
