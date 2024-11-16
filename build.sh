@@ -4,7 +4,7 @@ DIR=/Users/daniellebarker/programming/personal/draw-go-react
 
 # Delete everything inside ./backend/public except the ./backend/public/images directory and its contents
 
-find ./backend/public -mindepth 1 ! -path "./backend/public/images*" -exec rm -rf {} +
+find ./backend/public -mindepth 1 ! -path "./backend/public/assets/images*" -exec rm -rf {} +
 
 
 cd $DIR/frontend && tsc -b && vite build
