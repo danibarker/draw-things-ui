@@ -169,7 +169,7 @@ const SettingsPage = styled.main`
 const Button = styled.button`
 	font-family: var(--font-4), serif;
 	padding: 5px 10px;
-	max-width: 120px;
+	max-width: 165px;
 	cursor: pointer;
 	font-size: 16px;
 	position: relative;
@@ -209,10 +209,10 @@ const Button = styled.button`
 	}
 
 	&.solid {
-		background-color: var(--highlight-1);
+		background-color: var(--highlight-1a);
 		color: var(--text-color);
 		&:hover {
-			background-color: var(--highlight-2);
+			background-color: var(--highlight-2a);
 		}
 	}
 `;

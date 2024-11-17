@@ -17,7 +17,12 @@ interface LoraSetting {
 	weight: number;
 	key: string;
 }
-
+interface Auth {
+	username: string;
+	password: string;
+	email?: string;
+	confirmPassword?: string;
+}
 interface Settings {
 	model_category?: string;
 	model: string;
@@ -159,4 +164,8 @@ type Refiner = {
 	refiner_name: string;
 	model_type: string;
 	filename: string;
+};
+
+type User = {
+	username: string;
 };

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
-import { Button } from "./styled-components";
+import { Button } from "../../shared/styled-components";
 export function GetMoreLoras({
 	setModalOpen,
 }: {

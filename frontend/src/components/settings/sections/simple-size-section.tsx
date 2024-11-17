@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Button, Column, Row, Section } from "../styled-components";
+import { Button, Column, Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
 import styled from "styled-components";
 interface SelectableButtonProps {

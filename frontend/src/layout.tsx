@@ -7,8 +7,8 @@ import {
 	Scrollable,
 	TitleBar,
 	Window,
-} from "./components/settings/layout-elements";
-import { NavBar } from "./components/settings/navbar";
+} from "./components/shared/layout-elements";
+import { NavBar } from "./components/shared/navbar";
 import LoraSection from "./components/settings/sections/loras-section";
 import ModelSection from "./components/settings/sections/model-section";
 import PromptSection from "./components/settings/sections/prompt-section";
@@ -20,7 +20,7 @@ import StrengthSeedSection from "./components/settings/sections/strength-seed-se
 import { useSettings } from "./components/settings/useSettings";
 import { Modal } from "./Modal";
 import { HelpSection } from "./HelpSection";
-import { GetMoreLoras } from "./components/settings/get-more-loras";
+import { GetMoreLoras } from "./components/settings/sections/get-more-loras";
 const Layout = () => {
 	const { isAdvanced, images, queue, modalOpen, setModalOpen, modalContent } =
 		useSettings();

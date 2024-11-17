@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
-import { Button } from "./components/settings/styled-components";
+import { Button } from "./components/shared/styled-components";
+import { useAuth } from "./components/providers/useAuth";
 
 const MainPage = () => {
 	const pageRef = useRef<HTMLDivElement>(null);
 	const [showNav, setShowNav] = useState<boolean>(true);
-
+	const { user } = useAuth();
 	useEffect(() => {
 		if (pageRef.current) {
 			pageRef.current.addEventListener("mousemove", e => {
@@ -33,10 +34,17 @@ const MainPage = () => {
 		<Page ref={pageRef}>
 			<Nav $show={showNav}>
 				<ul>
+					{user && <li>Welcome, {user.username}!</li>}
 					<li>
-						<Link to="login">
-							<Button className="solid">Login</Button>
-						</Link>
+						{!user ? (
+							<Link to="login">
+								<Button className="solid">Login</Button>
+							</Link>
+						) : (
+							<Link to="logout">
+								<Button className="solid">Logout</Button>
+							</Link>
+						)}
 					</li>
 					<li>
 						<Link to="/">
@@ -75,6 +83,7 @@ const Nav = styled.nav<{ $show: boolean }>`
 	ul {
 		display: flex;
 		justify-content: space-evenly;
+		align-items: center;
 		width: 100%;
 		list-style: none;
 	}

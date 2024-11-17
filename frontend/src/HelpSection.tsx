@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Button } from "./components/settings/styled-components";
+import { Button } from "./components/shared/styled-components";
 
 interface HelpProps {
 	setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;

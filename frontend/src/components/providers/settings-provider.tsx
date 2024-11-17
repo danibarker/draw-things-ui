@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { defaultSettings, SettingsContext } from "./useSettings";
+import { defaultSettings, SettingsContext } from "../settings/useSettings";
 import useWebSocket from "../../useWebsocket";
 import {
 	getLoras,
@@ -7,7 +7,7 @@ import {
 	getSamplers,
 	getUpscalers,
 	getSeedModes,
-} from "./api";
+} from "../../helpers/api";
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [isAdvanced, setIsAdvanced] = useState(false);

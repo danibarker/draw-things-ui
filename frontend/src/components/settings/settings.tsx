@@ -1,4 +1,4 @@
-import { Button, LeftPanel, Main } from "./styled-components";
+import { Button, LeftPanel, Main } from "../shared/styled-components";
 import PageHeader from "./page-header";
 import SamplerSection from "./sections/sampler-section";
 import SizeSection from "./sections/size-section";

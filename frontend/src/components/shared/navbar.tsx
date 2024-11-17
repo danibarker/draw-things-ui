@@ -1,7 +1,7 @@
 import Loading from "../icons/loading";
 import { Nav } from "./layout-elements";
 import { Button } from "./styled-components";
-import { useSettings } from "./useSettings";
+import { useSettings } from "../settings/useSettings";
 
 export const NavBar = () => {
 	const { websocket, globalQueueLength, setModalContent, setModalOpen } =

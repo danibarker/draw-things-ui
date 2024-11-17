@@ -7,7 +7,7 @@ import {
 	LorasList,
 	Row,
 	Section,
-} from "../styled-components";
+} from "../../shared/styled-components";
 import { useState } from "react";
 import { useSettings } from "../useSettings";
 import { FloppyDisk, FloppyDiskRegular } from "../../icons";

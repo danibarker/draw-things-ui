@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button } from "./settings/styled-components";
+import { Button } from "./shared/styled-components";
 
 const Timer = ({ time }: { time: number }) => {
 	const [timeRemaining, setTimeRemaining] = useState(time);

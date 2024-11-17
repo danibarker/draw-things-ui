@@ -1,4 +1,4 @@
-import { ModalContent } from "./components/settings/layout-elements";
+import { ModalContent } from "./components/shared/layout-elements";
 
 export const Modal = ({
 	children,

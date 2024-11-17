@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Button, Row, Section } from "../styled-components";
+import { Button, Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
 // import Timer from "../../timer";
 import styled from "styled-components";

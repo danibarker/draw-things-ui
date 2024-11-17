@@ -1,4 +1,4 @@
-import { Column, Row, Section } from "../styled-components";
+import { Column, Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
 
 function StrengthSeedSection() {

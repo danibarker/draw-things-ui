@@ -1,4 +1,4 @@
-import { Row, Section } from "../styled-components";
+import { Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
 import models from "./models.json";
 

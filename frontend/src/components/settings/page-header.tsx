@@ -1,4 +1,4 @@
-import { Header } from "./styled-components";
+import { Header } from "../shared/styled-components";
 
 function PageHeader() {
 	return (

@@ -1,4 +1,4 @@
-import { Row, Section } from "../styled-components";
+import { Row, Section } from "../../shared/styled-components";
 import samplers from "./samplers.json";
 import { useSettings } from "../useSettings";
 
