@@ -47,6 +47,11 @@ func IsAuthenticated(next http.HandlerFunc) http.HandlerFunc {
 				return
 			}
 		} else {
+			http.SetCookie(w, &http.Cookie{
+				Name:   "session",
+				Value:  "",
+				MaxAge: -1,
+			})
 			http.Error(w, "no session found", http.StatusUnauthorized)
 			return
 		}

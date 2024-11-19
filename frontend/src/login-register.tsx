@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./components/shared/styled-components";
 import styled from "styled-components";
+import { useAuth } from "./components/providers/useAuth";
 const validate = (
 	mode: string,
 	username: string,
@@ -51,7 +52,7 @@ const LoginRegister = () => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState("");
-
+	const { setUser } = useAuth();
 	const [mode, setMode] = useState("Login");
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -63,7 +64,8 @@ const LoginRegister = () => {
 		}
 	}, [location]);
 
-	const sendRequest = async () => {
+	const sendRequest = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		const valid = validate(
 			mode,
 			username,
@@ -89,23 +91,31 @@ const LoginRegister = () => {
 		// If the server responds with an error, display the error
 		if (response.data.error) {
 			setError(response.data.error);
+			console.log("there was an error", response.data.error);
 		} else {
-			// If the server responds with a success message, navigate to the home page
+			console.log("response in login", response.data);
+			// if (response.data) {
+			setUser(response.data);
 			navigate("/");
+			// }
+			console.log("no errors");
+			// If the server responds with a success message, navigate to the home page
 		}
 	};
 	return (
 		<Page>
 			<h1>{mode}</h1>
 			<div>{error}</div>
-			<LoginInputs>
+			<LoginInputs onSubmit={sendRequest}>
 				<input
 					type="text"
+					autoComplete="username"
 					placeholder="Username"
 					onChange={e => setUsername(e.target.value)}
 				/>
 
 				<input
+					autoComplete="password"
 					type="password"
 					placeholder="Password"
 					onChange={e => setPassword(e.target.value)}
@@ -113,12 +123,14 @@ const LoginRegister = () => {
 				{mode === "Register" && (
 					<>
 						<input
+							autoComplete="confirm-password"
 							type="password"
 							placeholder="Confirm Password"
 							onChange={e => setConfirmPassword(e.target.value)}
 						/>
 
 						<input
+							autoComplete="email"
 							type="email"
 							placeholder="Email"
 							onChange={e => setEmail(e.target.value)}
@@ -126,7 +138,7 @@ const LoginRegister = () => {
 					</>
 				)}
 				<LoginButtons>
-					<Button onClick={sendRequest}>{mode}</Button>
+					<Button type="submit">{mode}</Button>
 					{mode === "Login" && (
 						<Button onClick={() => navigate("/forgot-password")}>
 							Forgot Password
@@ -163,7 +175,7 @@ const Page = styled.div`
 	background: var(--panel-bg);
 `;
 
-const LoginInputs = styled.div`
+const LoginInputs = styled.form`
 	display: flex;
 	flex-direction: column;
 	align-items: center;

@@ -53,6 +53,7 @@ function useWebSocket(
 					const json = JSON.parse(event.data);
 					if (json.type === "image") {
 						setImages(images => [...images, json.data]);
+						setQueue(queue => queue.slice(1));
 					} else if (json.type === "queue") {
 						setGlobalQueueLength(json.queue_length);
 					}

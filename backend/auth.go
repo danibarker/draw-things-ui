@@ -81,6 +81,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{
 		Name:  "session",
 		Value: string(sessionToken),
+		Path:  "/",
 	})
 
 	userAttempt.Password = ""

@@ -5,7 +5,7 @@ import Loading from "./loading";
 
 const AuthenticatedRoute = ({ children }: { children: React.ReactNode }) => {
 	const { user, loading } = useAuth();
-
+	console.log("loading is", loading);
 	return loading ? <Loading /> : user ? children : <Navigate to="/login" />;
 };
 

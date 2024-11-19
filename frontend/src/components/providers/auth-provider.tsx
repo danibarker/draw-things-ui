@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "../../helpers/api";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "./useAuth";
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
-	const navigate = useNavigate();
 	console.log("user", user);
 	useEffect(() => {
 		const getLoggedInUser = async () => {
-			const newUser = await getCurrentUser();
-			setUser(newUser);
+			try {
+				const newUser = await getCurrentUser();
+				setUser(newUser);
+			} catch (error) {
+				setUser(null);
+				console.warn("error getting user", error);
+			}
 			setLoading(false);
 		};
 		getLoggedInUser();
-	}, [navigate]);
-
-	const theValue = { user, loading };
+	}, []);
+	console.log("provider,user", user);
+	const theValue = { user, loading, setUser };
 	return (
 		<AuthContext.Provider value={theValue}>{children}</AuthContext.Provider>
 	);
