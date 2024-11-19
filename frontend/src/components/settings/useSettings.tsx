@@ -77,9 +77,11 @@ export const SettingsContext = createContext<SettingsContextProps>({
 	id: "",
 	setSettings: () => null,
 	settings: defaultSettings,
-	setImages: () => null,
+	unsavedImages: [],
+	setUnsavedImages: () => null,
+	savedImages: [],
+	setSavedImages: () => null,
 	websocket: null,
-	images: [],
 	isAdvanced: false,
 	setIsAdvanced: () => null,
 	showHidden: false,
@@ -97,6 +99,10 @@ export const SettingsContext = createContext<SettingsContextProps>({
 	seedModes: [],
 	upscalers: [],
 	samplers: [],
+	query: "",
+	setQuery: () => null,
+	page: 1,
+	setPage: () => null,
 });
 
 export const useSettings = () => {

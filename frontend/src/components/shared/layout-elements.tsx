@@ -2,6 +2,7 @@ import styled, {
 	// css,
 	keyframes,
 } from "styled-components";
+import { Button } from "./styled-components";
 const spin = ({
 	$color1,
 	$color2,
@@ -49,6 +50,7 @@ export const Window = styled.div`
 	display: grid;
 	grid-template-rows: 1fr 40px;
 	height: 100%;
+	overflow: hidden;
 `;
 
 export const Nav = styled.nav`
@@ -104,7 +106,7 @@ export const Scrollable = styled.div`
 	overflow-x: hidden;
 `;
 
-export const PhotoGallery = styled.div`
+export const Images = styled.div`
 	height: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -120,6 +122,7 @@ export const PhotoGallery = styled.div`
 		display: block;
 	}
 `;
+
 // const animationRule = css`
 // 	${props: { $color1: string, $color2: string } => spin(props.$color1, props.$color2)} 1s infinite alternate;
 // `;
@@ -163,5 +166,66 @@ export const ModalContent = styled.div<{ $color1: string; $color2: string }>`
 		animation: ${props =>
 				spin({ $color1: props.$color1, $color2: props.$color2 })}
 			2s infinite;
+	}
+`;
+
+export const PhotoGallery = styled.div<{ $both: boolean }>`
+	display: grid;
+	grid-template-rows: ${props => (props.$both ? "1fr auto 1fr" : "1fr")};
+	height: 100%;
+	overflow: hidden;
+`;
+
+export const ImageOptions = styled.div`
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	align-items: center;
+`;
+
+export const Divider = styled.div`
+	width: 100%;
+	height: 1px;
+	background: var(--border-color-1);
+	margin: 1rem 0;
+`;
+
+export const DeleteButton = styled(Button)`
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: transparent;
+	color: var(--highlight-1);
+	border: none;
+	padding: 0.5rem;
+	cursor: pointer;
+`;
+
+export const ImageSaveContainer = styled.div`
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	input {
+		margin-bottom: 0.5rem;
+		height: 24px;
+		width: 100%;
+		padding: 0 10px;
+	}
+	button {
+		height: 24px;
+		padding: 0 10px;
+		width: 100%;
+		margin-bottom: 0.5rem;
+	}
+`;
+
+export const ImageContainer = styled.div`
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	img {
+		width: 100%;
 	}
 `;

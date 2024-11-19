@@ -237,3 +237,20 @@ export {
 	ScrollWindow,
 	RightPanel,
 };
+interface SelectableButtonProps {
+	$isselected: boolean;
+}
+export const SelectableButton = styled(Button)<SelectableButtonProps>`
+	padding: 0px 2px;
+	aspect-ratio: 1.9;
+	width: 70px;
+	font-weight: 500;
+	font-size: 10px;
+	background: none;
+	border: 1px solid transparent;
+	&:after {
+		transition: all 1s ease infinite;
+		animation: ${props => (props.$isselected ? "pulse 1s infinite" : "none")};
+	}
+	animation: ${props => (props.$isselected ? "pulse 1s infinite" : "none")};
+`;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { getCookie } from "./helpers";
 
 function useWebSocket(
 	url: string,
@@ -17,7 +18,7 @@ function useWebSocket(
 			ws.onopen = () => {
 				console.log("Connected to websocket");
 				setWebsocket(ws);
-				ws.send(`{"type":"reconnect", "id": "${localStorage.getItem("id")}"}`);
+				ws.send(`{"type":"reconnect", "cookie": "${getCookie("session")}"}`);
 			};
 
 			ws.onclose = () => {

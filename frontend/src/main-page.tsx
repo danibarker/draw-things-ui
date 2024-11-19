@@ -22,7 +22,7 @@ const MainPage = () => {
 					"background",
 					`radial-gradient(circle at ${xPercent}% ${yPercent}%,black 1%, var(--main-bg) 3%)`
 				);
-				if (yPercent < 6) {
+				if (yPercent < 3) {
 					setShowNav(true);
 				} else {
 					setShowNav(false);
@@ -87,4 +87,5 @@ const Nav = styled.nav<{ $show: boolean }>`
 		width: 100%;
 		list-style: none;
 	}
+	z-index: 500;
 `;

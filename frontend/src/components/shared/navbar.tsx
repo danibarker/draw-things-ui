@@ -2,6 +2,7 @@ import Loading from "../icons/loading";
 import { Nav } from "./layout-elements";
 import { Button } from "./styled-components";
 import { useSettings } from "../settings/useSettings";
+import { getCookie } from "../../helpers";
 
 export const NavBar = () => {
 	const { websocket, globalQueueLength, setModalContent, setModalOpen } =
@@ -27,7 +28,9 @@ export const NavBar = () => {
 			<Button
 				style={{ border: "none", background: "none" }}
 				onClick={() => {
-					websocket?.send(JSON.stringify({ type: "queue" }));
+					websocket?.send(
+						JSON.stringify({ type: "queue", cookie: getCookie("session") })
+					);
 				}}
 			>
 				<Loading fill="white" stroke="white" width={20} />

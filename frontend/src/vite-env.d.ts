@@ -98,8 +98,10 @@ interface Settings {
 interface SettingsContextProps {
 	settings: Settings;
 	setSettings: React.Dispatch<React.SetStateAction<Settings>>;
-	images: string[];
-	setImages: React.Dispatch<React.SetStateAction<string[]>>;
+	unsavedImages: string[];
+	setUnsavedImages: React.Dispatch<React.SetStateAction<string[]>>;
+	savedImages: string[];
+	setSavedImages: React.Dispatch<React.SetStateAction<string[]>>;
 	websocket: WebSocket | null;
 	isAdvanced: boolean;
 	setIsAdvanced: React.Dispatch<React.SetStateAction<boolean>>;
@@ -119,6 +121,10 @@ interface SettingsContextProps {
 	upscalers: Upscaler[];
 	samplers: Sampler[];
 	id: string;
+	query: string;
+	setQuery: React.Dispatch<React.SetStateAction<string>>;
+	page: number;
+	setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 type PageHeaderProps = {
@@ -168,4 +174,8 @@ type Refiner = {
 
 type User = {
 	username: string;
+};
+
+type EventWithPrompt = Event & {
+	prompt: () => Promise<{ [outcome: string]: string }>;
 };

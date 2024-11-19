@@ -8,6 +8,7 @@ import {
 	getUpscalers,
 	getSeedModes,
 } from "../../helpers/api";
+import axios from "axios";
 
 const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [isAdvanced, setIsAdvanced] = useState(false);
@@ -17,7 +18,8 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [globalQueueLength, setGlobalQueueLength] = useState(0);
 	const [positionsInQueue, setPositionsInQueue] = useState<number[]>([]);
 	const [settings, setSettings] = useState<Settings>(defaultSettings);
-	const [images, setImages] = useState<string[]>([]);
+	const [unsavedImages, setUnsavedImages] = useState<string[]>([]);
+	const [savedImages, setSavedImages] = useState<string[]>([]);
 	const [id, setId] = useState("");
 	const [modalContent, setModalContent] = useState("help");
 	const [loras, setLoras] = useState<{
@@ -29,6 +31,8 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [seedModes, setSeedModes] = useState<SeedMode[]>([]);
 	const [upscalers, setUpscalers] = useState<Upscaler[]>([]);
 	const [samplers, setSamplers] = useState<Sampler[]>([]);
+	const [query, setQuery] = useState("");
+	const [page, setPage] = useState(1);
 	useEffect(() => {
 		const getSettings = async () => {
 			const newLoras = await getLoras();
@@ -52,10 +56,23 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 		};
 		getSettings();
 	}, []);
+	useEffect(() => {
+		const getSettings = async () => {
+			const imageResponse = await axios.get("/api/images/unsaved");
+			const newImages = imageResponse.data;
+			setUnsavedImages(newImages);
+			const savedImageResponse = await axios.get(
+				`/api/images/search?page=${page}${query ? `&query=${query}` : ""}`
+			);
+			const newSavedImages = savedImageResponse.data;
+			setSavedImages(newSavedImages);
+		};
+		getSettings();
+	}, [query, page]);
 
 	const websocket = useWebSocket(
 		"/ws",
-		setImages,
+		setUnsavedImages,
 		setQueue,
 		setGlobalQueueLength
 	);
@@ -72,8 +89,10 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				id,
 				settings,
 				setSettings,
-				images,
-				setImages,
+				unsavedImages,
+				setUnsavedImages,
+				savedImages,
+				setSavedImages,
 				websocket,
 				isAdvanced,
 				setIsAdvanced,
@@ -92,6 +111,10 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				seedModes,
 				upscalers,
 				samplers,
+				query,
+				setQuery,
+				page,
+				setPage,
 			}}
 		>
 			{children}

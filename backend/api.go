@@ -17,16 +17,14 @@ func setupApi() {
 	apiMux.Handle("/images/", http.StripPrefix("/images", imagesMux))
 }
 
-// handle /auth
 func HandleApi(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("handling /api", r.URL.Path)
-	// strip /api from path
 
 }
 
 func HandleLoras(w http.ResponseWriter, r *http.Request) {
-	// get input from request body
+
 	body := struct {
 		Input string `json:"input"`
 	}{}
@@ -36,10 +34,10 @@ func HandleLoras(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if body.Input == config.Password {
-		// return "success" if true
+
 		w.Write([]byte(config.ExtraLoras))
 	} else {
-		// send 500 error if false
+
 		http.Error(w, "invalid input", http.StatusInternalServerError)
 	}
 }

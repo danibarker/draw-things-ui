@@ -2,7 +2,6 @@ import { useRef } from "react";
 import {
 	LeftSide,
 	Main,
-	PhotoGallery,
 	RightSide,
 	Scrollable,
 	TitleBar,
@@ -21,10 +20,11 @@ import { useSettings } from "./components/settings/useSettings";
 import { Modal } from "./Modal";
 import { HelpSection } from "./HelpSection";
 import { GetMoreLoras } from "./components/settings/sections/get-more-loras";
+import Gallery from "./gallery";
 const Layout = () => {
-	const { isAdvanced, images, queue, modalOpen, setModalOpen, modalContent } =
-		useSettings();
+	const { isAdvanced, modalOpen, setModalOpen, modalContent } = useSettings();
 	const modalRef = useRef<HTMLDivElement>(null);
+
 	console.log("modalContent", modalContent);
 	return (
 		<Window>
@@ -55,20 +55,7 @@ const Layout = () => {
 				</LeftSide>
 
 				<RightSide>
-					<TitleBar>
-						<h2>Gallery</h2>
-					</TitleBar>
-					<PhotoGallery>
-						{images.map(image => (
-							<img key={image} src={`${image}`} alt="Generated" />
-						))}
-						{queue.map((settings, index) => (
-							<div key={index} className="img">
-								<h2>Queue {index + 1}</h2>
-								<p>{settings.prompt}</p>
-							</div>
-						))}
-					</PhotoGallery>
+					<Gallery />
 				</RightSide>
 			</Main>
 			<NavBar />

@@ -66,3 +66,8 @@ export const getCurrentUser = async (): Promise<User> => {
 	const response = await axios.get("/api/auth/current_user");
 	return response.data;
 };
+
+export const getUnsavedImages = async () => {
+	const response = await axios.get("/api/images/unsaved");
+	return response.data;
+};

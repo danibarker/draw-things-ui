@@ -3,6 +3,7 @@ import { Button, Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
 // import Timer from "../../timer";
 import styled from "styled-components";
+import { getCookie } from "../../../helpers";
 
 function PromptSection() {
 	const buttonRef = useRef<HTMLDivElement>(null);
@@ -16,9 +17,6 @@ function PromptSection() {
 		setIsAdvanced,
 		setQueue,
 		queue,
-		id,
-		// setShowHidden,
-		// showHidden,
 	} = s;
 	useEffect(() => {
 		setSettings(prev => ({
@@ -56,7 +54,9 @@ function PromptSection() {
 	Sampler        string    `json:"sampler"`
 	InitImages []string `json:"init_images,omitempty"`
   */
+
 	const submit = async () => {
+		const cookie = getCookie("session");
 		const data = {
 			data: {
 				width: settings.width,
@@ -74,7 +74,7 @@ function PromptSection() {
 				// init_images: settings.init_images,
 			},
 			type: "image",
-			id: id,
+			cookie: cookie,
 		};
 		console.log(data);
 		if (
@@ -136,6 +136,9 @@ function PromptSection() {
 						onClick={submit}
 					>
 						{queue.length > 3 ? "Busy..." : "Submit"}
+					</Button>
+					<Button onClick={() => setIsAdvanced(prev => !prev)}>
+						{isAdvanced ? "Basic" : "Advanced"}
 					</Button>
 					<FlyingButton ref={buttonRef}>
 						<Button

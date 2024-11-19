@@ -97,3 +97,9 @@ export function getId(input: string) {
 	}
 	return result;
 }
+
+export const getCookie = (key: string) => {
+	console.log("key", key, "document.cookie", document.cookie);
+	const b = document.cookie.match("(^|;)\\s*" + key + "\\s*=\\s*([^;]+)");
+	return b ? b.pop() : "";
+};
