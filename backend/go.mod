@@ -1,4 +1,4 @@
-module github.com/danibarker/drawthings-server
+module github.com/danibarker/draw-go-react
 
 go 1.23.0
 
