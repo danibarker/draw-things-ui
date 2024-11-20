@@ -386,7 +386,7 @@ func UnsavedPaged(w http.ResponseWriter, r *http.Request) {
 
 	images := []string{}
 	for i, file := range files {
-		if i < 9*(pageNum-1) || file.Name() == "saved" {
+		if i < 9*(pageNum-1) || file.Name() == "saved" || file.Name() == ".DS_Store" {
 			continue
 		}
 		if i >= 9*pageNum {
