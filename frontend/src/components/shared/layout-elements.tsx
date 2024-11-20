@@ -63,11 +63,18 @@ export const Nav = styled.nav`
 	justify-content: space-evenly;
 `;
 
-export const Main = styled.main`
+export const Main = styled.main<{ $hideGallery: boolean }>`
 	display: grid;
 	grid-template-columns: 500px 5fr; /* Left auto width, Right takes remaining */
 	height: 100%;
 	overflow: hidden;
+
+	@media (max-width: 500px) {
+		grid-template-columns: 1fr;
+		grid-template-rows: ${props =>
+			props.$hideGallery ? "1fr 50px" : "1fr 1fr"};
+		gap: 1rem;
+	}
 `;
 
 /* Left Side (2 rows) */
@@ -77,6 +84,10 @@ export const LeftSide = styled.div`
 	border-right: 0.1px solid var(--border-color-1);
 	display: grid;
 	grid-template-rows: 50px 1fr; /* Title Bar (50px) + Scrollable Settings */
+
+	@media (max-width: 500px) {
+		border-bottom: 2px solid var(--border-color-1);
+	}
 `;
 
 export const RightSide = styled.div`
@@ -84,6 +95,12 @@ export const RightSide = styled.div`
 	height: 100%;
 	display: grid;
 	grid-template-rows: 50px 1fr;
+	position: relative;
+
+	@media (max-width: 500px) {
+		grid-template-rows: 100px 1fr;
+		border-top: 2px solid var(--border-color-1);
+	}
 `;
 
 export const TitleBar = styled.div`
@@ -97,6 +114,8 @@ export const TitleBar = styled.div`
 	h2 {
 		font-size: 29px;
 		font-weight: 100;
+		margin-left: auto;
+		margin-right: auto;
 	}
 `;
 
@@ -181,6 +200,14 @@ export const ImageOptions = styled.div`
 	gap: 10px;
 	justify-content: center;
 	align-items: center;
+	margin: auto;
+	height: 50px;
+	flex-direction: row;
+	position: relative;
+
+	@media (max-width: 500px) {
+		margin: 0;
+	}
 `;
 
 export const Divider = styled.div`

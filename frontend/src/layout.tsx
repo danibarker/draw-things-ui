@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import {
 	LeftSide,
 	Main,
@@ -21,10 +21,12 @@ import { Modal } from "./Modal";
 import { HelpSection } from "./HelpSection";
 import { GetMoreLoras } from "./components/settings/sections/get-more-loras";
 import Gallery from "./gallery";
+import { Button } from "./components/shared/styled-components";
 const Layout = () => {
-	const { isAdvanced, modalOpen, setModalOpen, modalContent } = useSettings();
+	const { isAdvanced, modalOpen, setModalOpen, modalContent, reconnect } =
+		useSettings();
 	const modalRef = useRef<HTMLDivElement>(null);
-
+	const [hideGallery, setHideGallery] = useState(false);
 	console.log("modalContent", modalContent);
 	return (
 		<Window>
@@ -38,10 +40,17 @@ const Layout = () => {
 				</Modal>
 			)}
 
-			<Main>
+			<Main $hideGallery={hideGallery}>
 				<LeftSide>
 					<TitleBar>
 						<h2>Settings</h2>
+						<Button
+							className="solid"
+							style={{ marginRight: "auto" }}
+							onClick={reconnect}
+						>
+							Reconnect
+						</Button>
 					</TitleBar>
 					<Scrollable>
 						<PromptSection />
@@ -55,7 +64,14 @@ const Layout = () => {
 				</LeftSide>
 
 				<RightSide>
-					<Gallery />
+					<Button
+						className="hide-on-desktop"
+						style={{ position: "absolute", left: "0", top: "0" }}
+						onClick={() => setHideGallery(prev => !prev)}
+					>
+						{hideGallery ? "Gallery" : "Hide"}
+					</Button>
+					<Gallery isHidden={hideGallery} />
 				</RightSide>
 			</Main>
 			<NavBar />

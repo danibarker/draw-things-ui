@@ -103,6 +103,7 @@ interface SettingsContextProps {
 	savedImages: string[];
 	setSavedImages: React.Dispatch<React.SetStateAction<string[]>>;
 	websocket: WebSocket | null;
+	reconnect: () => void;
 	isAdvanced: boolean;
 	setIsAdvanced: React.Dispatch<React.SetStateAction<boolean>>;
 	showHidden: boolean;

@@ -172,7 +172,15 @@ const Page = styled.div`
 	padding: 40px 0px;
 	margin: 15% 20%;
 	justify-content: space-evenly;
+	outline: 1px solid var(--highlight-2);
 	background: var(--panel-bg);
+	@media (prefers-color-scheme: light) {
+		background: var(--main-bg);
+		outline: none;
+	}
+	@media screen and (max-width: 500px) {
+		margin: 0;
+	}
 `;
 
 const LoginInputs = styled.form`
@@ -187,7 +195,7 @@ const LoginInputs = styled.form`
 
 const SwitchModes = styled.div`
 	width: 100%;
-	border-top: 1px solid var(--highlight-1);
+	border-top: 1px solid var(--highlight-2);
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
@@ -195,6 +203,14 @@ const SwitchModes = styled.div`
 	margin-top: 20px;
 	padding-top: 40px;
 	gap: 20px;
+
+	@media (prefers-color-scheme: light) {
+		border-top: none;
+	}
+
+	@media screen and (max-width: 500px) {
+		border-top: none;
+	}
 `;
 
 const LoginButtons = styled.div`

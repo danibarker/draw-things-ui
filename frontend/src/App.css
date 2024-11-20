@@ -82,15 +82,15 @@ html {
 
 @media (prefers-color-scheme: light) {
 	:root {
-		--main-bg: #bae4f3;
-		--panel-bg: darkturquoise;
+		--main-bg: #dcf2ff;
+		--panel-bg: #8efaa6;
 		--input-bg: #e7e7e7;
 		--shadow-1: rgba(216, 0, 0, 0.8);
 		--button-hover-bg: #a4f2a0;
-		--highlight-1: #b050ff;
-		--highlight-2: #e91e76;
-		--highlight-1a: #ff6c3b;
-		--highlight-2a: #1ee936;
+		--highlight-1: #482adb;
+		--highlight-2: #fe904b;
+		--highlight-1a: #ceffaf;
+		--highlight-2a: #94fca0;
 		--lowlight-1a: #ff1515;
 		--lowlight-2a: #ffee00;
 		--highdark-1: rgb(205, 254, 255);
@@ -106,6 +106,16 @@ html {
 		--slider-bg: rgb(255, 112, 181);
 	}
 }
+.hide-on-desktop {
+	display: none;
+}
+
+@media (max-width: 500px) {
+	.hide-on-desktop {
+		display: block;
+	}
+}
+
 textarea,
 input {
 	padding: 10px;
@@ -342,11 +352,5 @@ select option:hover::after {
 	100% {
 		background: linear-gradient(360deg, var(--lowlight-1a), var(--lowlight-2a));
 		transform: scale(1);
-	}
-}
-
-@media screen and (max-width: 500px) {
-	* {
-		overflow: unset !important;
 	}
 }

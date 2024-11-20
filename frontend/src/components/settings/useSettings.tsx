@@ -82,6 +82,7 @@ export const SettingsContext = createContext<SettingsContextProps>({
 	savedImages: [],
 	setSavedImages: () => null,
 	websocket: null,
+	reconnect: () => null,
 	isAdvanced: false,
 	setIsAdvanced: () => null,
 	showHidden: false,

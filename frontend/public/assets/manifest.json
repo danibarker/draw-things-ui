@@ -24,8 +24,8 @@
 			"type": "image/png"
 		}
 	],
-	"start_url": "https://draw.danibarker.ca",
-	"id": "https://draw.danibarker.ca",
+	"start_url": "http://localhost:3333",
+	"id": "http://localhost:3333",
 	"display": "standalone",
 	"theme_color": "#5c3bff",
 	"background_color": "#222222"

@@ -1,68 +1,13 @@
 import styled from "styled-components";
-const ScrollWindow = styled.div`
-	display: grid;
-	grid-template-columns: 50% 50%;
-	height: 100%;
-	width: 100%;
-	gap: 5px;
-	overflow-y: auto;
-	grid-template-rows: repeat(20, 50%);
 
-	img {
-		width: 100%;
-	}
-	div {
-		height: 30%;
-		width: auto;
-		display: flex;
-		flex-direction: column;
-		gap: 5px;
-		p {
-			font-size: 16px;
-		}
-		h2 {
-			font-size: 24px;
-		}
-	}
-	.icon {
-		width: 100%;
-		height: 100%;
-		opacity: 0.4;
-	}
-`;
-const RightPanel = styled.div<{ wide: boolean }>`
-	position: relative;
-	height: 100%;
-	width: 100%;
-	outline: var(--outline-1) solid 3px;
-	color: white;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-	h1 {
-		font-size: 24px;
-		grid-column: 1 / 9;
-		grid-row: 1;
-		text-align: center;
-	}
-	grid-column: ${props => (props.wide ? "1 / 4" : "2 / 4")};
-	grid-row: 1;
-
-	&* {
-		outline: var(--outline-2) solid 3px;
-	}
-`; // This is a type definition for the props of the Modal component
-
-const DropdownWithButtons = styled.div`
+export const DropdownWithButtons = styled.div`
 	position: relative;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
 `;
-const DropdownBox = styled.div<{ open?: boolean }>`
+export const DropdownBox = styled.div<{ open?: boolean }>`
 	display: ${props => (props.open ? "block" : "none")};
 	position: absolute;
 	top: 50px;
@@ -76,7 +21,7 @@ const DropdownBox = styled.div<{ open?: boolean }>`
 	overflow-y: auto;
 `;
 
-const DropdownOption = styled.div`
+export const DropdownOption = styled.div`
 	display: flex;
 	background-color: var(--panel-bg);
 	justify-content: space-between;
@@ -91,18 +36,18 @@ const DropdownOption = styled.div`
 		font-size: 16px;
 	}
 `;
-const Row = styled.div`
+export const Row = styled.div`
 	display: flex;
 	flex-direction: column;
 	width: 100%;
 `;
-const Column = styled.div`
+export const Column = styled.div`
 	display: flex;
 	flex-direction: row;
 	width: 100%;
 	gap: 20px;
 `;
-const Section = styled.div`
+export const Section = styled.div`
 	padding: 10px 30px;
 	border-bottom: 1px solid #838383;
 	display: flex;
@@ -111,16 +56,7 @@ const Section = styled.div`
 		margin-bottom: 8px;
 	}
 `;
-const LeftPanel = styled.div<{ open?: boolean }>`
-	width: 600px;
-	transform: translateX(${props => (props.open ? "0" : "-565px")});
-	height: 100%;
-	overflow: auto;
-	display: flex;
-	flex-direction: column;
-	grid-area: ${props => (props.open ? "1 / 1 / auto / 2" : "1 / 1 / 1 / 1")};
-`;
-const LorasList = styled.ul`
+export const LorasList = styled.ul`
 	list-style-type: none;
 	li {
 		position: relative;
@@ -142,31 +78,8 @@ const LorasList = styled.ul`
 		}
 	}
 `;
-const Header = styled.header`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding-left: 28px;
-	color: white;
-	Button {
-		background-color: transparent;
-		color: white;
-		font-size: 24px;
-		border: none;
-		cursor: pointer;
-	}
-	h1 {
-		font-size: 24px;
-	}
-`;
-const SettingsPage = styled.main`
-	overflow-y: auto;
-	height: 100%;
-	display: flex;
-	flex-direction: column;
-`;
 
-const Button = styled.button`
+export const Button = styled.button`
 	font-family: var(--font-4), serif;
 	padding: 5px 10px;
 	max-width: 165px;
@@ -215,28 +128,16 @@ const Button = styled.button`
 			background-color: var(--highlight-2a);
 		}
 	}
+	&.selected {
+		background-color: var(--highlight-2a);
+		color: var(--text-color);
+	}
 `;
 
-const DropDownOpener = styled(Button)`
+export const DropDownOpener = styled(Button)`
 	width: 25%;
 `;
 
-export {
-	Button,
-	DropdownWithButtons,
-	DropdownBox,
-	DropDownOpener,
-	DropdownOption,
-	Row,
-	Column,
-	Section,
-	LeftPanel,
-	LorasList,
-	Header,
-	SettingsPage as Main,
-	ScrollWindow,
-	RightPanel,
-};
 interface SelectableButtonProps {
 	$isselected: boolean;
 }

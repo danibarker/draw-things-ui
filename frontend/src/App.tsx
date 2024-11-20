@@ -9,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "./components/shared/styled-components";
 import styled from "styled-components";
 import { Divider, PhotoGallery } from "./components/shared/layout-elements";
+import LogOut from "./log-out";
 function App() {
 	const [installPrompt, setInstallPrompt] = useState<EventWithPrompt | null>(
 		null
@@ -152,6 +153,14 @@ function App() {
 						</AuthenticatedRoute>
 					}
 				/>
+				<Route
+					path="logout"
+					element={
+						<AuthenticatedRoute>
+							<LogOut />
+						</AuthenticatedRoute>
+					}
+				/>
 			</Route>
 		</Routes>
 	);
@@ -172,6 +181,10 @@ const InstallScreen = styled.div`
 	color: var(--text-color);
 	p {
 		font-size: 0.8rem;
+	}
+
+	@media (max-width: 800px) {
+		overflow: scroll;
 	}
 
 	@media (max-width: 500px) {
@@ -207,6 +220,7 @@ const PhotoGalleryInstall = styled(PhotoGallery)`
 	@media (max-width: 800px) {
 		grid-template-columns: 1fr 1fr 1fr;
 		grid-template-rows: 1fr 1fr 1fr;
+		height: unset;
 	}
 
 	@media (max-width: 500px) {

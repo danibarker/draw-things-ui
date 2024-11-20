@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Link, Outlet } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "./components/shared/styled-components";
@@ -6,7 +6,6 @@ import { useAuth } from "./components/providers/useAuth";
 
 const MainPage = () => {
 	const pageRef = useRef<HTMLDivElement>(null);
-	const [showNav, setShowNav] = useState<boolean>(true);
 	const { user } = useAuth();
 	useEffect(() => {
 		if (pageRef.current) {
@@ -22,23 +21,18 @@ const MainPage = () => {
 					"background",
 					`radial-gradient(circle at ${xPercent}% ${yPercent}%,black 1%, var(--main-bg) 3%)`
 				);
-				if (yPercent < 3) {
-					setShowNav(true);
-				} else {
-					setShowNav(false);
-				}
 			});
 		}
 	}, []);
 	return (
 		<Page ref={pageRef}>
-			<Nav $show={showNav}>
+			<Nav>
 				<ul>
 					{user && <li>Welcome, {user.username}!</li>}
 					<li>
 						{!user ? (
 							<Link to="login">
-								<Button className="solid">Login</Button>
+								<Button className="solid">Login/Register</Button>
 							</Link>
 						) : (
 							<Link to="logout">
@@ -46,11 +40,13 @@ const MainPage = () => {
 							</Link>
 						)}
 					</li>
-					<li>
-						<Link to="/">
-							<Button className="solid">Home</Button>
-						</Link>
-					</li>
+					{user && (
+						<li>
+							<Link to="/">
+								<Button className="solid">Home</Button>
+							</Link>
+						</li>
+					)}
 				</ul>
 			</Nav>
 			<Outlet />
@@ -62,22 +58,21 @@ export default MainPage;
 
 const Page = styled.div`
 	display: grid;
-	grid-template-rows: 1fr;
+	grid-template-rows: 32px 1fr;
 	height: 100%;
-	background: var(--input-bg);
+	background: var(--main-bg);
 	color: var(--text-color);
 	width: 100%;
 `;
 
-const Nav = styled.nav<{ $show: boolean }>`
-	height: ${(props: { $show: boolean }) => (props.$show ? "55px" : "0")};
+const Nav = styled.nav`
+	height: 32px;
 	background: var(--input-bg);
 	border-bottom: 0.1px solid var(--border-color-1);
 	color: var(--text-color);
 	display: flex;
 	align-items: center;
 	transition: all 0.3s;
-	position: absolute;
 	overflow: hidden;
 	width: 100%;
 	ul {
@@ -86,6 +81,12 @@ const Nav = styled.nav<{ $show: boolean }>`
 		align-items: center;
 		width: 100%;
 		list-style: none;
+	}
+	Button {
+		height: 21px;
+		width: 100px;
+		font-size: 12px;
+		padding: 0;
 	}
 	z-index: 500;
 `;

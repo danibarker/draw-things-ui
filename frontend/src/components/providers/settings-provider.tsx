@@ -70,7 +70,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 		getSettings();
 	}, [query, page]);
 
-	const websocket = useWebSocket(
+	const { websocket, reconnect } = useWebSocket(
 		"/ws",
 		setUnsavedImages,
 		setQueue,
@@ -115,6 +115,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				setQuery,
 				page,
 				setPage,
+				reconnect,
 			}}
 		>
 			{children}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getCookie } from "./helpers";
 
 function useWebSocket(
@@ -8,17 +8,21 @@ function useWebSocket(
 	setGlobalQueueLength: React.Dispatch<React.SetStateAction<number>>
 ) {
 	const [websocket, setWebsocket] = useState<WebSocket | null>(null);
-	useEffect(() => {
-		let ws: WebSocket;
-		let reconnectAttempts = 0;
-
-		const connect = () => {
-			ws = new WebSocket(url);
-
+	const connect = useCallback(
+		(
+			url: string,
+			setWebsocket: React.Dispatch<React.SetStateAction<WebSocket | null>>,
+			setImages: React.Dispatch<React.SetStateAction<string[]>>,
+			setGlobalQueueLength: React.Dispatch<React.SetStateAction<number>>,
+			setQueue: React.Dispatch<React.SetStateAction<Settings[]>>
+		) => {
+			let reconnectAttempts = 0;
+			const ws = new WebSocket(url);
 			ws.onopen = () => {
 				console.log("Connected to websocket");
-				setWebsocket(ws);
 				ws.send(`{"type":"reconnect", "cookie": "${getCookie("session")}"}`);
+				setWebsocket(ws);
+				reconnectAttempts = 0;
 			};
 
 			ws.onclose = () => {
@@ -81,16 +85,31 @@ function useWebSocket(
 					reader.readAsText(blob);
 				}
 			};
-		};
-
-		connect();
+		},
+		[]
+	);
+	const reconnect = useCallback(() => {
+		if (websocket) websocket.close();
+		connect(url, setWebsocket, setImages, setGlobalQueueLength, setQueue);
+	}, [connect, setImages, setGlobalQueueLength, setQueue, url, websocket]);
+	useEffect(() => {
+		if (!websocket)
+			connect(url, setWebsocket, setImages, setGlobalQueueLength, setQueue);
 
 		return () => {
-			ws.close();
+			if (websocket) websocket.close();
 		};
-	}, [url, setImages, setWebsocket, setGlobalQueueLength, setQueue]);
+	}, [
+		connect,
+		websocket,
+		url,
+		setImages,
+		setWebsocket,
+		setGlobalQueueLength,
+		setQueue,
+	]);
 
-	return websocket;
+	return { websocket, reconnect };
 }
 
 export default useWebSocket;
