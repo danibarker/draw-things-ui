@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+
+	<body>
+		<input type="text" id="input" />
+		<button id="go">Go</button>
+		<div id="possible"></div>
+	</body>
+	<script>
+		const replace = {
+			a: ["a", "а"],
+			c: ["c", "с"],
+			d: ["d", "ԁ"],
+			e: ["e", "е"],
+			h: ["h", "һ"],
+			i: ["i", "і"],
+			j: ["j", "ј", "ʝ"],
+			l: ["l", "ӏ"],
+			n: ["n", "ո"],
+			o: ["o", "о", "ο", "օ"],
+			p: ["p", "р"],
+			q: ["q", "զ"],
+			u: ["u", "υ", "ս"],
+			v: ["v", "ν", "ѵ"],
+			x: ["x", "х"],
+			y: ["y", "у"],
+		};
+		let possibleAnchors = [];
+		const input = document.getElementById("input");
+
+		input.addEventListener("input", e => {
+			let possibilities = [input.value];
+			let value = e.target.value;
+			for (let letter of value) {
+				if (replace[letter]) {
+					let newPossibilities = [];
+					for (let possibility of possibilities) {
+						for (let replacement of replace[letter]) {
+							newPossibilities.push(possibility.replace(letter, replacement));
+						}
+					}
+					possibilities = newPossibilities;
+				}
+			}
+			possibleAnchors = [];
+			let pos = document.getElementById("possible");
+			pos.innerHTML = "";
+			pos.innerHTML = possibilities.length + " possibilities";
+
+			possibilities.forEach(possibility => {
+				const url =
+					"https://www.namecheap.com/domains/registration/results/?domain=";
+				const anchor = document.createElement("a");
+				anchor.href = url + possibility + ".ca";
+				anchor.target = "_blank";
+				anchor.innerText = anchor.href;
+				document.getElementById("possible").appendChild(anchor);
+				possibleAnchors.push(anchor);
+			});
+		});
+		const goButton = document.getElementById("go");
+		goButton.addEventListener("click", () => {
+			possibleAnchors.forEach((anchor, idx) => {
+				setTimeout(() => {
+					anchor.click();
+					console.log(idx, "gone");
+				}, 1000 * idx);
+			});
+		});
+	</script>
+</html>

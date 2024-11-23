@@ -52,7 +52,7 @@ const LoginRegister = () => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState("");
-	const { setUser } = useAuth();
+	const { user, setUser } = useAuth();
 	const [mode, setMode] = useState("Login");
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -106,6 +106,10 @@ const LoginRegister = () => {
 		<Page>
 			<h1>{mode}</h1>
 			<div>{error}</div>
+			<button onClick={() => console.log(user)}>check user</button>
+			<button onClick={() => console.log(document.cookie)}>
+				check cookies
+			</button>
 			<LoginInputs onSubmit={sendRequest}>
 				<input
 					type="text"
