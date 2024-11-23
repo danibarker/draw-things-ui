@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -79,9 +80,12 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:  "session",
-		Value: string(sessionToken),
-		Path:  "/",
+		Name:     "session",
+		Value:    string(sessionToken),
+		Path:     "/",
+		Expires:  time.Now().Add(1000000 * time.Hour),
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
 	})
 
 	userAttempt.Password = ""
@@ -152,9 +156,12 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.SetCookie(w, &http.Cookie{
-		Name:  "session",
-		Value: sessionToken,
-		Path:  "/",
+		Name:     "session",
+		Value:    sessionToken,
+		Path:     "/",
+		Expires:  time.Now().Add(1000000 * time.Hour),
+		Secure:   true,
+		SameSite: http.SameSiteStrictMode,
 	})
 
 	user.Password = ""

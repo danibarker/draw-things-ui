@@ -4,6 +4,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./components/shared/styled-components";
 import styled from "styled-components";
 import { useAuth } from "./components/providers/useAuth";
+import Loading from "./components/loading";
 const validate = (
 	mode: string,
 	username: string,
@@ -52,7 +53,7 @@ const LoginRegister = () => {
 	const [confirmPassword, setConfirmPassword] = useState("");
 	const [email, setEmail] = useState("");
 	const [error, setError] = useState("");
-	const { user, setUser } = useAuth();
+	const { user, setUser, loading } = useAuth();
 	const [mode, setMode] = useState("Login");
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -102,6 +103,9 @@ const LoginRegister = () => {
 			// If the server responds with a success message, navigate to the home page
 		}
 	};
+	if (loading) {
+		return <Loading />;
+	}
 	if (user) {
 		return <Navigate to="/" />;
 	}
