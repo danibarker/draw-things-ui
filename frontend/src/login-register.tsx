@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./components/shared/styled-components";
 import styled from "styled-components";
 import { useAuth } from "./components/providers/useAuth";
@@ -102,13 +102,15 @@ const LoginRegister = () => {
 			// If the server responds with a success message, navigate to the home page
 		}
 	};
+	if (user) {
+		return <Navigate to="/" />;
+	}
 	return (
 		<Page>
 			<h1>{mode}</h1>
 			<div>{error}</div>
-			<button onClick={() => console.log(user)}>check user</button>
 			<button onClick={() => console.log(document.cookie)}>
-				check cookies
+				{document.cookie}
 			</button>
 			<LoginInputs onSubmit={sendRequest}>
 				<input
