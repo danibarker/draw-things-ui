@@ -34,21 +34,6 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 
-	text := "Hello"
-	optionalResultWithText := OptionalResult{
-		Number: nil, // Field is omitted
-		Text:   &text,
-	}
-
-	// Print JSON
-	// resultJSON, _ := json.Marshal(result)
-	// optionalResultJSON, _ := json.Marshal(optionalResult)
-	optionalResultWithTextJSON, _ := json.Marshal(optionalResultWithText)
-
-	// fmt.Println(string(resultJSON))
-	// fmt.Println(string(optionalResultJSON))
-	fmt.Println(string(optionalResultWithTextJSON))
-
 	if _, err := os.Stat("public/assets/images"); os.IsNotExist(err) {
 		if err = os.MkdirAll("public/assets/images", 0755); err != nil {
 			fmt.Printf("error creating images folder: %s\n", err)
@@ -99,20 +84,4 @@ func main() {
 	} else {
 		fmt.Printf("server started on port 3333\n")
 	}
-}
-
-func Add(a int, b int) int {
-	return a + b
-}
-
-// Result
-type Result struct {
-	Number int    `json:"number"`
-	Text   string `json:"text"`
-}
-
-// OptionalResult, can have one or both fields
-type OptionalResult struct {
-	Number *int    `json:"number,omitempty"`
-	Text   *string `json:"text,omitempty"`
 }
