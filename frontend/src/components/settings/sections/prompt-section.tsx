@@ -8,7 +8,6 @@ import { getCookie } from "../../../helpers";
 function PromptSection() {
 	const buttonRef = useRef<HTMLDivElement>(null);
 	const submitRef = useRef<HTMLButtonElement>(null);
-	const s = useSettings();
 	const {
 		settings,
 		websocket,
@@ -17,7 +16,8 @@ function PromptSection() {
 		setIsAdvanced,
 		setQueue,
 		queue,
-	} = s;
+	} = useSettings();
+
 	useEffect(() => {
 		setSettings(prev => ({
 			...prev,
@@ -57,7 +57,7 @@ function PromptSection() {
 
 	const submit = async () => {
 		const cookie = getCookie("session");
-		const data = {
+		const data: { data: Settings; type: string; cookie: string | undefined } = {
 			data: {
 				width: settings.width,
 				height: settings.height,
@@ -71,12 +71,14 @@ function PromptSection() {
 				guidance_scale: settings.guidance_scale,
 				sampler: settings.sampler,
 				upscaler: "",
-				// init_images: settings.init_images,
 			},
 			type: "image",
 			cookie: cookie,
 		};
-		console.log(data);
+		if (settings.init_images) {
+			data.data["init_images"] = settings.init_images;
+		}
+		console.log("data is", data);
 		if (
 			data &&
 			websocket &&

@@ -38,6 +38,7 @@ type ImageConfig struct {
 	Seed          int64            `json:"seed"`
 	GuidanceScale float32          `json:"guidance_scale"`
 	Sampler       string           `json:"sampler"`
+	InitImages    *[]string        `json:"init_images,omitempty"`
 }
 
 type ImageRequest struct {

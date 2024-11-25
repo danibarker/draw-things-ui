@@ -104,6 +104,8 @@ export const SettingsContext = createContext<SettingsContextProps>({
 	setQuery: () => null,
 	page: 1,
 	setPage: () => null,
+	setSizeLocked: () => null,
+	sizeLocked: false,
 });
 
 export const useSettings = () => {

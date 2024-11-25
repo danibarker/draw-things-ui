@@ -93,6 +93,7 @@ interface Settings {
 	batch_count?: number;
 	refiner_model?: string;
 	type?: string;
+	init_images?: string[];
 }
 
 interface SettingsContextProps {
@@ -126,6 +127,8 @@ interface SettingsContextProps {
 	setQuery: React.Dispatch<React.SetStateAction<string>>;
 	page: number;
 	setPage: React.Dispatch<React.SetStateAction<number>>;
+	setSizeLocked: React.Dispatch<React.SetStateAction<boolean>>;
+	sizeLocked: boolean;
 }
 
 type PageHeaderProps = {

@@ -8,22 +8,23 @@ function SizeSection() {
 	//   1920, 1984, 2048,
 	// ];
 
-	const settings = useSettings();
+	const { settings, sizeLocked, setSettings } = useSettings();
 	return (
 		<Section>
 			<Column>
 				<Row>
 					<label htmlFor="controls">Width</label>
-					<span>{settings.settings.width}</span>
+					<span>{settings.width}</span>
 					<input
 						type="range"
+						disabled={sizeLocked}
 						min={144}
 						max={2000}
 						step={1}
-						value={settings.settings.width}
+						value={settings.width}
 						onChange={event => {
-							settings.setSettings({
-								...settings.settings,
+							setSettings({
+								...settings,
 								width: parseInt(event.target.value),
 							});
 						}}
@@ -31,16 +32,17 @@ function SizeSection() {
 				</Row>
 				<Row>
 					<label htmlFor="controls">Height</label>
-					<span>{settings.settings.height}</span>
+					<span>{settings.height}</span>
 					<input
 						type="range"
+						disabled={sizeLocked}
 						min={144}
 						max={2000}
 						step={1}
-						value={settings.settings.height}
+						value={settings.height}
 						onChange={event => {
-							settings.setSettings({
-								...settings.settings,
+							setSettings({
+								...settings,
 								height: parseInt(event.target.value),
 							});
 						}}

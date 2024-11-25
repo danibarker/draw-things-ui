@@ -20,6 +20,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [settings, setSettings] = useState<Settings>(defaultSettings);
 	const [unsavedImages, setUnsavedImages] = useState<string[]>([]);
 	const [savedImages, setSavedImages] = useState<string[]>([]);
+	const [sizeLocked, setSizeLocked] = useState(false);
 	const [id, setId] = useState("");
 	const [modalContent, setModalContent] = useState("help");
 	const [loras, setLoras] = useState<{
@@ -116,6 +117,8 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				page,
 				setPage,
 				reconnect,
+				setSizeLocked,
+				sizeLocked,
 			}}
 		>
 			{children}

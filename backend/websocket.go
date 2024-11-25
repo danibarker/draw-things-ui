@@ -24,11 +24,9 @@ func handleWebSocket(ws *websocket.Conn) {
 		fmt.Printf("received message: %s,%s\n", message.Type, message.Cookie)
 		user := getUser(message.Cookie)
 		if user != nil {
-
 			switch message.Type {
 			case "reconnect":
 				var complete []string
-
 				userIdToSocketMap[user.ID] = ws
 				if userIdToImageRequest[user.ID] != nil {
 					for _, imgReq := range userIdToImageRequest[user.ID] {
@@ -43,13 +41,36 @@ func handleWebSocket(ws *websocket.Conn) {
 				}); err != nil {
 					fmt.Printf("error sending message: %s\n", err)
 				}
-
+			case "queue":
+				handleQueueMessage(ws)
 			case "image":
-				var imgConfig ImageConfig
-				if err := mapstructure.Decode(message.Data, &imgConfig); err != nil {
-					fmt.Printf("error decoding image config: %s\n", err)
+				fmt.Printf("Raw message data: %v\n", message.Data)
+
+				// Temporary map to inspect data
+				tempMap := map[string]interface{}{}
+				if err := mapstructure.Decode(message.Data, &tempMap); err != nil {
+					fmt.Printf("Error decoding to map: %s\n", err)
 					continue
 				}
+				fmt.Printf("Temporary map: %+v\n", tempMap)
+
+				// Decode into ImageConfig
+				var imgConfig ImageConfig
+				decoder, err := mapstructure.NewDecoder(&mapstructure.DecoderConfig{
+					Metadata: nil,
+					Result:   &imgConfig,
+					TagName:  "json",
+				})
+				if err != nil {
+					fmt.Printf("Error creating decoder: %s\n", err)
+					continue
+				}
+				if err := decoder.Decode(message.Data); err != nil {
+					fmt.Printf("Error decoding image config: %s\n", err)
+					continue
+				}
+				fmt.Printf("Decoded ImageConfig: %+v\n", imgConfig)
+
 				newImageRequest := ImageRequest{
 					ImageConfig: imgConfig,
 					Complete:    false,
@@ -62,8 +83,6 @@ func handleWebSocket(ws *websocket.Conn) {
 					go handleImageMessages()
 				}
 				go handleQueueMessage(ws)
-			case "queue":
-				handleQueueMessage(ws)
 			default:
 				fmt.Printf("unknown message type: %s\n", message.Type)
 			}
@@ -71,21 +90,6 @@ func handleWebSocket(ws *websocket.Conn) {
 	}
 }
 
-func handleQueueMessage(ws *websocket.Conn) {
-	queueMutex.Lock()
-	queueLength := len(clientQueue)
-	queueMutex.Unlock()
-
-	message := QueueMessage{
-		QueueLength: queueLength,
-		Type:        "queue",
-	}
-
-	if err := websocket.JSON.Send(ws, message); err != nil {
-		fmt.Printf("error sending message: %s\n", err)
-	}
-
-}
 func handleImageMessages() {
 	for {
 		if len(imageRequestList) == 0 {
@@ -98,12 +102,21 @@ func handleImageMessages() {
 		queueMutex.Unlock()
 		imgRequest := userIdToImageRequest[userId][0]
 		userIdToImageRequest[userId] = userIdToImageRequest[userId][1:]
+		reqType := "txt2img"
+		fmt.Printf("image request: %v\n", imgRequest.ImageConfig)
+		fmt.Printf("image request: (%v)\n", imgRequest.ImageConfig.InitImages)
+		typeOf := fmt.Sprintf("%T", imgRequest.ImageConfig.InitImages)
+		fmt.Printf("type of init images== (%v)\n", typeOf)
+		if imgRequest.ImageConfig.InitImages != nil {
+			reqType = "img2img"
+		}
 		jsonBody, err := json.Marshal(imgRequest.ImageConfig)
 		if err != nil {
 			fmt.Printf("error marshalling image config: %s\n", err)
 			continue
 		}
-		image, err := handleImageRequest("txt2img", jsonBody)
+		fmt.Printf("jsonBody: %s\n", jsonBody)
+		image, err := handleImageRequest(reqType, jsonBody)
 		if err != nil {
 			fmt.Printf("error handling image request: %s\n", err)
 			continue
@@ -147,6 +160,22 @@ func handleImageMessages() {
 			fmt.Printf("no socket for user: %d,%d\n", userId, len(userIdToSocketMap))
 		}
 	}
+}
+
+func handleQueueMessage(ws *websocket.Conn) {
+	queueMutex.Lock()
+	queueLength := len(clientQueue)
+	queueMutex.Unlock()
+
+	message := QueueMessage{
+		QueueLength: queueLength,
+		Type:        "queue",
+	}
+
+	if err := websocket.JSON.Send(ws, message); err != nil {
+		fmt.Printf("error sending message: %s\n", err)
+	}
+
 }
 
 func convertBase64ToPng(base64String, filePath string) error {
