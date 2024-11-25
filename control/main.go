@@ -14,10 +14,10 @@ func main() {
 	setupApi()
 	http.Handle("/api/", http.StripPrefix("/api", apiMux))
 
-	http.HandleFunc("/", serveFrontend)
-	http.HandleFunc("/assets/", func(w http.ResponseWriter, r *http.Request) {
-		http.FileServer(http.Dir("./public")).ServeHTTP(w, r)
+	http.HandleFunc("/assets", func(w http.ResponseWriter, r *http.Request) {
+		http.FileServer(http.Dir("./dist/assets")).ServeHTTP(w, r)
 	})
+	http.HandleFunc("/", serveFrontend)
 	fmt.Printf("listening on port 3334\n")
 	err = http.ListenAndServe(":3334", nil)
 	if errors.Is(err, http.ErrServerClosed) {
@@ -39,6 +39,6 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 
 func setupApi() {
 	apiMux = http.NewServeMux()
-	apiMux.HandleFunc("/check-status", checkStatus)
-	apiMux.HandleFunc("/open-draw-things", openDrawThings)
+	apiMux.HandleFunc("/check", checkStatus)
+	apiMux.HandleFunc("/open", openDrawThings)
 }
