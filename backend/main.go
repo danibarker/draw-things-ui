@@ -50,7 +50,6 @@ func init() {
 		fmt.Printf("error opening sqlite3: %s\n", err)
 		panic(err)
 	}
-	defer db.Close()
 
 	fmt.Printf("connected to sqlite3\n")
 	// run CREATE_DB
@@ -79,6 +78,7 @@ func main() {
 	setupApi()
 
 	fmt.Printf("listening on port 3333\n")
+	defer db.Close()
 
 	http.Handle("/ws", websocket.Handler(handleWebSocket))
 	http.Handle("/api/", http.StripPrefix("/api", apiMux))
