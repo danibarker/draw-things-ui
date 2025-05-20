@@ -40,5 +40,5 @@ func serveFrontend(w http.ResponseWriter, r *http.Request) {
 func setupApi() {
 	apiMux = http.NewServeMux()
 	apiMux.HandleFunc("/check", checkStatus)
-	apiMux.HandleFunc("/open", openDrawThings)
+	apiMux.HandleFunc("/start", openDrawThings)
 }

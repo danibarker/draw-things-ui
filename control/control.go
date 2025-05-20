@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	scrollX = 280
+	scrollX = 480
 	scrollY = 430
-	buttonX = 324
+	buttonX = 522
 	buttonY = 508
 )
 

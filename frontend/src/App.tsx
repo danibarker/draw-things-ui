@@ -21,11 +21,12 @@ function App() {
 		installButton?.current?.setAttribute("hidden", "");
 	}
 	useEffect(() => {
+if (!("Notification" in window)) {}else{
 		Notification.requestPermission().then(result => {
 			console.log(result);
 		});
 		// main.js
-
+}
 		window.addEventListener("beforeinstallprompt", ((
 			event: EventWithPrompt
 		) => {
