@@ -188,6 +188,7 @@ func convertBase64ToPng(base64String, filePath string) error {
 	}
 
 	file, err := os.Create(filePath)
+
 	if err != nil {
 		return err
 	}

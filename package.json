@@ -25,5 +25,8 @@
 		"chokidar": "^4.0.1",
 		"readline-sync": "^1.4.10",
 		"typescript": "^5.6.3"
+	},
+	"devDependencies": {
+		"concurrently": "^9.1.2"
 	}
 }
