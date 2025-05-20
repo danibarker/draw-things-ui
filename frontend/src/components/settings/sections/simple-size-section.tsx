@@ -17,34 +17,34 @@ function SimpleSizeSection() {
 		useMemo(
 			() => ({
 				square: {
-					small: [512, 512],
+					small: [384, 384],
 					medium: [768, 768],
 					large: [960, 960],
 				},
 
 				landscape: {
-					small: [512, 384],
+					small: [512, 256],
 					medium: [704, 512],
 					large: [960, 704],
 				},
 
 				portrait: {
-					small: [384, 512],
+					small: [256, 512],
 					medium: [512, 704],
 					large: [704, 960],
 				},
 				tall: {
-					small: [320, 640],
+					small: [192, 640],
 					medium: [512, 1024],
 					large: [640, 1208],
 				},
 				wide: {
-					small: [640, 320],
+					small: [640, 192],
 					medium: [1024, 512],
 					large: [1208, 640],
 				},
 				panoramic: {
-					small: [768, 256],
+					small: [768, 128],
 					medium: [1152, 384],
 					large: [1728, 576],
 				},
