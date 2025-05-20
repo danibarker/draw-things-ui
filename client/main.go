@@ -53,7 +53,6 @@ var (
 			"SD V2 (SD2.0 Inpainting)": "sd_v2.0_inpainting_f16.ckpt",
 		},
 		"flux": {
-			"Flux.1 (Flux)":       "flux_1_schnell_q8p.ckpt",
 			"Flux.1 8-bit (Flux)": "flux_1_schnell_q5p.ckpt",
 		},
 		"sd1_5": {

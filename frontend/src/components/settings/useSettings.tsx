@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 export const defaultSettings: Settings = {
 	model_category: "flux",
-	model: "flux_1_schnell_q8p.ckpt",
+	model: "flux_1_schnell_q5p.ckpt",
 	loras: [],
 	controls: [],
 	strength: 1,
