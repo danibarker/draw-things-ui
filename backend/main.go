@@ -26,21 +26,8 @@ var (
 	Id                   string
 )
 
-func serveFrontend(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("serving frontend\n")
-
-	http.ServeFile(w, r, "public/index.html")
-}
-
-func main() {
-
-	if _, err := os.Stat("public/assets/images"); os.IsNotExist(err) {
-		if err = os.MkdirAll("public/assets/images", 0755); err != nil {
-			fmt.Printf("error creating images folder: %s\n", err)
-			panic(err)
-		}
-	}
-	setupApi()
+func init() {
+	//
 
 	file, err := os.Open("config.json")
 	if err != nil {
@@ -66,6 +53,31 @@ func main() {
 	defer db.Close()
 
 	fmt.Printf("connected to sqlite3\n")
+	// run CREATE_DB
+	res, err := db.Exec(CREATE_DB)
+	if err != nil {
+		fmt.Printf("error creating database: %s\n", err)
+		panic(err)
+	}
+	fmt.Printf("created database: %s\n", res)
+
+}
+func serveFrontend(w http.ResponseWriter, r *http.Request) {
+	fmt.Printf("serving frontend\n")
+
+	http.ServeFile(w, r, "public/index.html")
+}
+
+func main() {
+
+	if _, err := os.Stat("public/assets/images"); os.IsNotExist(err) {
+		if err = os.MkdirAll("public/assets/images", 0755); err != nil {
+			fmt.Printf("error creating images folder: %s\n", err)
+			panic(err)
+		}
+	}
+	setupApi()
+
 	fmt.Printf("listening on port 3333\n")
 
 	http.Handle("/ws", websocket.Handler(handleWebSocket))
@@ -75,7 +87,7 @@ func main() {
 	http.HandleFunc("/assets/", func(w http.ResponseWriter, r *http.Request) {
 		http.FileServer(http.Dir("./public")).ServeHTTP(w, r)
 	})
-	err = http.ListenAndServe(":3333", nil)
+	err := http.ListenAndServe(":3333", nil)
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
 	} else if err != nil {
