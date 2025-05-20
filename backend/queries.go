@@ -203,7 +203,6 @@ CREATE TABLE IF NOT EXISTS roles (
 
 
 	INSERT OR IGNORE INTO models (model_name, model_type, filename) VALUES ('SD V2 (SD2.0 Inpainting)', 'sd2_0', 'sd_v2.0_inpainting_f16.ckpt');
-	INSERT OR IGNORE INTO models (model_name, model_type, filename) VALUES ('Flux.1 (Flux)', 'flux', 'flux_1_schnell_q8p.ckpt');
 	INSERT OR IGNORE INTO models (model_name, model_type, filename) VALUES ('Flux.1 8-bit (Flux)', 'flux', 'flux_1_schnell_q5p.ckpt');
 	INSERT OR IGNORE INTO models (model_name, model_type, filename) VALUES ('SD V1.5 (SD1.5 Inpainting)', 'sd1_5', 'sd_v1.5_inpainting_f16.ckpt');
 	INSERT OR IGNORE INTO models (model_name, model_type, filename) VALUES ('Dreamshaper (SD1.5)', 'sd1_5', 'dreamshaper_v8_f16.ckpt');
