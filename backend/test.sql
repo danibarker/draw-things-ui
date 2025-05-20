@@ -320,14 +320,6 @@ VALUES
     'sd_v2.0_inpainting_f16.ckpt'
   );
 
-INSERT
-  OR IGNORE INTO models (model_name, model_type, filename)
-VALUES
-  (
-    'Flux.1 (Flux)',
-    'flux',
-    'flux_1_schnell_q8p.ckpt'
-  );
 
 INSERT
   OR IGNORE INTO models (model_name, model_type, filename)
