@@ -22,7 +22,7 @@ var (
 	userIdToSocketMap    map[int]*websocket.Conn = make(map[int]*websocket.Conn)
 	userIdToImageRequest map[int][]ImageRequest  = make(map[int][]ImageRequest)
 	busy                 bool                    = false
-	HOST                 string                  = "http://localhost:7775"
+	HOST                 string                  = "http://10.11.12.2:7775"
 	Id                   string
 )
 
