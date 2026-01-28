@@ -58,7 +58,7 @@ func init() {
 		fmt.Printf("error creating database: %s\n", err)
 		panic(err)
 	}
-	fmt.Printf("created database: %s\n", res)
+	fmt.Printf("created database now: %s\n", res)
 
 }
 func serveFrontend(w http.ResponseWriter, r *http.Request) {
