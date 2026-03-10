@@ -32,3 +32,4 @@ zzz-fake
 backend/public
 run.go
 backend/private/assets/images
+node_modules/
