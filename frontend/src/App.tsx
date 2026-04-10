@@ -21,12 +21,12 @@ function App() {
 		installButton?.current?.setAttribute("hidden", "");
 	}
 	useEffect(() => {
-if (!("Notification" in window)) {}else{
-		Notification.requestPermission().then(result => {
-			console.log(result);
-		});
-		// main.js
-}
+		if ("Notification" in window) {
+			Notification.requestPermission().then(result => {
+				console.log(result);
+			});
+			// main.js
+		}
 		window.addEventListener("beforeinstallprompt", ((
 			event: EventWithPrompt
 		) => {
@@ -39,132 +39,130 @@ if (!("Notification" in window)) {}else{
 			disableInAppInstallPrompt();
 		});
 	}, [installButton]);
-	return installPrompt ? (
-		<>
-			<InstallScreen>
-				<h1>Welcome To Imagine Something</h1>
-				<p>
-					<br />
-					<br />
-					Imagine Something is a App that lets you create images using the
-					latest image generation AI, featuring
-					<br />
-					<FluxText src="assets/flux.png" alt="flux" />
-					<br />
-					<br />
-					Some sample images generated using Flux.1 are shown below. Click to
-					view full size.
-					<Divider />
-					Install on Apple, Android, MacOS or Windows.
-				</p>
-				<Main>
-					<Button
-						ref={installButton}
-						onClick={async () => {
-							if (!installPrompt) {
-								return;
-							}
-							const result = await installPrompt.prompt();
-							console.log(`Install prompt was: ${result.outcome}`);
-							disableInAppInstallPrompt();
-						}}
-						id="install"
-					>
-						Install
-					</Button>
-					<PhotoGalleryInstall $both={false}>
-						<a target="_blank" href="assets/9.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/9.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/4.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/4.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/5.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/5.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/8.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/8.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/1.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/1.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/2.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/2.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/6.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/6.png"
-								alt="placeholder"
-							/>
-						</a>
-						<a target="_blank" href="assets/7.png">
-							<img
-								style={{ width: "100%" }}
-								src="assets/7.png"
-								alt="placeholder"
-							/>
-						</a>
-					</PhotoGalleryInstall>
-				</Main>
-			</InstallScreen>
-		</>
-	) : (
-		<Routes>
-			<Route path="/" element={<MainPage />}>
-				<Route
-					path=""
-					element={
-						<AuthenticatedRoute>
-							<Layout />
-						</AuthenticatedRoute>
-					}
-				/>
-				<Route path="login" element={<LoginRegister />} />
-				<Route path="register" element={<LoginRegister />} />
-				<Route
-					path="images"
-					element={
-						<AuthenticatedRoute>
-							<SavedImages />
-						</AuthenticatedRoute>
-					}
-				/>
-				<Route
-					path="logout"
-					element={
-						<AuthenticatedRoute>
-							<LogOut />
-						</AuthenticatedRoute>
-					}
-				/>
-			</Route>
-		</Routes>
-	);
+	return installPrompt ?
+			<>
+				<InstallScreen>
+					<h1>Welcome To Imagine Something</h1>
+					<p>
+						<br />
+						<br />
+						Imagine Something is a App that lets you create images using the
+						latest image generation AI, featuring
+						<br />
+						<FluxText src="assets/flux.png" alt="flux" />
+						<br />
+						<br />
+						Some sample images generated using Flux.1 are shown below. Click to
+						view full size.
+						<Divider />
+						Install on Apple, Android, MacOS or Windows.
+					</p>
+					<Main>
+						<Button
+							ref={installButton}
+							onClick={async () => {
+								if (!installPrompt) {
+									return;
+								}
+								const result = await installPrompt.prompt();
+								console.log(`Install prompt was: ${result.outcome}`);
+								disableInAppInstallPrompt();
+							}}
+							id="install"
+						>
+							Install
+						</Button>
+						<PhotoGalleryInstall $both={false}>
+							<a target="_blank" href="assets/9.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/9.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/4.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/4.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/5.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/5.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/8.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/8.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/1.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/1.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/2.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/2.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/6.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/6.png"
+									alt="placeholder"
+								/>
+							</a>
+							<a target="_blank" href="assets/7.png">
+								<img
+									style={{ width: "100%" }}
+									src="assets/7.png"
+									alt="placeholder"
+								/>
+							</a>
+						</PhotoGalleryInstall>
+					</Main>
+				</InstallScreen>
+			</>
+		:	<Routes>
+				<Route path="/" element={<MainPage />}>
+					<Route
+						path=""
+						element={
+							<AuthenticatedRoute>
+								<Layout />
+							</AuthenticatedRoute>
+						}
+					/>
+					<Route path="login" element={<LoginRegister />} />
+					<Route path="register" element={<LoginRegister />} />
+					<Route
+						path="images"
+						element={
+							<AuthenticatedRoute>
+								<SavedImages />
+							</AuthenticatedRoute>
+						}
+					/>
+					<Route
+						path="logout"
+						element={
+							<AuthenticatedRoute>
+								<LogOut />
+							</AuthenticatedRoute>
+						}
+					/>
+				</Route>
+			</Routes>;
 }
 
 export default App;

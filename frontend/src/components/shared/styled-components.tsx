@@ -104,7 +104,8 @@ export const Button = styled.button`
 		height: 100%;
 		background: linear-gradient(179deg, var(--highlight-1), var(--highlight-2))
 			border-box;
-		mask: linear-gradient(white, white) padding-box,
+		mask:
+			linear-gradient(white, white) padding-box,
 			linear-gradient(white, white);
 		mask-composite: exclude;
 		border-radius: inherit;

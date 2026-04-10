@@ -1,0 +1,15 @@
+[tasks.build]
+depends = ["install","lint","pretty"]
+depends_post = ["cleanup"]
+run = "cd frontend && npm run build && cd ../backend && go build -o draw-go-react"
+[tasks.install]
+run = "cd frontend && npm install && cd ../backend && go mod tidy"
+[tasks.cleanup]
+run = "find ./backend/public -mindepth 1 ! -path \"./backend/public/assets/images*\" -delete"
+depends_post = ["deploy"]
+[tasks.deploy]
+run = "cp -R backend/dist/* backend/public && rm -rf backend/dist"
+[tasks.pretty]
+run = "prettier --write ."
+[tasks.lint]
+run= "cd frontend && node_modules/eslint/bin/eslint.js ."

@@ -113,9 +113,6 @@ const LoginRegister = () => {
 		<Page>
 			<h1>{mode}</h1>
 			<div>{error}</div>
-			<button onClick={() => console.log(document.cookie)}>
-				{document.cookie}
-			</button>
 			<LoginInputs onSubmit={sendRequest}>
 				<input
 					type="text"
@@ -157,17 +154,16 @@ const LoginRegister = () => {
 				</LoginButtons>
 			</LoginInputs>
 			<SwitchModes>
-				{mode === "Login" ? (
+				{mode === "Login" ?
 					<>
 						<p>Don't have an account?</p>
 						<Button onClick={() => navigate("/register")}>Register</Button>
 					</>
-				) : (
-					<>
+				:	<>
 						<p>Already have an account?</p>
 						<Button onClick={() => navigate("/login")}>Login</Button>
 					</>
-				)}
+				}
 			</SwitchModes>
 		</Page>
 	);

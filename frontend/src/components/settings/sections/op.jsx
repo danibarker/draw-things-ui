@@ -2801,9 +2801,9 @@ function generatePrompt() {
 					randomAction = "";
 				} else if (fantasticScenes.includes(sceneArray)) {
 					randomClothes =
-						Math.random() < 0.5
-							? getRandom(maleFantasticClothes)
-							: getRandom(femaleFantasticClothes);
+						Math.random() < 0.5 ?
+							getRandom(maleFantasticClothes)
+						:	getRandom(femaleFantasticClothes);
 				}
 				break;
 			case 1:
@@ -2816,9 +2816,9 @@ function generatePrompt() {
 				break;
 			case 3:
 				randomClothes =
-					Math.random() < 0.5
-						? getRandom(maleFantasticClothes)
-						: getRandom(femaleFantasticClothes);
+					Math.random() < 0.5 ?
+						getRandom(maleFantasticClothes)
+					:	getRandom(femaleFantasticClothes);
 				break;
 		}
 	} else if (rand < 0.5) {
@@ -2954,9 +2954,9 @@ function generatePrompt() {
 				randomClothes = getRandom(femaleClothes);
 			} else {
 				randomClothes =
-					Math.random() < 0.5
-						? getRandom(maleClothes)
-						: getRandom(femaleClothes);
+					Math.random() < 0.5 ?
+						getRandom(maleClothes)
+					:	getRandom(femaleClothes);
 			}
 
 			if (promptsSourceInput[4][1] == false) {
@@ -3356,9 +3356,9 @@ if (workflow == 0) {
 		for (var i = 0; i < batchCount; i++) {
 			const completedBatches = batchCount * s + i + 1;
 			const eTime =
-				completedBatches > 1
-					? estimateTime(start, completedBatches - 1, totalBatches)
-					: ``;
+				completedBatches > 1 ?
+					estimateTime(start, completedBatches - 1, totalBatches)
+				:	``;
 			var schnellLora = [];
 			if (loras.length > 0) {
 				for (var x = 0; x < loras.length; x++) {
@@ -3482,9 +3482,9 @@ if (workflow == 0) {
 		for (var i = 0; i < batchCount; i++) {
 			const completedBatches = batchCount * s + i + 1;
 			const eTime =
-				completedBatches > 1
-					? estimateTime(start, completedBatches - 1, totalBatches)
-					: ``;
+				completedBatches > 1 ?
+					estimateTime(start, completedBatches - 1, totalBatches)
+				:	``;
 			console.log(
 				`🟢 Running the ${currentModel}   ⚙︎ Image batch progress ‣ ${completedBatches}/${totalBatches}${eTime}`
 			);
@@ -3539,9 +3539,9 @@ if (workflow == 0) {
 function refine(info, srcPrompt) {
 	configuration.model = fluxModel;
 	let p =
-		imgFiles.length == 0
-			? promptsArray[0]
-			: "sharp focus, detailed texture, film grain, a high-quality image.";
+		imgFiles.length == 0 ?
+			promptsArray[0]
+		:	"sharp focus, detailed texture, film grain, a high-quality image.";
 	if (srcPrompt) {
 		p = srcPrompt;
 	}
@@ -3588,9 +3588,9 @@ function refine(info, srcPrompt) {
 
 function outpainting(info, srcPrompt) {
 	let p =
-		imgFiles.length == 0
-			? promptsArray[0]
-			: "sharp focus, detailed texture, film grain, a high-quality image.";
+		imgFiles.length == 0 ?
+			promptsArray[0]
+		:	"sharp focus, detailed texture, film grain, a high-quality image.";
 	if (srcPrompt) {
 		p = srcPrompt;
 	}

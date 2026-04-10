@@ -55,9 +55,9 @@ function LoraSection() {
 												lorasInUse.push({
 													weight: 1,
 													file:
-														typeof value === "string"
-															? value
-															: JSON.stringify(value),
+														typeof value === "string" ? value : (
+															JSON.stringify(value)
+														),
 													key,
 												});
 

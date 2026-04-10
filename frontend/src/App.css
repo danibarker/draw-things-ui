@@ -2,7 +2,8 @@
 	font-family: "Friz Quadrata Regular OS";
 	font-style: normal;
 	font-weight: normal;
-	src: local("Friz Quadrata Regular OS"),
+	src:
+		local("Friz Quadrata Regular OS"),
 		url("/assets/fonts/friz-quadrata-regular-os-5870333951e7c.woff")
 			format("woff");
 }
@@ -11,7 +12,8 @@
 	font-family: "Friz Quadrata Bold Italic OS";
 	font-style: normal;
 	font-weight: normal;
-	src: local("Friz Quadrata Bold Italic OS"),
+	src:
+		local("Friz Quadrata Bold Italic OS"),
 		url("/assets/fonts/friz-quadrata-bold-italic-os-5870341205e0f.woff")
 			format("woff");
 }

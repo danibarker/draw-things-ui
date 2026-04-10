@@ -30,15 +30,14 @@ const MainPage = () => {
 				<ul>
 					{user && <li>Welcome, {user.username}!</li>}
 					<li>
-						{!user ? (
+						{!user ?
 							<Link to="login">
 								<Button className="solid">Login/Register</Button>
 							</Link>
-						) : (
-							<Link to="logout">
+						:	<Link to="logout">
 								<Button className="solid">Logout</Button>
 							</Link>
-						)}
+						}
 					</li>
 					{user && (
 						<li>

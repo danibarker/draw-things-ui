@@ -19,7 +19,9 @@ const Settings = ({ isAdvanced }: { isAdvanced: boolean }) => {
 			<LoraSection />
 			{isAdvanced && <StrengthSeedSection />}
 			{isAdvanced && <StepsGuidanceSection />}
-			{isAdvanced ? <SizeSection /> : <SimpleSizeSection />}
+			{isAdvanced ?
+				<SizeSection />
+			:	<SimpleSizeSection />}
 			{isAdvanced && <SamplerSection />}
 			<ImageUploadSection />
 		</Scrollable>

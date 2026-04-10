@@ -2568,9 +2568,9 @@ function generatePrompt() {
 			randomAction = "";
 		} else if (fantasticScenes.includes(sceneArray)) {
 			randomClothes =
-				Math.random() < 0.5
-					? (getRandom(maleFantasticClothes) as string)
-					: (getRandom(femaleFantasticClothes) as string);
+				Math.random() < 0.5 ?
+					(getRandom(maleFantasticClothes) as string)
+				:	(getRandom(femaleFantasticClothes) as string);
 		}
 	} else if (rand < 0.5) {
 		randomSubject = getRandom(allPeople) as string;

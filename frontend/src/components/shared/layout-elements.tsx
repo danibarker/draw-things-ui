@@ -165,10 +165,12 @@ export const ModalContent = styled.div<{ $color1: string; $color2: string }>`
 		left: -4px;
 		width: 100%;
 		height: 100%;
-		background: linear-gradient(137deg, var(--highlight-3), var(--highlight-4))
+		background:
+			linear-gradient(137deg, var(--highlight-3), var(--highlight-4))
 				padding-box,
 			linear-gradient(45deg, var(--highlight-1), var(--highlight-2)) border-box;
-		mask: linear-gradient(white, black) padding-box,
+		mask:
+			linear-gradient(white, black) padding-box,
 			linear-gradient(white, white);
 		mask-composite: exclude;
 		border-radius: inherit;

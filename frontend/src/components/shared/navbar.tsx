@@ -11,11 +11,11 @@ export const NavBar = () => {
 		<Nav>
 			<p>
 				Hello, server is
-				{websocket && websocket?.readyState == 1
-					? " connected"
-					: websocket && websocket.readyState == 0
-					? " not responding"
-					: " disconnected"}
+				{websocket && websocket?.readyState == 1 ?
+					" connected"
+				: websocket && websocket.readyState == 0 ?
+					" not responding"
+				:	" disconnected"}
 			</p>
 			<Button
 				onClick={() => {

@@ -1,0 +1,12 @@
+some_command | grep "pattern1" | grep "pattern2" | \
+awk 'NR==1 { header=$0; next } $2 >= 1000 { print }' | \
+sort -k2,2n | \
+awk -v h="$(some_command | grep "pattern1" | grep "pattern2" | head -n1)" 'BEGIN { print h; print "" } { print }'
+
+tokei . | grep -v "━" | grep -v "─" | grep -v "(Total)" | \
+awk -F'  +' 'NR==1 { header=$0; next } $2 >= 100 \
+{ printf "%-25s%s\n", $1, $3  }' | \
+sort -k3,3n | \
+awk -v h="$(tokei . | grep -v "━" | grep -v "─" | \
+grep -v "(Total)" | head -n1)" \
+'BEGIN { print h; print"" } { print }'

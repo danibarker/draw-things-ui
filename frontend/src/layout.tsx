@@ -24,11 +24,9 @@ const Layout = () => {
 		<Window>
 			{modalOpen && (
 				<Modal modalRef={modalRef} $color1="green" $color2="purple">
-					{modalContent === "help" ? (
+					{modalContent === "help" ?
 						<HelpSection setModalOpen={setModalOpen} />
-					) : (
-						<GetMoreLoras setModalOpen={setModalOpen} />
-					)}
+					:	<GetMoreLoras setModalOpen={setModalOpen} />}
 				</Modal>
 			)}
 
