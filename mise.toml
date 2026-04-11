@@ -18,8 +18,8 @@ run= "cd frontend && node_modules/eslint/bin/eslint.js ."
 description = "Grant admin role to a user in the local SQLite database"
 run = '''
 cd backend
-if [ -z "${USERNAME:-}" ]                                               ; then
-	echo "Usage: USERNAME=<your-username> mise run promote-admin"
+if [ -z "${ADMIN:-}" ]                                                  ; then
+	echo "Usage: ADMIN=<your-username> mise run promote-admin"
 	exit 1
 fi
 
@@ -31,7 +31,7 @@ INSERT OR IGNORE INTO user_roles (user_id, role_id)
 SELECT u.id, r.id
 FROM users u
 JOIN roles r ON r.level = 0
-WHERE u.username = '${USERNAME}'
+WHERE u.username = '${ADMIN}'
 	AND NOT EXISTS (
 		SELECT 1
 		FROM user_roles ur
