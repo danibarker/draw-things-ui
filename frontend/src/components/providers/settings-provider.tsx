@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { defaultSettings, SettingsContext } from "../settings/useSettings";
 import useWebSocket from "../../useWebsocket";
 import {
+	canEditSettingsOptions,
 	getLoras,
 	getModels,
 	getSamplers,
@@ -32,10 +33,13 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 	const [seedModes, setSeedModes] = useState<SeedMode[]>([]);
 	const [upscalers, setUpscalers] = useState<Upscaler[]>([]);
 	const [samplers, setSamplers] = useState<Sampler[]>([]);
+	const [isSettingsAdmin, setIsSettingsAdmin] = useState(false);
 	const [query, setQuery] = useState("");
 	const [page, setPage] = useState(1);
 	useEffect(() => {
 		const getSettings = async () => {
+			const canEdit = await canEditSettingsOptions();
+			setIsSettingsAdmin(canEdit);
 			const newLoras = await getLoras();
 			setLoras(newLoras);
 			const newModels = await getModels();
@@ -112,6 +116,7 @@ const SettingsProvider = ({ children }: { children: ReactNode }) => {
 				seedModes,
 				upscalers,
 				samplers,
+				isSettingsAdmin,
 				query,
 				setQuery,
 				page,

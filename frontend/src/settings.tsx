@@ -3,6 +3,7 @@ import LoraSection from "./components/settings/sections/loras-section";
 import ModelSection from "./components/settings/sections/model-section";
 import PromptSection from "./components/settings/sections/prompt-section";
 import SamplerSection from "./components/settings/sections/sampler-section";
+import SettingsFilesEditorSection from "./components/settings/sections/settings-files-editor";
 import SimpleSizeSection from "./components/settings/sections/simple-size-section";
 import SizeSection from "./components/settings/sections/size-section";
 import StepsGuidanceSection from "./components/settings/sections/steps-guidance";
@@ -12,6 +13,7 @@ import { useSettings } from "./components/settings/useSettings";
 import { Column, Row, Section } from "./components/shared/styled-components";
 
 const Settings = ({ isAdvanced }: { isAdvanced: boolean }) => {
+	const { isSettingsAdmin } = useSettings();
 	return (
 		<Scrollable>
 			<PromptSection />
@@ -23,6 +25,7 @@ const Settings = ({ isAdvanced }: { isAdvanced: boolean }) => {
 				<SizeSection />
 			:	<SimpleSizeSection />}
 			{isAdvanced && <SamplerSection />}
+			{isAdvanced && isSettingsAdmin && <SettingsFilesEditorSection />}
 			<ImageUploadSection />
 		</Scrollable>
 	);

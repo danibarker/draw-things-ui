@@ -171,6 +171,10 @@ CREATE TABLE IF NOT EXISTS roles (
 	INSERT OR IGNORE INTO visibilities (visibility_name) VALUES ('unlisted');
 	INSERT OR IGNORE INTO visibilities (visibility_name) VALUES ('direct');
 
+	INSERT OR IGNORE INTO roles (level, role_name) VALUES (0, 'admin');
+	INSERT OR IGNORE INTO roles (level, role_name) VALUES (7, 'user');
+	INSERT OR IGNORE INTO roles (level, role_name) VALUES (9, 'guest');
+
 
 
 	INSERT OR IGNORE INTO seed_modes (seed_mode_name) VALUES ('Scale Alike');

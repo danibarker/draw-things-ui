@@ -1,9 +1,9 @@
 import { Row, Section } from "../../shared/styled-components";
 import { useSettings } from "../useSettings";
-import models from "./models.json";
 
 function ModelSection() {
 	const settings = useSettings();
+	const models = settings.models;
 	return (
 		<Section>
 			<Row>
@@ -41,13 +41,13 @@ function ModelSection() {
 				>
 					<option value="">Select Model</option>
 					{settings.settings.model_category &&
-						Object.entries(
-							models[settings.settings.model_category as keyof typeof models]
-						).map(([key, value]) => (
-							<option key={key} value={value}>
-								{key}
-							</option>
-						))}
+						Object.entries(models[settings.settings.model_category] ?? {}).map(
+							([key, value]) => (
+								<option key={key} value={value}>
+									{key}
+								</option>
+							)
+						)}
 				</select>
 			</Row>
 		</Section>

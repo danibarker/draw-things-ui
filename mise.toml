@@ -13,3 +13,29 @@ run = "cp -R backend/dist/* backend/public && rm -rf backend/dist"
 run = "prettier --write ."
 [tasks.lint]
 run= "cd frontend && node_modules/eslint/bin/eslint.js ."
+
+[tasks.promote-admin]
+description = "Grant admin role to a user in the local SQLite database"
+run = '''
+cd backend
+if [ -z "${USERNAME:-}" ]                                               ; then
+	echo "Usage: USERNAME=<your-username> mise run promote-admin"
+	exit 1
+fi
+
+sqlite3 drawlings.db "
+INSERT OR IGNORE INTO roles (level, role_name) VALUES (0, 'admin');
+INSERT OR IGNORE INTO roles (level, role_name) VALUES (7, 'user');
+INSERT OR IGNORE INTO roles (level, role_name) VALUES (9, 'guest');
+INSERT OR IGNORE INTO user_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u
+JOIN roles r ON r.level = 0
+WHERE u.username = '${USERNAME}'
+	AND NOT EXISTS (
+		SELECT 1
+		FROM user_roles ur
+		WHERE ur.user_id = u.id AND ur.role_id = r.id
+	)                                                                  ;
+"
+'''

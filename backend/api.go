@@ -13,6 +13,8 @@ func setupApi() {
 	setupImages()
 	apiMux = http.NewServeMux()
 	apiMux.HandleFunc("/loras", HandleLoras)
+	apiMux.HandleFunc("/admin/options", IsAdmin(AdminOptionTypes))
+	apiMux.HandleFunc("/admin/options/", IsAdmin(AdminOptionsHandler))
 	apiMux.Handle("/auth/", http.StripPrefix("/auth", authMux))
 	apiMux.Handle("/images/", http.StripPrefix("/images", imagesMux))
 }

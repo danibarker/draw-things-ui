@@ -100,6 +100,7 @@ export const SettingsContext = createContext<SettingsContextProps>({
 	seedModes: [],
 	upscalers: [],
 	samplers: [],
+	isSettingsAdmin: false,
 	query: "",
 	setQuery: () => null,
 	page: 1,

@@ -122,6 +122,7 @@ interface SettingsContextProps {
 	seedModes: SeedMode[];
 	upscalers: Upscaler[];
 	samplers: Sampler[];
+	isSettingsAdmin: boolean;
 	id: string;
 	query: string;
 	setQuery: React.Dispatch<React.SetStateAction<string>>;

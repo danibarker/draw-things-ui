@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"net/http"
 )
@@ -110,10 +111,15 @@ func IsAdmin(next http.HandlerFunc) http.HandlerFunc {
 		SELECT u.id, u.username, r.level FROM users u
 		inner join user_roles ur on u.id = ur.user_id
 		inner join roles r on ur.role_id = r.id
-		WHERE u.id = ?
-		`, userID).Scan(&user.ID, &user.Username, &role)
+		WHERE u.id = ? AND r.level = ?
+		LIMIT 1
+		`, userID, AdminRole).Scan(&user.ID, &user.Username, &role)
 		fmt.Println("role", role, "user", user)
 		if err != nil {
+			if err == sql.ErrNoRows {
+				http.Error(w, "not an admin", http.StatusUnauthorized)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}

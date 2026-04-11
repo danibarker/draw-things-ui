@@ -1,9 +1,9 @@
 import { Row, Section } from "../../shared/styled-components";
-import samplers from "./samplers.json";
 import { useSettings } from "../useSettings";
 
 const SamplerSection = () => {
 	const settings = useSettings();
+	const samplers = settings.samplers;
 	return (
 		<Section>
 			<Row>
@@ -11,6 +11,7 @@ const SamplerSection = () => {
 				<select
 					id="sampler"
 					name="sampler"
+					value={settings.settings.sampler}
 					onChange={event => {
 						const sampler = event.target.value;
 						settings.setSettings({
@@ -21,9 +22,9 @@ const SamplerSection = () => {
 				>
 					<option value="">Select Sampler</option>
 					{samplers &&
-						Object.keys(samplers).map(key => (
-							<option key={key} value={key}>
-								{key}
+						samplers.map(({ sampler_name }) => (
+							<option key={sampler_name} value={sampler_name}>
+								{sampler_name}
 							</option>
 						))}
 				</select>

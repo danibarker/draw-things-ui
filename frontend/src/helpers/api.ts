@@ -1,5 +1,14 @@
 import axios from "axios";
 
+type SettingsFileName =
+	| "models"
+	| "loras"
+	| "samplers"
+	| "seed-modes"
+	| "upscalers"
+	| "refiners"
+	| "controls";
+
 export const getLoras = async () => {
 	try {
 		const lorasFromLocalStorage = localStorage.getItem("loras");
@@ -12,7 +21,6 @@ export const getLoras = async () => {
 			lorasToAdd = {};
 		}
 		const response = await axios.get("/api/images/loras");
-		console.log("loras", response.data);
 		response.data.forEach((lora: Lora) => {
 			if (!lorasToAdd[lora.lora_name]) {
 				lorasToAdd[lora.lora_name] = { [lora.model_type]: lora.filename };
@@ -60,6 +68,49 @@ export const getUpscalers = async () => {
 export const getSamplers = async () => {
 	const response = await axios.get("/api/images/samplers");
 	return response.data;
+};
+
+export const getSettingsFileContent = async (name: SettingsFileName) => {
+	const response = await axios.get(`/api/admin/options/${name}`);
+	return response.data;
+};
+
+export const saveSettingsFileContent = async (
+	name: SettingsFileName,
+	content: unknown
+) => {
+	const response = await axios.put(
+		`/api/admin/options/${name}/${(content as { id: number }).id}`,
+		content
+	);
+	return response.data;
+};
+
+export const createSettingsOption = async (
+	name: SettingsFileName,
+	content: unknown
+) => {
+	const response = await axios.post(`/api/admin/options/${name}`, content);
+	return response.data;
+};
+
+export const deleteSettingsOption = async (
+	name: SettingsFileName,
+	id: number
+) => {
+	await axios.delete(`/api/admin/options/${name}/${id}`);
+};
+
+export const canEditSettingsOptions = async () => {
+	try {
+		await axios.get("/api/admin/options");
+		return true;
+	} catch (error) {
+		if (axios.isAxiosError(error) && error.response?.status === 401) {
+			return false;
+		}
+		return false;
+	}
 };
 
 export const getCurrentUser = async (): Promise<User> => {

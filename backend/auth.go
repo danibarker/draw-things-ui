@@ -141,7 +141,11 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	_, err = db.Exec("INSERT INTO user_roles (user_id, role_id) VALUES (?, ?)", id, UserRole)
+	_, err = db.Exec(
+		"INSERT INTO user_roles (user_id, role_id) VALUES (?, (SELECT id FROM roles WHERE level = ? LIMIT 1))",
+		id,
+		UserRole,
+	)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
