@@ -5,7 +5,7 @@ run = "cd frontend && npm run build && cd ../backend && go build -o draw-go-reac
 [tasks.install]
 run = "cd frontend && npm install && cd ../backend && go mod tidy"
 [tasks.cleanup]
-run = "find backend/public -mindepth 1 -path \"backend/public/assets/images\" -prune -o -delete"
+run = "fd . backend/public --mindepth 1 --exclude assets/images -x rm -rf"
 depends_post = ["deploy"]
 [tasks.deploy]
 run = "cp -R backend/dist/* backend/public && rm -rf backend/dist"
